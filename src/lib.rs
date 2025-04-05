@@ -1,22 +1,35 @@
 mod lexer;
 
-pub use crate::lexer::token_type::{punctuator, TokenType};
+pub use crate::lexer::lexer::Lexer;
+pub use crate::lexer::token::Token;
+pub use crate::lexer::token_type::TokenType;
 
 #[cfg(test)]
 mod tests {
-    use super::{punctuator, TokenType};
+    use super::{Lexer, Token, TokenType};
 
     #[test]
     fn get_type() {
         let mut token_type = TokenType::LeftParen;
-        let mut result = punctuator(token_type);
+        let mut result = token_type.punctuator();
 
         assert_eq!(result, Some('('));
 
         token_type = TokenType::Eof;
-        result = punctuator(token_type);
+        result = token_type.punctuator();
 
         assert_eq!(result, None);
     }
-}
 
+    #[test]
+    fn lexer() {
+        let mut lexer = Lexer::new(&String::from(""));
+        let result = lexer.next();
+        let token = Token {
+            token_type: TokenType::Eof,
+            text: String::from(""),
+        };
+
+        assert_eq!(result, Some(token));
+    }
+}
