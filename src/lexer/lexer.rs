@@ -5,7 +5,7 @@ use crate::lexer::token::Token;
 use crate::lexer::token_type::TokenType;
 
 pub struct Lexer {
-    index: i32,
+    index: usize,
     text: String,
     punctuators: HashMap<char, &'static TokenType>,
 }
@@ -34,15 +34,16 @@ impl Iterator for Lexer {
     type Item = Token;
 
     fn next(&mut self) -> Option<Token> {
-        for c in self.text.chars() {
+        for (i, c) in self.text.char_indices() {
+            self.index = i;
             if self.punctuators.contains_key(&c) {
-                return Some(Token::new(
-                    *self.punctuators.get(&c).unwrap(),
-                    String::from(c),
-                ));
+                return Some(Token {
+                    token_type: (*(*self.punctuators.get(&c).unwrap())).clone(),
+                    text: String::from(c),
+                });
             } else if c.is_alphabetic() {
                 let name = String::from(c);
-
+                
                 return Some(Token {
                     token_type: TokenType::Name,
                     text: name,

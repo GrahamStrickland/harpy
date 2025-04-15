@@ -1,6 +1,6 @@
 use std::slice::Iter;
 
-#[derive(Debug, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub enum TokenType {
     LeftParen,
     RightParen,
