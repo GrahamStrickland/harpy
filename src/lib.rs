@@ -23,7 +23,7 @@ mod tests {
 
     #[test]
     fn lexer() {
-        let mut lexer = Lexer::new(&String::from(""));
+        let mut lexer = Lexer::new("");
         let result = lexer.next();
         let token = Token {
             token_type: TokenType::Eof,
@@ -31,5 +31,47 @@ mod tests {
         };
 
         assert_eq!(result, Some(token));
+
+        let mut lexer = Lexer::new("Hello");
+        let result = lexer.next();
+        let token = Token {
+            token_type: TokenType::Name,
+            text: String::from("Hello"),
+        };
+
+        assert_eq!(result, Some(token));
+
+        let mut lexer = Lexer::new("from + offset(time)");
+        let tokens = vec![
+            Token {
+                token_type: TokenType::Name,
+                text: String::from("from"),
+            },
+            Token {
+                token_type: TokenType::Plus,
+                text: String::from("+"),
+            },
+            Token {
+                token_type: TokenType::Name,
+                text: String::from("offset"),
+            },
+            Token {
+                token_type: TokenType::LeftParen,
+                text: String::from("("),
+            },
+            Token {
+                token_type: TokenType::Name,
+                text: String::from("time"),
+            },
+            Token {
+                token_type: TokenType::RightParen,
+                text: String::from(")"),
+            },
+        ];
+
+        let mut tmp = tokens.iter().next().zip(lexer.next()).into_iter();
+        while let Some((result, token)) = tmp.next() {
+            assert_eq!(result, &token);
+        }
     }
 }
