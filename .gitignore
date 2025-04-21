@@ -1,1 +1,5 @@
 /target
+
+# VSCode files
+*.code-workspace
+.vscode
