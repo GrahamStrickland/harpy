@@ -69,6 +69,7 @@ mod tests {
             },
         ];
 
+        // TODO: Fix this iteration, it only loops once
         let mut tmp = tokens.iter().next().zip(lexer.next()).into_iter();
         while let Some((result, token)) = tmp.next() {
             assert_eq!(result, &token);
