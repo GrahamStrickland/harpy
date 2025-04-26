@@ -42,37 +42,55 @@ mod tests {
         assert_eq!(result, Some(token));
 
         let mut lexer = Lexer::new("from + offset(time)");
-        let tokens = vec![
-            Token {
+        // TODO: Put this into some kind of collection, it's not exactly DRY...
+        assert_eq!(
+            lexer.next(),
+            Some(Token {
                 token_type: TokenType::Name,
                 text: String::from("from"),
-            },
-            Token {
+            })
+        );
+        assert_eq!(
+            lexer.next(),
+            Some(Token {
                 token_type: TokenType::Plus,
                 text: String::from("+"),
-            },
-            Token {
+            })
+        );
+        assert_eq!(
+            lexer.next(),
+            Some(Token {
                 token_type: TokenType::Name,
                 text: String::from("offset"),
-            },
-            Token {
+            })
+        );
+        assert_eq!(
+            lexer.next(),
+            Some(Token {
                 token_type: TokenType::LeftParen,
                 text: String::from("("),
-            },
-            Token {
+            })
+        );
+        assert_eq!(
+            lexer.next(),
+            Some(Token {
                 token_type: TokenType::Name,
                 text: String::from("time"),
-            },
-            Token {
+            })
+        );
+        assert_eq!(
+            lexer.next(),
+            Some(Token {
                 token_type: TokenType::RightParen,
                 text: String::from(")"),
-            },
-        ];
-
-        // TODO: Fix this iteration, it only loops once
-        let mut tmp = tokens.iter().next().zip(lexer.next()).into_iter();
-        while let Some((result, token)) = tmp.next() {
-            assert_eq!(result, &token);
-        }
+            })
+        );
+        assert_eq!(
+            lexer.next(),
+            Some(Token {
+                token_type: TokenType::Eof,
+                text: String::from(""),
+            })
+        );
     }
 }

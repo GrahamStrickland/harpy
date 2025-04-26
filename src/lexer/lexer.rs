@@ -50,7 +50,10 @@ impl<'a> Iterator for Lexer<'a> {
                     token_type: TokenType::Name,
                     text: name,
                 });
-            } // else ignore all other characters (whitespace, etc.)
+            } else {
+                // ignore all other characters (whitespace, etc.)
+                continue;
+            }
         }
 
         // Once we've reached the end of the string, just return EOF tokens. We'll
