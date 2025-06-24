@@ -1,0 +1,44 @@
+name: Format and test Harpy
+
+on:
+  push:
+    branches: 
+      - "main"
+
+jobs:
+  format:
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Format with ruff
+        uses: chartboost/ruff-action@v1
+        with:
+          args: "format"
+      - name: Fix with ruff
+        uses: chartboost/ruff-action@v1
+        with:
+          args: "check --fix"
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+          enable-cache: true
+      - name: Install dependencies
+        run: uv python install 3.13
+      - name: Sort imports with isort 
+        run: uv run isort .
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+          enable-cache: true
+      - name: Install dependencies
+        run: uv python install 3.13
+      - name: Test with pytest
+        run: uv run --frozen pytest

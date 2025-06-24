@@ -1,5 +1,6 @@
-/target
-
 # VSCode files
 *.code-workspace
 .vscode
+
+# Python files
+__pycache__
