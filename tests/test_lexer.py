@@ -23,4 +23,4 @@ class TestLexer:
             Token(TokenType.RIGHT_PAREN, ")"),
         ]
 
-        assert str(obs) == repr(expected)
+        assert str(obs) == str(expected)
