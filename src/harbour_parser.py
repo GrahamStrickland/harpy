@@ -10,4 +10,3 @@ class HarbourParser(Parser):
         self.prefix(token=TokenType.MINUS)
         self.prefix(token=TokenType.TILDE)
         self.prefix(token=TokenType.BANG)
-

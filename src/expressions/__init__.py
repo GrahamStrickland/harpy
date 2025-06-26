@@ -1,4 +1,12 @@
-from .expression import Expression
+from .expression import (ConditionalExpression, Expression, NameExpression,
+                         OperatorExpression, PostfixExpression,
+                         PrefixExpression)
 
-
-__all__ = ["Expression"]
+__all__ = [
+    "ConditionalExpression",
+    "Expression",
+    "NameExpression",
+    "OperatorExpression",
+    "PostfixExpression",
+    "PrefixExpression",
+]
