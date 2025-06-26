@@ -1,7 +1,6 @@
-from abs import ABC, abstractmethod
+from abc import ABC, abstractmethod
 
 from ..expressions import Expression
-from ..parser import Parser
 from ..token import Token
 
 
@@ -15,5 +14,9 @@ class InfixParselet(ABC):
     """
 
     @abstractmethod
-    def parse(self, parser: Parser, left: Expression, token: Token) -> Expression:
+    def parse(self, parser, left: Expression, token: Token) -> Expression:
+        pass
+
+    @abstractmethod
+    def get_precedence() -> int:
         pass

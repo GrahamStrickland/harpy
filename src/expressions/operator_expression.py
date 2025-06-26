@@ -5,7 +5,7 @@ from .expression import Expression
 
 
 class OperatorExpression(Expression):
-    """A binary arithmetic expression like 'a + b' or 'c ^ d'."""
+    """A binary arithmetic expression like `a + b` or `c ^ d`."""
 
     _left: Expression
     _right: Expression

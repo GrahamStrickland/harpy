@@ -1,16 +1,30 @@
-from parselets import InfixParselet, PrefixOperatorParselet, PrefixParselet
+from typing import Iterable
 
+from .parselets.infix_parselet import InfixParselet
+from .parselets.prefix_parselet import PrefixParselet
+from .token import Token
 from .token_type import TokenType
 
 
 class Parser:
+    _tokens: Iterable[Token]
+    _read: list[Token]
     _infix_parselets: dict[TokenType, InfixParselet]
     _prefix_parselets: dict[TokenType, PrefixParselet]
 
-    def __init__(self):
+    def __init__(self, tokens: Iterable[Token]):
+        self._tokens = tokens
+        self._read = []
+        self._infix_parselets = {}
         self._prefix_parselets = {}
 
-    def parse_expression(self):
+    def register(self, token: TokenType, parselet: PrefixParselet | InfixParselet):
+        if isinstance(parselet, PrefixParselet):
+            self._prefix_parselets[token] = parselet
+        elif isinstance(parselet, InfixParselet):
+            self._infix_parselets[token] = parselet
+
+    def parse_expression(self, precedence: int = 0):
         token = self.consume()
         prefix = self._prefix_parselets[token.get_type()]
 
@@ -19,21 +33,41 @@ class Parser:
 
         left = prefix.parse(parser=self, token=token)
 
-        token = self._look_ahead(0)
-        infix = self._infix_parselets[token.get_type()]
+        while precedence < self._get_precedence():
+            token = self.consume()
+            infix = self._infix_parselets[token.get_type()]
+            left = infix.parse(parser=self, left=left, token=token)
 
-        # No infix expression at this point, so we're done.
-        if infix is None:
-            return left
+        return left
+
+    def match(self, expected: TokenType) -> bool:
+        token = self._look_ahead(0)
+        if token.get_type() != expected:
+            raise RuntimeError(
+                f"Expected token {expected} and found {token.get_type()}"
+            )
 
         self.consume()
-        return infix.parse(parser=self, left=left, token=token)
 
-    def register(self, token: TokenType, parselet: PrefixParselet | InfixParselet):
-        if isinstance(parselet, PrefixParselet):
-            self._prefix_parselets[token] = parselet
-        elif isinstance(parselet, InfixParselet):
-            self._infix_parselets[token] = parselet
+        return True
 
-    def prefix(self, token: TokenType):
-        self.register(token=token, parselet=PrefixOperatorParselet())
+    def consume(self) -> Token:
+        # Make sure we've read the token.
+        self._look_ahead(0)
+
+        return self._read.pop(0)
+
+    def _look_ahead(self, distance: int) -> Token:
+        # Read in as many as needed.
+        while distance >= len(self._read):
+            self._read.append(next(self._tokens))
+
+        # Get the queued token.
+        return self._read[distance]
+
+    def _get_precedence(self) -> int:
+        parser = self._infix_parselets[self._look_ahead(0).get_type()]
+        if parser is not None:
+            return parser.get_precedence()
+
+        return 0

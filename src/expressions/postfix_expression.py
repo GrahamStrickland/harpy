@@ -5,7 +5,7 @@ from .expression import Expression
 
 
 class PostfixExpression(Expression):
-    """A postfix unary arithmetic expression like 'a!'."""
+    """A postfix unary arithmetic expression like `a!`."""
 
     _left: Expression
     _operator: TokenType

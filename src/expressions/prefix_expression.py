@@ -5,7 +5,7 @@ from .expression import Expression
 
 
 class PrefixExpression(Expression):
-    """A prefix unary arithmetic expression like '!a' or '-b'."""
+    """A prefix unary arithmetic expression like `!a` or `-b`."""
 
     _operator: TokenType
     _right: Expression
