@@ -41,6 +41,14 @@ class Lexer:
             self._index += 1
 
             if c in self._punctuators:
+                if (
+                    c == ":"
+                    and len(self._text) > self._index
+                    and self._text[self._index] == "="
+                ):
+                    self._index += 1
+                    return Token(TokenType.ASSIGN, ":=")
+
                 # Handle punctuation.
                 return Token(self._punctuators[c], c)
             elif c.isalpha():

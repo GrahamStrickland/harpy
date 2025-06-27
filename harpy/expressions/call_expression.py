@@ -18,7 +18,7 @@ class CallExpression(Expression):
         argstr = ""
         for i, arg in enumerate(self._args):
             argstr += arg.print()
-            if i < len(self._args):
+            if i < len(self._args) - 1:
                 argstr += ", "
 
-        return f"({self._function.print()} = {argstr}))"
+        return f"{self._function.print()}({argstr})"

@@ -15,4 +15,4 @@ class AssignExpression(Expression):
 
     @override
     def print(self):
-        return f"({self._name} = {self._right.print()})"
+        return f"({self._name} := {self._right.print()})"

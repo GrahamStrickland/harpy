@@ -1,7 +1,7 @@
 from .lexer import Lexer
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
-                        ConditionalParselet, GroupParselet, NameParselet,
-                        PostfixOperatorParselet, PrefixOperatorParselet)
+                        GroupParselet, NameParselet, PostfixOperatorParselet,
+                        PrefixOperatorParselet)
 from .parser import Parser
 from .precedence import Precedence
 from .token_type import TokenType
@@ -20,21 +20,19 @@ class HarbourParser(Parser):
         # Register the ones that need special parselets.
         self.register(token=TokenType.NAME, parselet=NameParselet())
         self.register(token=TokenType.ASSIGN, parselet=AssignParselet())
-        self.register(token=TokenType.QUESTION, parselet=ConditionalParselet())
         self.register(token=TokenType.LEFT_PAREN, parselet=GroupParselet())
         self.register(token=TokenType.LEFT_PAREN, parselet=CallParselet())
 
         # Register the simple operator parselets.
         self.prefix(token=TokenType.PLUS, precedence=Precedence.PREFIX)
         self.prefix(token=TokenType.MINUS, precedence=Precedence.PREFIX)
-        self.prefix(token=TokenType.TILDE, precedence=Precedence.PREFIX)
         self.prefix(token=TokenType.BANG, precedence=Precedence.PREFIX)
 
         self.infix_left(token=TokenType.PLUS, precedence=Precedence.SUM)
         self.infix_left(token=TokenType.MINUS, precedence=Precedence.SUM)
         self.infix_left(token=TokenType.ASTERISK, precedence=Precedence.PRODUCT)
         self.infix_left(token=TokenType.SLASH, precedence=Precedence.PRODUCT)
-        self.infix_left(token=TokenType.CARET, precedence=Precedence.EXPONENT)
+        self.infix_right(token=TokenType.CARET, precedence=Precedence.EXPONENT)
 
     def postfix(self, token: TokenType, precedence: Precedence):
         """Registers a postfix unary operator parselet for the given token and

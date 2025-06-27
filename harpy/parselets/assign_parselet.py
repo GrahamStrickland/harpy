@@ -20,7 +20,7 @@ class AssignParselet(InfixParselet):
         if not isinstance(left, NameExpression):
             raise SyntaxError("The left-hand side of an assignment must be a name.")
 
-        name = left.get_name()
+        name = left.print()
         return AssignExpression(name=name, right=right)
 
     @override

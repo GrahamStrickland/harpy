@@ -26,8 +26,6 @@ class TokenType(Enum):
                 return ")"
             case TokenType.COMMA:
                 return ","
-            case TokenType.ASSIGN:
-                return "="
             case TokenType.PLUS:
                 return "+"
             case TokenType.MINUS:

@@ -43,17 +43,19 @@ class Parser:
     def match(self, expected: TokenType) -> bool:
         token = self._look_ahead(0)
         if token.get_type() != expected:
-            raise RuntimeError(
-                f"Expected token {expected} and found {token.get_type()}"
-            )
+            return False
 
         self.consume()
 
         return True
 
-    def consume(self) -> Token:
+    def consume(self, expected: TokenType | None = None) -> Token:
         # Make sure we've read the token.
-        self._look_ahead(0)
+        token = self._look_ahead(0)
+        if expected is not None and token.get_type() != expected:
+            raise RuntimeError(
+                f"Expected token {expected} and found {token.get_type()}"
+            )
 
         return self._read.pop(0)
 
@@ -66,7 +68,9 @@ class Parser:
         return self._read[distance]
 
     def _get_precedence(self) -> int:
-        parser = self._infix_parselets[self._look_ahead(0).get_type()]
+        type = self._look_ahead(0).get_type()
+        parser = self._infix_parselets[type] if type in self._infix_parselets else None
+
         if parser is not None:
             return parser.get_precedence()
 
