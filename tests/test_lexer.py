@@ -1,3 +1,5 @@
+import pytest
+
 from ..harpy.lexer import Lexer
 from ..harpy.token import Token
 from ..harpy.token_type import TokenType
@@ -46,6 +48,29 @@ class TestLexer:
         expected = [Token(TokenType.BLOCK_COMMENT, "/* This is a block comment.*/")]
 
         assert str(obs) == str(expected)
+
+        obs = self._get_obs(
+            source="""
+/* This is also a
+ * block
+ * comment.
+ */
+ """
+        )
+        expected = [
+            Token(
+                TokenType.BLOCK_COMMENT,
+                "/* This is also a\n * block\n * comment.\n */",
+            )
+        ]
+
+        assert str(obs) == str(expected)
+
+        with pytest.raises(SyntaxError):
+            self._get_obs(source="/* This is an unfinished block comment.*")
+
+        with pytest.raises(SyntaxError):
+            self._get_obs(source="/* This one is even worse./*")
 
     def _get_obs(self, source: str) -> list[Token]:
         lexer = Lexer(text=source)
