@@ -126,7 +126,7 @@ class Lexer:
             return "\0"
 
     def _advance(self) -> str:
-        c = ""
+        c = "\0"
 
         if len(self._text) > self._index:
             c = self._text[self._index]

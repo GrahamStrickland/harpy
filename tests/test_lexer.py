@@ -38,12 +38,13 @@ class TestLexer:
 
         assert str(obs) == str(expected)
 
-    def test_comment(self):
+    def test_line_comment(self):
         obs = self._get_obs(source="// This is a line comment.")
         expected = [Token(TokenType.LINE_COMMENT, "// This is a line comment.")]
 
         assert str(obs) == str(expected)
 
+    def test_block_comment(self):
         obs = self._get_obs(source="/* This is a block comment.*/")
         expected = [Token(TokenType.BLOCK_COMMENT, "/* This is a block comment.*/")]
 
