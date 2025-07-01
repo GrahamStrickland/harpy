@@ -1,4 +1,3 @@
-
 from .token import Token
 from .token_type import TokenType
 
@@ -41,38 +40,38 @@ class Lexer:
             c = self._text[self._index]
             self._index += 1
 
-            if c in self._punctuators:
-                match c:
-                    case ":":
-                        # Assignment operator.
-                        if self._peek() == "=":
-                            self._advance()
-                            return Token(TokenType.ASSIGN, ":=")
-                        else:
+            match c:
+                case "/":
+                    # Potential comments.
+                    match self._peek():
+                        case "/":
+                            return self._read_line_comment()
+                        case "*":
+                            return self._read_block_comment()
+                        case _:
                             return Token(self._punctuators[c], c)
-                    case "/":
-                        # Potential comments.
-                        match self._peek():
-                            case "/":
-                                return self._read_line_comment()
-                            case "*":
-                                return self._read_block_comment()
-                            case _:
-                                return Token(self._punctuators[c], c)
-                    case _:
+                case ":":
+                    # Assignment operator.
+                    if self._peek() == "=":
+                        self._advance()
+                        return Token(TokenType.ASSIGN, ":=")
+                    else:
+                        return Token(self._punctuators[c], c)
+                case _:
+                    if c in self._punctuators:
                         # Handle punctuation.
                         return Token(self._punctuators[c], c)
-            elif c.isalpha():
-                # Handle names.
-                return self._read_name()
-            else:
-                # Ignore all other characters (whitespace, etc.)
-                pass
+                    elif c.isalpha():
+                        # Handle names.
+                        return self._read_name()
+                    else:
+                        # Ignore all other characters (whitespace, etc.)
+                        pass
 
         # Once we've reached the end of the string, just return EOF tokens. We'll
         # just keep returning them as many times as we're asked so that the
         # parser's lookahead doesn't have to worry about running out of tokens.
-        return Token(TokenType.EOF, "")
+        return Token(TokenType.EOF, "\0")
 
     def _read_line_comment(self) -> Token:
         start = self._index - 1
