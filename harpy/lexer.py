@@ -1,3 +1,4 @@
+
 from .token import Token
 from .token_type import TokenType
 
@@ -41,26 +42,29 @@ class Lexer:
             self._index += 1
 
             if c in self._punctuators:
-                if (
-                    c == ":"
-                    and len(self._text) > self._index
-                    and self._text[self._index] == "="
-                ):
-                    self._index += 1
-                    return Token(TokenType.ASSIGN, ":=")
-
-                # Handle punctuation.
-                return Token(self._punctuators[c], c)
+                match c:
+                    case ":":
+                        # Assignment operator.
+                        if self._peek() == "=":
+                            self._advance()
+                            return Token(TokenType.ASSIGN, ":=")
+                        else:
+                            return Token(self._punctuators[c], c)
+                    case "/":
+                        # Potential comments.
+                        match self._peek():
+                            case "/":
+                                return self._read_line_comment()
+                            case "*":
+                                return self._read_block_comment()
+                            case _:
+                                return Token(self._punctuators[c], c)
+                    case _:
+                        # Handle punctuation.
+                        return Token(self._punctuators[c], c)
             elif c.isalpha():
                 # Handle names.
-                start = self._index - 1
-                while self._index < len(self._text):
-                    if not self._text[self._index].isalpha():
-                        break
-                    self._index += 1
-
-                name = self._text[start : self._index]
-                return Token(TokenType.NAME, name)
+                return self._read_name()
             else:
                 # Ignore all other characters (whitespace, etc.)
                 pass
@@ -69,3 +73,64 @@ class Lexer:
         # just keep returning them as many times as we're asked so that the
         # parser's lookahead doesn't have to worry about running out of tokens.
         return Token(TokenType.EOF, "")
+
+    def _read_line_comment(self) -> Token:
+        start = self._index - 1
+
+        # Consume second '/'.
+        self._advance()
+
+        while True:
+            match self._peek():
+                case "\n" | "\r" | "\0":
+                    return Token(
+                        TokenType.LINE_COMMENT, self._text[start : self._index]
+                    )
+                case _:
+                    self._advance()
+
+    def _read_block_comment(self) -> Token:
+        start = self._index - 1
+
+        while True:
+            match self._advance():
+                case "*":
+                    match self._advance():
+                        case "/":
+                            return Token(
+                                TokenType.BLOCK_COMMENT, self._text[start : self._index]
+                            )
+                        case "\0":
+                            raise SyntaxError("Unterminated block comment.")
+                        case _:
+                            pass  # Do nothing, keep advancing.
+                case "\0":
+                    raise SyntaxError("Unterminated block comment.")
+                case _:
+                    pass  # Do nothing, keep advancing.
+
+    def _read_name(self) -> Token:
+        start = self._index - 1
+        while self._index < len(self._text):
+            if not self._text[self._index].isalpha():
+                break
+            self._index += 1
+
+        name = self._text[start : self._index]
+        return Token(TokenType.NAME, name)
+
+    def _peek(self) -> str:
+        if len(self._text) > self._index:
+            return self._text[self._index]
+        else:
+            return "\0"
+
+    def _advance(self) -> str:
+        c = ""
+
+        if len(self._text) > self._index:
+            c = self._text[self._index]
+            if len(self._text) > self._index:
+                self._index += 1
+
+        return c

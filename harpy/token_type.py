@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class TokenType(Enum):
+    # Punctuation and grouping
     LEFT_PAREN = 0
     RIGHT_PAREN = 1
     COMMA = 2
@@ -11,12 +12,19 @@ class TokenType(Enum):
     ASTERISK = 6
     SLASH = 7
     CARET = 8
-    TILDE = 9
-    BANG = 10
-    QUESTION = 11
-    COLON = 12
-    NAME = 13
-    EOF = 14
+    BANG = 9
+    QUESTION = 10
+    COLON = 11
+
+    # Identifiers
+    NAME = 12
+
+    # Comments
+    BLOCK_COMMENT = 13
+    LINE_COMMENT = 14
+
+    # Spacing
+    EOF = 15
 
     def punctuator(self) -> str | None:
         match self:
@@ -36,8 +44,6 @@ class TokenType(Enum):
                 return "/"
             case TokenType.CARET:
                 return "^"
-            case TokenType.TILDE:
-                return "~"
             case TokenType.BANG:
                 return "!"
             case TokenType.QUESTION:
