@@ -61,10 +61,15 @@ class Lexer:
                     # Equality relation.
                     if self._peek() == "=":
                         self._advance()
-                        return Token(TokenType.EQ, "==")
+                        return Token(TokenType.EQ1, "==")
                     else:
-                        # TODO: Find out if this is valid.
-                        raise SyntaxError("'=' is not a valid Harbour token")
+                        return Token(TokenType.EQ2, c)
+                case "!":
+                    if self._peek() == "=":
+                        self._advance()
+                        return Token(TokenType.NE2, "!=")
+                    else:
+                        return Token(TokenType.BANG, c)
                 case "<":
                     if self._peek() == "=":
                         self._advance()

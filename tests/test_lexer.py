@@ -42,7 +42,7 @@ class TestLexer:
         obs = self._get_obs(source="a == b")
         expected = [
             Token(TokenType.NAME, "a"),
-            Token(TokenType.EQ, "=="),
+            Token(TokenType.EQ1, "=="),
             Token(TokenType.NAME, "b"),
         ]
 

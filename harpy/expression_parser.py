@@ -28,7 +28,10 @@ class ExpressionParser(Parser):
         self.prefix(token=TokenType.MINUS, precedence=Precedence.PREFIX)
         self.prefix(token=TokenType.BANG, precedence=Precedence.PREFIX)
 
-        self.infix_left(token=TokenType.EQ, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.EQ1, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.EQ2, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.NE1, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.NE2, precedence=Precedence.RELATION)
         self.infix_left(token=TokenType.LE, precedence=Precedence.RELATION)
         self.infix_left(token=TokenType.GE, precedence=Precedence.RELATION)
         self.infix_left(token=TokenType.LT, precedence=Precedence.RELATION)

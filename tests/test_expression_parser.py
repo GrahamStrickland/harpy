@@ -29,9 +29,12 @@ class TestExpressionParser:
 
     def test_binary_associativity(self):
         self._test("a := b := c", "(a := (b := c))")
+        self._test("a := b = c", "(a := (b = c))")
         self._test("a := b == c", "(a := (b == c))")
         self._test("a := b < c", "(a := (b < c))")
         self._test("a := b <= c", "(a := (b <= c))")
+        self._test("a := b # c", "(a := (b # c))")
+        self._test("a := b != c", "(a := (b != c))")
         self._test("a + b - c", "((a + b) - c)")
         self._test("a + b > c", "((a + b) > c)")
         self._test("a + b >= c", "((a + b) >= c)")

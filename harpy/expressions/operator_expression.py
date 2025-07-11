@@ -21,8 +21,10 @@ class OperatorExpression(Expression):
         if self._operator.punctuator() is None:
             op = None
             match self._operator:
-                case TokenType.EQ:
+                case TokenType.EQ1:
                     op = "=="
+                case TokenType.NE2:
+                    op = "!="
                 case TokenType.LE:
                     op = "<="
                 case TokenType.GE:
