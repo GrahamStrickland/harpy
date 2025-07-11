@@ -7,9 +7,9 @@ from .precedence import Precedence
 from .token_type import TokenType
 
 
-class HarbourParser(Parser):
-    """Extends the generic Parser class with support for parsing the actual Harbour
-    grammar.
+class ExpressionParser(Parser):
+    """Extends the generic Parser class with support for parsing the Harbour
+    expression grammar.
     """
 
     def __init__(self, lexer: Lexer):
@@ -28,10 +28,17 @@ class HarbourParser(Parser):
         self.prefix(token=TokenType.MINUS, precedence=Precedence.PREFIX)
         self.prefix(token=TokenType.BANG, precedence=Precedence.PREFIX)
 
+        self.infix_left(token=TokenType.EQ, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.LE, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.GE, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.LT, precedence=Precedence.RELATION)
+        self.infix_left(token=TokenType.GT, precedence=Precedence.RELATION)
+
         self.infix_left(token=TokenType.PLUS, precedence=Precedence.SUM)
         self.infix_left(token=TokenType.MINUS, precedence=Precedence.SUM)
         self.infix_left(token=TokenType.ASTERISK, precedence=Precedence.PRODUCT)
         self.infix_left(token=TokenType.SLASH, precedence=Precedence.PRODUCT)
+        self.infix_left(token=TokenType.PERCENT, precedence=Precedence.PRODUCT)
         self.infix_right(token=TokenType.CARET, precedence=Precedence.EXPONENT)
 
     def postfix(self, token: TokenType, precedence: Precedence):

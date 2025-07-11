@@ -38,6 +38,25 @@ class TestLexer:
 
         assert str(obs) == str(expected)
 
+    def test_relations(self):
+        obs = self._get_obs(source="a == b")
+        expected = [
+            Token(TokenType.NAME, "a"),
+            Token(TokenType.EQ, "=="),
+            Token(TokenType.NAME, "b"),
+        ]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="a <= b")
+        expected = [
+            Token(TokenType.NAME, "a"),
+            Token(TokenType.LE, "<="),
+            Token(TokenType.NAME, "b"),
+        ]
+
+        assert str(obs) == str(expected)
+
     def test_line_comment(self):
         obs = self._get_obs(source="// This is a line comment.")
         expected = [Token(TokenType.LINE_COMMENT, "// This is a line comment.")]

@@ -57,6 +57,26 @@ class Lexer:
                         return Token(TokenType.ASSIGN, ":=")
                     else:
                         return Token(self._punctuators[c], c)
+                case "=":
+                    # Equality relation.
+                    if self._peek() == "=":
+                        self._advance()
+                        return Token(TokenType.EQ, "==")
+                    else:
+                        # TODO: Find out if this is valid.
+                        raise SyntaxError("'=' is not a valid Harbour token")
+                case "<":
+                    if self._peek() == "=":
+                        self._advance()
+                        return Token(TokenType.LE, "<=")
+                    else:
+                        return Token(TokenType.LT, c)
+                case ">":
+                    if self._peek() == "=":
+                        self._advance()
+                        return Token(TokenType.GE, ">=")
+                    else:
+                        return Token(TokenType.GT, c)
                 case _:
                     if c in self._punctuators:
                         # Handle punctuation.

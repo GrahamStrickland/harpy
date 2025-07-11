@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from os import path
 
-from .harbour_parser import HarbourParser
+from .expression_parser import ExpressionParser
 from .lexer import Lexer
 
 
@@ -17,7 +17,7 @@ def main():
     args = argparse.parse_args()
 
     lexer = Lexer(text=args.src)
-    parser = HarbourParser(lexer=lexer)
+    parser = ExpressionParser(lexer=lexer)
 
     result = parser.parse_expression()
     base, ext = path.splitext(args.src)

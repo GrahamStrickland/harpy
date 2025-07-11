@@ -1,8 +1,8 @@
-from ..harpy.harbour_parser import HarbourParser
+from ..harpy.expression_parser import ExpressionParser
 from ..harpy.lexer import Lexer
 
 
-class TestHarbourParser:
+class TestExpressionParser:
     def test_call(self):
         self._test("a()", "a()")
         self._test("a(b)", "a(b)")
@@ -16,6 +16,7 @@ class TestHarbourParser:
 
     def test_unary_binary_precedence(self):
         self._test("-a * b", "((-a) * b)")
+        self._test("-a % b", "((-a) % b)")
         self._test("!a + b", "((!a) + b)")
         self._test("!a ^ b", "((!a) ^ b)")
         self._test("-a", "(-a)")
@@ -28,9 +29,16 @@ class TestHarbourParser:
 
     def test_binary_associativity(self):
         self._test("a := b := c", "(a := (b := c))")
+        self._test("a := b == c", "(a := (b == c))")
+        self._test("a := b < c", "(a := (b < c))")
+        self._test("a := b <= c", "(a := (b <= c))")
         self._test("a + b - c", "((a + b) - c)")
+        self._test("a + b > c", "((a + b) > c)")
+        self._test("a + b >= c", "((a + b) >= c)")
         self._test("a * b / c", "((a * b) / c)")
         self._test("a ^ b ^ c", "(a ^ (b ^ c))")
+        self._test("a^b^c", "(a ^ (b ^ c))")
+        self._test("a * b % c", "((a * b) % c)")
 
     def test_grouping(self):
         self._test("a + (b + c) + d", "((a + (b + c)) + d)")
@@ -42,7 +50,7 @@ class TestHarbourParser:
         pretty-printed result.
         """
         lexer = Lexer(text=source)
-        parser = HarbourParser(lexer=lexer)
+        parser = ExpressionParser(lexer=lexer)
 
         result = parser.parse_expression()
         actual = result.print()

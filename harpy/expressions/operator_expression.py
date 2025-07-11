@@ -18,4 +18,15 @@ class OperatorExpression(Expression):
 
     @override
     def print(self) -> str:
-        return f"({self._left.print()} {self._operator.punctuator()} {self._right.print()})"
+        if self._operator.punctuator() is None:
+            op = None
+            match self._operator:
+                case TokenType.EQ:
+                    op = "=="
+                case TokenType.LE:
+                    op = "<="
+                case TokenType.GE:
+                    op = ">="
+            return f"({self._left.print()} {op} {self._right.print()})"
+        else:
+            return f"({self._left.print()} {self._operator.punctuator()} {self._right.print()})"

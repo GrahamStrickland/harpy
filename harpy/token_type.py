@@ -7,24 +7,30 @@ class TokenType(Enum):
     RIGHT_PAREN = 1
     COMMA = 2
     ASSIGN = 3
-    PLUS = 4
-    MINUS = 5
-    ASTERISK = 6
-    SLASH = 7
-    CARET = 8
-    BANG = 9
-    QUESTION = 10
-    COLON = 11
+    EQ = 4
+    LE = 5
+    GE = 6
+    LT = 7
+    GT = 8
+    PLUS = 9
+    MINUS = 10
+    ASTERISK = 11
+    SLASH = 12
+    PERCENT = 13
+    CARET = 14
+    BANG = 15
+    QUESTION = 16
+    COLON = 17
 
     # Identifiers
-    NAME = 12
+    NAME = 18
 
     # Comments
-    BLOCK_COMMENT = 13
-    LINE_COMMENT = 14
+    BLOCK_COMMENT = 19
+    LINE_COMMENT = 20
 
     # Spacing
-    EOF = 15
+    EOF = 21
 
     def punctuator(self) -> str | None:
         match self:
@@ -34,6 +40,10 @@ class TokenType(Enum):
                 return ")"
             case TokenType.COMMA:
                 return ","
+            case TokenType.LT:
+                return "<"
+            case TokenType.GT:
+                return ">"
             case TokenType.PLUS:
                 return "+"
             case TokenType.MINUS:
@@ -42,6 +52,8 @@ class TokenType(Enum):
                 return "*"
             case TokenType.SLASH:
                 return "/"
+            case TokenType.PERCENT:
+                return "%"
             case TokenType.CARET:
                 return "^"
             case TokenType.BANG:
