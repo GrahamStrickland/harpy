@@ -13,7 +13,8 @@ class Lexer:
 
     _index: int
     _text: str
-    _punctuators: dict[str, TokenType]
+    _simple_operators: dict[str, TokenType]
+    _compound_operatos: dict[str, TokenType]
 
     def __init__(self, text: str):
         """Creates a new Lexer to tokenize the given string.
@@ -24,13 +25,18 @@ class Lexer:
 
         self._index = 0
         self._text = text
-        self._punctuators = {}
+        self._compound_operators = {}
+        self._simple_operators = {}
 
-        # Register all the TokenTypes that are explicit punctuators.
         for type in TokenType:
-            punctuator = type.punctuator()
-            if punctuator is not None:
-                self._punctuators[punctuator] = type
+            compound_operator = type.compound_operator()
+            if compound_operator is not None:
+                self._compound_operators[compound_operator] = type
+
+        for type in TokenType:
+            simple_operator = type.simple_operator()
+            if simple_operator is not None:
+                self._simple_operators[simple_operator] = type
 
     def __iter__(self):
         return self
@@ -49,45 +55,14 @@ class Lexer:
                         case "*":
                             return self._read_block_comment()
                         case _:
-                            return Token(self._punctuators[c], c)
-                case ":":
-                    # Assignment operator.
-                    if self._peek() == "=":
-                        self._advance()
-                        return Token(TokenType.ASSIGN, ":=")
-                    else:
-                        return Token(self._punctuators[c], c)
-                case "=":
-                    # Equality relation.
-                    if self._peek() == "=":
-                        self._advance()
-                        return Token(TokenType.EQ1, "==")
-                    else:
-                        return Token(TokenType.EQ2, c)
-                case "!":
-                    if self._peek() == "=":
-                        self._advance()
-                        return Token(TokenType.NE2, "!=")
-                    else:
-                        return Token(TokenType.BANG, c)
-                case "<":
-                    if self._peek() == "=":
-                        self._advance()
-                        return Token(TokenType.LE, "<=")
-                    else:
-                        return Token(TokenType.LT, c)
-                case ">":
-                    if self._peek() == "=":
-                        self._advance()
-                        return Token(TokenType.GE, ">=")
-                    else:
-                        return Token(TokenType.GT, c)
+                            return Token(self._simple_operators[c], c)
                 case _:
-                    if c in self._punctuators:
-                        # Handle punctuation.
-                        return Token(self._punctuators[c], c)
+                    if c + (c1 := self._peek()) in self._compound_operators:
+                        self._advance()
+                        return Token(self._compound_operators[c + c1], c + c1)
+                    elif c in self._simple_operators:
+                        return Token(self._simple_operators[c], c)
                     elif c.isalpha():
-                        # Handle names.
                         return self._read_name()
                     else:
                         # Ignore all other characters (whitespace, etc.)

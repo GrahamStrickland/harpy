@@ -6,36 +6,71 @@ class TokenType(Enum):
     LEFT_PAREN = 0
     RIGHT_PAREN = 1
     COMMA = 2
+
     ASSIGN = 3
-    EQ1 = 4
-    EQ2 = 5
-    NE1 = 6
-    NE2 = 7
-    LE = 8
-    GE = 9
-    LT = 10
-    GT = 11
-    PLUS = 12
-    MINUS = 13
-    ASTERISK = 14
-    SLASH = 15
-    PERCENT = 16
-    CARET = 17
-    BANG = 18
-    QUESTION = 19
-    COLON = 20
+    PLUSEQ = 4
+    MINUSEQ = 5
+    MULTEQ = 6
+    DIVEQ = 7
+    MODEQ = 8
+    EXPEQ = 9
+
+    EQ1 = 10
+    EQ2 = 11
+    NE1 = 12
+    NE2 = 13
+    LE = 14
+    GE = 15
+    LT = 16
+    GT = 17
+
+    DOLLAR = 18
+    PLUS = 19
+    MINUS = 20
+    ASTERISK = 21
+    SLASH = 22
+    PERCENT = 23
+    CARET = 24
+    BANG = 25
+    QUESTION = 26
+    COLON = 27
 
     # Identifiers
-    NAME = 21
+    NAME = 28
 
     # Comments
-    BLOCK_COMMENT = 22
-    LINE_COMMENT = 23
+    BLOCK_COMMENT = 29
+    LINE_COMMENT = 30
 
     # Spacing
-    EOF = 24
+    EOF = 31
 
-    def punctuator(self) -> str | None:
+    def compound_operator(self) -> str | None:
+        match self:
+            case TokenType.ASSIGN:
+                return ":="
+            case TokenType.PLUSEQ:
+                return "+="
+            case TokenType.MINUSEQ:
+                return "-="
+            case TokenType.MULTEQ:
+                return "*="
+            case TokenType.DIVEQ:
+                return "/="
+            case TokenType.MODEQ:
+                return "%="
+            case TokenType.EXPEQ:
+                return "^="
+            case TokenType.EQ1:
+                return "=="
+            case TokenType.NE2:
+                return "!="
+            case TokenType.LE:
+                return "<="
+            case TokenType.GE:
+                return ">="
+
+    def simple_operator(self) -> str | None:
         match self:
             case TokenType.LEFT_PAREN:
                 return "("
@@ -51,6 +86,8 @@ class TokenType(Enum):
                 return "<"
             case TokenType.GT:
                 return ">"
+            case TokenType.DOLLAR:
+                return "$"
             case TokenType.PLUS:
                 return "+"
             case TokenType.MINUS:

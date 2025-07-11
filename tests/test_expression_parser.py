@@ -35,6 +35,8 @@ class TestExpressionParser:
         self._test("a := b <= c", "(a := (b <= c))")
         self._test("a := b # c", "(a := (b # c))")
         self._test("a := b != c", "(a := (b != c))")
+        self._test("a += b *= c", "(a += (b *= c))")
+        self._test("a %= b -= c", "((a %= b) -= c)")
         self._test("a + b - c", "((a + b) - c)")
         self._test("a + b > c", "((a + b) > c)")
         self._test("a + b >= c", "((a + b) >= c)")
@@ -42,6 +44,7 @@ class TestExpressionParser:
         self._test("a ^ b ^ c", "(a ^ (b ^ c))")
         self._test("a^b^c", "(a ^ (b ^ c))")
         self._test("a * b % c", "((a * b) % c)")
+        self._test("a $ b $ c", "((a $ b) $ c)")
 
     def test_grouping(self):
         self._test("a + (b + c) + d", "((a + (b + c)) + d)")

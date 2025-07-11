@@ -10,10 +10,14 @@ class Precedence(Enum):
     """
 
     ASSIGNMENT = 1
-    RELATION = 2
-    SUM = 3
-    PRODUCT = 4
-    EXPONENT = 5
-    PREFIX = 6
-    POSTFIX = 7
-    CALL = 8
+    SUMEQ = 2
+    MULTEQ = 3
+    EXPEQ = 4
+    EQRELATION = 5
+    ORDRELATION = 6
+    SUM = 7
+    PRODUCT = 8
+    EXPONENT = 9
+    PREFIX = 10
+    POSTFIX = 11
+    CALL = 12

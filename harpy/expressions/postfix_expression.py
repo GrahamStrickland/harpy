@@ -16,4 +16,4 @@ class PostfixExpression(Expression):
 
     @override
     def print(self) -> str:
-        return f"({self._left.print()}{self._operator.punctuator()})"
+        return f"({self._left.print()}{self._operator.simple_operator()})"

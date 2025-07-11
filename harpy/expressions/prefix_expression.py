@@ -16,4 +16,4 @@ class PrefixExpression(Expression):
 
     @override
     def print(self) -> str:
-        return f"({self._operator.punctuator()}{self._right.print()})"
+        return f"({self._operator.simple_operator()}{self._right.print()})"

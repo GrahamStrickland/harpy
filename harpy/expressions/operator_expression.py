@@ -18,17 +18,9 @@ class OperatorExpression(Expression):
 
     @override
     def print(self) -> str:
-        if self._operator.punctuator() is None:
-            op = None
-            match self._operator:
-                case TokenType.EQ1:
-                    op = "=="
-                case TokenType.NE2:
-                    op = "!="
-                case TokenType.LE:
-                    op = "<="
-                case TokenType.GE:
-                    op = ">="
-            return f"({self._left.print()} {op} {self._right.print()})"
+        if self._operator.compound_operator() is not None:
+            return f"({self._left.print()} {self._operator.compound_operator()} {self._right.print()})"
+        elif self._operator.simple_operator() is not None:
+            return f"({self._left.print()} {self._operator.simple_operator()} {self._right.print()})"
         else:
-            return f"({self._left.print()} {self._operator.punctuator()} {self._right.print()})"
+            raise SyntaxError(f"Invalid operator '{self._operator}")
