@@ -3,7 +3,7 @@ use std::slice::Iter;
 #[derive(Debug)]
 pub struct Token {
     pub token: TokenType,
-    pub value: &'static str,
+    pub value: String,
 }
 
 #[derive(Clone, Copy, Debug)]

@@ -47,8 +47,161 @@ impl Lexer {
 impl Iterator for Lexer {
     type Item = Token;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        todo!()
+    fn next(&mut self) -> Option<Token> {
+        while self.index < self.text.len() {
+            let c = self.text[self.index..].chars().next().unwrap();
+            self.index += 1;
+
+            match c {
+                '/' => match self.peek() {
+                    '/' => Some(self.read_line_comment()),
+                    '*' => Some(self.read_block_comment()),
+                    _ => {
+                        let charstr = format!("{}", c);
+                        let op = self.simple_operators.get(charstr);
+                        return match op {
+                            Some(t) => Some(Token {
+                                token: *t,
+                                value: charstr,
+                            }),
+                            None => None,
+                        };
+                    }
+                },
+                _ => {
+                    let c1 = self.peek();
+                    let compound_op = self.compound_operators.get(c1);
+                    let compound_charstr = format!("{}{}", c, c1);
+
+                    match compound_op {
+                        Some(t) => {
+                            self.advance();
+                            return Some(Token {
+                                token: *t,
+                                value: compound_charstr,
+                            });
+                        }
+                        None => {
+                            let simple_charstr = format!("{}", c);
+                            let simple_op = self.simple_operators.get(simple_charstr);
+
+                            match simple_op {
+                                Some(t1) => {
+                                    return Some(Token {
+                                        token: *t1,
+                                        value: simple_charstr,
+                                    });
+                                }
+                                None => {
+                                    return Some(self.read_name());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Once we've reached the end of the string, just return EOF tokens. We'll
+        // just keep returning them as many times as we're asked so that the
+        // parser's lookahead doesn't have to worry about running out of tokens.
+        Some(Token {
+            token: TokenType::Eof,
+            value: String::from("\0"),
+        })
+    }
+}
+
+impl Lexer {
+    fn read_line_comment(&mut self) -> Token {
+        let mut comment = String::from("//");
+
+        // Consume second '/'.
+        self.advance();
+
+        loop {
+            match self.peek() {
+                '\n' | '\r' | '\0' => {
+                    return Token {
+                        token: TokenType::LineComment,
+                        value: comment,
+                    };
+                }
+                c => {
+                    comment.push(c);
+                    self.advance();
+                }
+            }
+        }
+    }
+
+    fn read_block_comment(&mut self) -> Token {
+        let mut comment = String::from("/");
+
+        loop {
+            let c = self.advance();
+            match c {
+                '*' => {
+                    let c1 = self.advance();
+                    match c1 {
+                        '/' => {
+                            return Token {
+                                token: TokenType::BlockComment,
+                                value: comment,
+                            };
+                        }
+                        '\0' => panic!("Unterminated block comment."),
+                        _ => comment.push(c1),
+                    }
+                }
+                '\0' => panic!("Unterminated block comment."),
+                _ => comment.push(c),
+            }
+        }
+    }
+
+    fn read_name(&mut self) -> Token {
+        let mut name = String::from("");
+
+        for c in self.text[self.index..].chars() {
+            if c.is_alphabetic() {
+                name.push(c);
+                self.index += 1;
+            } else {
+                return Token {
+                    token: TokenType::Name,
+                    value: name,
+                };
+            }
+        }
+
+        Token {
+            token: TokenType::Eof,
+            value: String::from("\0"),
+        }
+    }
+
+    fn peek(&mut self) -> char {
+        let c = self.text[self.index..].chars().next();
+
+        return match c {
+            Some(c) => c,
+            None => '\0',
+        };
+    }
+
+    fn advance(&mut self) -> char {
+        let c = '\0';
+
+        match self.text[self.index..].chars().next() {
+            Some(c) => {
+                self.index += 1;
+                return c;
+            }
+            None => (),
+        }
+
+        c
     }
 }
 
@@ -63,27 +216,27 @@ mod tests {
         let expected = vec![
             Token {
                 token: TokenType::Name,
-                value: "from",
+                value: String::from("from"),
             },
             Token {
                 token: TokenType::Plus,
-                value: "+",
+                value: String::from("+"),
             },
             Token {
                 token: TokenType::Name,
-                value: "offset",
+                value: String::from("offset"),
             },
             Token {
                 token: TokenType::LeftParen,
-                value: "(",
+                value: String::from("("),
             },
             Token {
                 token: TokenType::Name,
-                value: "time",
+                value: String::from("time"),
             },
             Token {
                 token: TokenType::RightParen,
-                value: ")",
+                value: String::from(")"),
             },
         ];
 
@@ -97,15 +250,15 @@ mod tests {
         let mut expected = vec![
             Token {
                 token: TokenType::Name,
-                value: "a",
+                value: String::from("a"),
             },
             Token {
                 token: TokenType::Assign,
-                value: ":=",
+                value: String::from(":="),
             },
             Token {
                 token: TokenType::Name,
-                value: "b",
+                value: String::from("b"),
             },
         ];
 
@@ -116,15 +269,15 @@ mod tests {
         expected = vec![
             Token {
                 token: TokenType::Name,
-                value: "a",
+                value: String::from("a"),
             },
             Token {
                 token: TokenType::Colon,
-                value: ":",
+                value: String::from(":"),
             },
             Token {
                 token: TokenType::Name,
-                value: "b",
+                value: String::from("b"),
             },
         ];
 
@@ -138,15 +291,15 @@ mod tests {
         let mut expected = vec![
             Token {
                 token: TokenType::Name,
-                value: "a",
+                value: String::from("a"),
             },
             Token {
                 token: TokenType::Eq1,
-                value: "==",
+                value: String::from("=="),
             },
             Token {
                 token: TokenType::Name,
-                value: "b",
+                value: String::from("b"),
             },
         ];
 
@@ -157,15 +310,15 @@ mod tests {
         expected = vec![
             Token {
                 token: TokenType::Name,
-                value: "a",
+                value: String::from("a"),
             },
             Token {
                 token: TokenType::Le,
-                value: "<=",
+                value: String::from("<="),
             },
             Token {
                 token: TokenType::Name,
-                value: "b",
+                value: String::from("b"),
             },
         ];
 
@@ -178,7 +331,7 @@ mod tests {
 
         let expected = vec![Token {
             token: TokenType::LineComment,
-            value: "// This is a line comment.",
+            value: String::from("// This is a line comment."),
         }];
 
         assert_eq!(format!("{:?}", obs), format!("{:?}", expected));
@@ -190,7 +343,7 @@ mod tests {
 
         let mut expected = vec![Token {
             token: TokenType::BlockComment,
-            value: "/* This is a block comment.*/",
+            value: String::from("/* This is a block comment.*/"),
         }];
 
         assert_eq!(format!("{:?}", obs), format!("{:?}", expected));
@@ -206,7 +359,7 @@ mod tests {
 
         expected = vec![Token {
             token: TokenType::BlockComment,
-            value: "/* This is also a\n * block\n * comment.\n */",
+            value: String::from("/* This is also a\n * block\n * comment.\n */"),
         }];
 
         assert_eq!(format!("{:?}", obs), format!("{:?}", expected));
@@ -228,11 +381,11 @@ mod tests {
         let lexer = Lexer::new(source);
         let mut obs = vec![];
 
-        for token in lexer.iter() {
+        for token in lexer {
             if token.get_type() == TokenType::Eof {
                 break;
             }
-            obs.append(token);
+            obs.push(token);
         }
 
         obs
