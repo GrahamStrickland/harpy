@@ -2,11 +2,11 @@ use std::slice::Iter;
 
 #[derive(Debug)]
 pub struct Token {
-    pub token: TokenType,
+    pub token_type: TokenType,
     pub value: String,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TokenType {
     // Punctuation and grouping
     LeftParen,

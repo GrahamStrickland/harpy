@@ -11,8 +11,8 @@ use crate::token::{Token, TokenType};
 pub struct Lexer {
     index: usize,
     text: String,
-    simple_operators: HashMap<&'static str, TokenType>,
-    compound_operators: HashMap<&'static str, TokenType>,
+    simple_operators: HashMap<String, TokenType>,
+    compound_operators: HashMap<String, TokenType>,
 }
 
 impl Lexer {
@@ -26,17 +26,19 @@ impl Lexer {
 
         for t in TokenType::iterator() {
             let compound_operator = t.compound_operator();
-            if compound_operator == "" {
+            if compound_operator != "" {
                 lexer
                     .compound_operators
-                    .insert(compound_operator, t.clone());
+                    .insert(String::from(compound_operator), t.clone());
             }
         }
 
         for t in TokenType::iterator() {
-            let simple_operator = t.compound_operator();
-            if simple_operator == "" {
-                lexer.simple_operators.insert(simple_operator, t.clone());
+            let simple_operator = t.simple_operator();
+            if simple_operator != "" {
+                lexer
+                    .simple_operators
+                    .insert(String::from(simple_operator), t.clone());
             }
         }
 
@@ -53,51 +55,66 @@ impl Iterator for Lexer {
             self.index += 1;
 
             match c {
-                '/' => match self.peek() {
-                    '/' => Some(self.read_line_comment()),
-                    '*' => Some(self.read_block_comment()),
-                    _ => {
-                        let charstr = format!("{}", c);
-                        let op = self.simple_operators.get(charstr);
-                        return match op {
-                            Some(t) => Some(Token {
-                                token: *t,
-                                value: charstr,
-                            }),
-                            None => None,
-                        };
-                    }
-                },
+                '/' => {
+                    let token = match self.peek() {
+                        '/' => Some(self.read_line_comment()),
+                        '*' => Some(self.read_block_comment()),
+                        _ => {
+                            let charstr = format!("{}", c);
+                            let op = self.simple_operators.get(&charstr);
+                            match op {
+                                Some(t) => {
+                                    return Some(Token {
+                                        token_type: *t,
+                                        value: charstr,
+                                    });
+                                }
+                                None => return None,
+                            };
+                        }
+                    };
+
+                    return token;
+                }
                 _ => {
                     let c1 = self.peek();
-                    let compound_op = self.compound_operators.get(c1);
                     let compound_charstr = format!("{}{}", c, c1);
+                    let compound_op = self.compound_operators.get(&compound_charstr);
 
-                    match compound_op {
+                    let token = match compound_op {
                         Some(t) => {
-                            self.advance();
+                            let c2 = self.text[self.index..].chars().next().unwrap();
+                            if c2 != '\0' {
+                                self.index += 1;
+                            }
                             return Some(Token {
-                                token: *t,
+                                token_type: *t,
                                 value: compound_charstr,
                             });
                         }
                         None => {
                             let simple_charstr = format!("{}", c);
-                            let simple_op = self.simple_operators.get(simple_charstr);
+                            let simple_op = self.simple_operators.get(&simple_charstr);
 
-                            match simple_op {
-                                Some(t1) => {
-                                    return Some(Token {
-                                        token: *t1,
-                                        value: simple_charstr,
-                                    });
-                                }
+                            let t = match simple_op {
+                                Some(t1) => Some(Token {
+                                    token_type: *t1,
+                                    value: simple_charstr,
+                                }),
                                 None => {
-                                    return Some(self.read_name());
+                                    if c.is_alphabetic() {
+                                        return Some(self.read_name());
+                                    } else {
+                                        continue;
+                                    }
                                 }
-                            }
+                            };
+
+                            t
                         }
-                    }
+                    };
+
+                    return token;
                 }
             }
         }
@@ -106,7 +123,7 @@ impl Iterator for Lexer {
         // just keep returning them as many times as we're asked so that the
         // parser's lookahead doesn't have to worry about running out of tokens.
         Some(Token {
-            token: TokenType::Eof,
+            token_type: TokenType::Eof,
             value: String::from("\0"),
         })
     }
@@ -123,7 +140,7 @@ impl Lexer {
             match self.peek() {
                 '\n' | '\r' | '\0' => {
                     return Token {
-                        token: TokenType::LineComment,
+                        token_type: TokenType::LineComment,
                         value: comment,
                     };
                 }
@@ -136,17 +153,23 @@ impl Lexer {
     }
 
     fn read_block_comment(&mut self) -> Token {
-        let mut comment = String::from("/");
+        let mut comment = String::from("/*");
+
+        // Consume '*'.
+        self.advance();
 
         loop {
             let c = self.advance();
             match c {
                 '*' => {
                     let c1 = self.advance();
+                    comment.push(c);
+
                     match c1 {
                         '/' => {
+                            comment.push(c1);
                             return Token {
-                                token: TokenType::BlockComment,
+                                token_type: TokenType::BlockComment,
                                 value: comment,
                             };
                         }
@@ -163,21 +186,24 @@ impl Lexer {
     fn read_name(&mut self) -> Token {
         let mut name = String::from("");
 
-        for c in self.text[self.index..].chars() {
+        for c in String::from(self.text.clone())[self.index - 1..].chars() {
             if c.is_alphabetic() {
                 name.push(c);
-                self.index += 1;
+                let c1 = self.peek();
+                if c1.is_alphabetic() {
+                    self.index += 1;
+                }
             } else {
                 return Token {
-                    token: TokenType::Name,
+                    token_type: TokenType::Name,
                     value: name,
                 };
             }
         }
 
         Token {
-            token: TokenType::Eof,
-            value: String::from("\0"),
+            token_type: TokenType::Name,
+            value: name,
         }
     }
 
@@ -215,27 +241,27 @@ mod tests {
 
         let expected = vec![
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("from"),
             },
             Token {
-                token: TokenType::Plus,
+                token_type: TokenType::Plus,
                 value: String::from("+"),
             },
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("offset"),
             },
             Token {
-                token: TokenType::LeftParen,
+                token_type: TokenType::LeftParen,
                 value: String::from("("),
             },
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("time"),
             },
             Token {
-                token: TokenType::RightParen,
+                token_type: TokenType::RightParen,
                 value: String::from(")"),
             },
         ];
@@ -249,15 +275,15 @@ mod tests {
 
         let mut expected = vec![
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("a"),
             },
             Token {
-                token: TokenType::Assign,
+                token_type: TokenType::Assign,
                 value: String::from(":="),
             },
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("b"),
             },
         ];
@@ -268,15 +294,15 @@ mod tests {
 
         expected = vec![
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("a"),
             },
             Token {
-                token: TokenType::Colon,
+                token_type: TokenType::Colon,
                 value: String::from(":"),
             },
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("b"),
             },
         ];
@@ -290,15 +316,15 @@ mod tests {
 
         let mut expected = vec![
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("a"),
             },
             Token {
-                token: TokenType::Eq1,
+                token_type: TokenType::Eq1,
                 value: String::from("=="),
             },
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("b"),
             },
         ];
@@ -309,15 +335,15 @@ mod tests {
 
         expected = vec![
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("a"),
             },
             Token {
-                token: TokenType::Le,
+                token_type: TokenType::Le,
                 value: String::from("<="),
             },
             Token {
-                token: TokenType::Name,
+                token_type: TokenType::Name,
                 value: String::from("b"),
             },
         ];
@@ -330,7 +356,7 @@ mod tests {
         let obs = get_obs("// This is a line comment.");
 
         let expected = vec![Token {
-            token: TokenType::LineComment,
+            token_type: TokenType::LineComment,
             value: String::from("// This is a line comment."),
         }];
 
@@ -342,7 +368,7 @@ mod tests {
         let mut obs = get_obs("/* This is a block comment.*/");
 
         let mut expected = vec![Token {
-            token: TokenType::BlockComment,
+            token_type: TokenType::BlockComment,
             value: String::from("/* This is a block comment.*/"),
         }];
 
@@ -358,7 +384,7 @@ mod tests {
         );
 
         expected = vec![Token {
-            token: TokenType::BlockComment,
+            token_type: TokenType::BlockComment,
             value: String::from("/* This is also a\n * block\n * comment.\n */"),
         }];
 
@@ -382,7 +408,7 @@ mod tests {
         let mut obs = vec![];
 
         for token in lexer {
-            if token.get_type() == TokenType::Eof {
+            if token.token_type == TokenType::Eof {
                 break;
             }
             obs.push(token);
