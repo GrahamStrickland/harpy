@@ -13,6 +13,7 @@ class Lexer:
 
     _index: int
     _text: str
+    _keywords: dict[str, TokenType]
     _simple_operators: dict[str, TokenType]
     _compound_operatos: dict[str, TokenType]
 
@@ -25,18 +26,25 @@ class Lexer:
 
         self._index = 0
         self._text = text
+        self._keywords = {}
         self._compound_operators = {}
         self._simple_operators = {}
 
         for type in TokenType:
+            keyword = type.keyword()
+            if keyword is not None:
+                self._keywords[keyword] = type
+                continue
+
             compound_operator = type.compound_operator()
             if compound_operator is not None:
                 self._compound_operators[compound_operator] = type
+                continue
 
-        for type in TokenType:
             simple_operator = type.simple_operator()
             if simple_operator is not None:
                 self._simple_operators[simple_operator] = type
+                continue
 
     def __iter__(self):
         return self
@@ -57,7 +65,9 @@ class Lexer:
                         case _:
                             return Token(self._simple_operators[c], c)
                 case _:
-                    if c + (c1 := self._peek()) in self._compound_operators:
+                    if (kw := self._read_keyword(c)) is not None:
+                        return kw
+                    elif c + (c1 := self._peek()) in self._compound_operators:
                         self._advance()
                         return Token(self._compound_operators[c + c1], c + c1)
                     elif c in self._simple_operators:
@@ -107,6 +117,18 @@ class Lexer:
                     raise SyntaxError("Unterminated block comment.")
                 case _:
                     pass  # Do nothing, keep advancing.
+
+    def _read_keyword(self, kw: str) -> Token | None:
+        start_index = self._index
+
+        while (c := self._advance()).isalpha():
+            kw += c
+
+        if kw.lower() in self._keywords:
+            return Token(self._keywords[kw.lower()], kw)
+
+        self._index = start_index
+        return None
 
     def _read_name(self) -> Token:
         start = self._index - 1

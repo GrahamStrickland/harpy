@@ -1,5 +1,6 @@
 from ..harpy.expression_parser import ExpressionParser
 from ..harpy.lexer import Lexer
+from ..harpy.source_reader import SourceReader
 
 
 class TestExpressionParser:
@@ -56,9 +57,10 @@ class TestExpressionParser:
         pretty-printed result.
         """
         lexer = Lexer(text=source)
-        parser = ExpressionParser(lexer=lexer)
+        reader = SourceReader(tokens=lexer)
+        parser = ExpressionParser(source_reader=reader)
 
-        result = parser.parse_expression()
+        result = parser.parse()
         actual = result.print()
 
         assert actual == expected

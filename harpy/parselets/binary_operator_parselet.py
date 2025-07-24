@@ -23,7 +23,7 @@ class BinaryOperatorParselet(InfixParselet):
         parselet with the same precedence appear on the right, which will then
         take *this* parselet's result as its left-hand argument.
         """
-        right = parser.parse_expression(self._precedence - (1 if self._is_right else 0))
+        right = parser.parse(self._precedence - (1 if self._is_right else 0))
         return OperatorExpression(left=left, operator=token.get_type(), right=right)
 
     def get_precedence(self) -> int:

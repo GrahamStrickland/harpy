@@ -12,6 +12,6 @@ class GroupParselet(PrefixParselet):
 
     @override
     def parse(self, parser: Parser, token: Token) -> Expression:
-        expression = parser.parse_expression()
+        expression = parser.parse()
         parser.consume(TokenType.RIGHT_PAREN)
         return expression

@@ -15,7 +15,7 @@ class AssignParselet(InfixParselet):
 
     @override
     def parse(self, parser: Parser, left: Expression, token: Token):
-        right = parser.parse_expression(Precedence.ASSIGNMENT.value - 1)
+        right = parser.parse(Precedence.ASSIGNMENT.value - 1)
 
         if not isinstance(left, NameExpression):
             raise SyntaxError("The left-hand side of an assignment must be a name.")

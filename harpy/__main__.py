@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from os import path
 
-from .expression_parser import ExpressionParser
+from .harbour_parser import HarbourParser
 from .lexer import Lexer
 
 
@@ -17,9 +17,9 @@ def main():
     args = argparse.parse_args()
 
     lexer = Lexer(text=args.src)
-    parser = ExpressionParser(lexer=lexer)
+    parser = HarbourParser(lexer=lexer)
 
-    result = parser.parse_expression()
+    result = parser.parse()
     base, ext = path.splitext(args.src)
     if ext == "prg" or "ch":
         with open(path.join(base, "py"), "w", encoding="utf-8") as outfile:

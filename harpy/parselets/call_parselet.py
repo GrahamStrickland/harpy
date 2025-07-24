@@ -18,10 +18,12 @@ class CallParselet(InfixParselet):
 
         # There may be no arguments at all.
         if not parser.match(TokenType.RIGHT_PAREN):
-            args.append(parser.parse_expression())
+            args.append(parser.parse())
             while parser.match(TokenType.COMMA):
-                args.append(parser.parse_expression())
-            parser.consume(TokenType.RIGHT_PAREN)
+                parser.consume(TokenType.COMMA)
+                args.append(parser.parse())
+
+        parser.consume(TokenType.RIGHT_PAREN)
 
         return CallExpression(function=left, args=args)
 

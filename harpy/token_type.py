@@ -35,15 +35,61 @@ class TokenType(Enum):
     QUESTION = 26
     COLON = 27
 
+    # Keywords
+    FUNCTION = 28
+    PROCEDURE = 29
+    RETURN = 30
+    NIL = 31
+    LOCAL = 32
+    STATIC = 33
+    IIF = 34
+    IF = 35
+    ELSE = 36
+    ELSEIF = 37
+    END = 38
+    ENDIF = 39
+    ENDERR = 40
+
     # Identifiers
-    NAME = 28
+    NAME = 41
 
     # Comments
-    BLOCK_COMMENT = 29
-    LINE_COMMENT = 30
+    BLOCK_COMMENT = 42
+    LINE_COMMENT = 43
 
     # Spacing
-    EOF = 31
+    EOF = 44
+
+    def keyword(self) -> str | None:
+        match self:
+            case TokenType.FUNCTION:
+                return "function"
+            case TokenType.PROCEDURE:
+                return "procedure"
+            case TokenType.RETURN:
+                return "return"
+            case TokenType.NIL:
+                return "nil"
+            case TokenType.LOCAL:
+                return "local"
+            case TokenType.STATIC:
+                return "static"
+            case TokenType.IIF:
+                return "iif"
+            case TokenType.IF:
+                return "if"
+            case TokenType.ELSE:
+                return "else"
+            case TokenType.ELSEIF:
+                return "elseif"
+            case TokenType.END:
+                return "end"
+            case TokenType.ENDIF:
+                return "endif"
+            case TokenType.ENDERR:
+                return "enderr"
+            case _:
+                return None
 
     def compound_operator(self) -> str | None:
         match self:
