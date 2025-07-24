@@ -68,7 +68,7 @@ class Lexer:
                     if (kw := self._read_keyword(c)) is not None:
                         return kw
                     elif (op := self._read_logical(c)) is not None:
-                        return op 
+                        return op
                     elif c + (c1 := self._peek()) in self._compound_operators:
                         self._advance()
                         return Token(self._compound_operators[c + c1], c + c1)
@@ -135,10 +135,10 @@ class Lexer:
     def _read_logical(self, op: str) -> Token | None:
         if op != ".":
             return None
-            
+
         while (c := self._advance()) != ".":
             op += c
-        op += c # Final '.'.
+        op += c  # Final '.'.
 
         if op.lower() not in self._compound_operators:
             raise SyntaxError(f"Unterminated logical operator '{op}'.")
