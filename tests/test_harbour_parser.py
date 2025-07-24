@@ -37,6 +37,10 @@ class TestHarbourParser:
             "if a(b, c, d)\ne()\nendif",
         )
         self._test(
+            "if !a(b, c, d) .and. !e\n\n    f()\n\nendif",
+            "if ((!a(b, c, d)) .and. (!e))\nf()\nendif",
+        )
+        self._test(
             "if a(b, c, d)\n\n    e()\n\nelse\n\n    f()\n\nendif",
             "if a(b, c, d)\ne()\nelse\nf()\nendif",
         )

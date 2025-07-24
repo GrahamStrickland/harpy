@@ -7,6 +7,7 @@ class TokenType(Enum):
     RIGHT_PAREN = 1
     COMMA = 2
 
+    # Assignment operators
     ASSIGN = 3
     PLUSEQ = 4
     MINUSEQ = 5
@@ -15,50 +16,56 @@ class TokenType(Enum):
     MODEQ = 8
     EXPEQ = 9
 
-    EQ1 = 10
-    EQ2 = 11
-    NE1 = 12
-    NE2 = 13
-    LE = 14
-    GE = 15
-    LT = 16
-    GT = 17
+    # Logical operators
+    OR = 10
+    AND = 11
+    NOT = 12
 
-    DOLLAR = 18
-    PLUS = 19
-    MINUS = 20
-    ASTERISK = 21
-    SLASH = 22
-    PERCENT = 23
-    CARET = 24
-    BANG = 25
-    QUESTION = 26
-    COLON = 27
+    # Relational operators
+    EQ1 = 13
+    EQ2 = 14
+    NE1 = 15
+    NE2 = 16
+    LE = 17
+    GE = 18
+    LT = 19
+    GT = 20
+
+    # Arithmetic operators
+    DOLLAR = 21
+    PLUS = 22
+    MINUS = 23
+    ASTERISK = 24
+    SLASH = 25
+    PERCENT = 26
+    CARET = 27
+    QUESTION = 28
+    COLON = 29
 
     # Keywords
-    FUNCTION = 28
-    PROCEDURE = 29
-    RETURN = 30
-    NIL = 31
-    LOCAL = 32
-    STATIC = 33
-    IIF = 34
-    IF = 35
-    ELSE = 36
-    ELSEIF = 37
-    END = 38
-    ENDIF = 39
-    ENDERR = 40
+    FUNCTION = 30
+    PROCEDURE = 31
+    RETURN = 32
+    NIL = 33
+    LOCAL = 34
+    STATIC = 35
+    IIF = 36
+    IF = 37
+    ELSE = 38
+    ELSEIF = 39
+    END = 40
+    ENDIF = 41
+    ENDERR = 42
 
     # Identifiers
-    NAME = 41
+    NAME = 43
 
     # Comments
-    BLOCK_COMMENT = 42
-    LINE_COMMENT = 43
+    BLOCK_COMMENT = 44
+    LINE_COMMENT = 45
 
     # Spacing
-    EOF = 44
+    EOF = 46
 
     def keyword(self) -> str | None:
         match self:
@@ -107,6 +114,10 @@ class TokenType(Enum):
                 return "%="
             case TokenType.EXPEQ:
                 return "^="
+            case TokenType.AND:
+                return ".and."
+            case TokenType.OR:
+                return ".or."
             case TokenType.EQ1:
                 return "=="
             case TokenType.NE2:
@@ -146,7 +157,7 @@ class TokenType(Enum):
                 return "%"
             case TokenType.CARET:
                 return "^"
-            case TokenType.BANG:
+            case TokenType.NOT:
                 return "!"
             case TokenType.QUESTION:
                 return "?"

@@ -46,6 +46,12 @@ class TestExpressionParser:
         self._test("a^b^c", "(a ^ (b ^ c))")
         self._test("a * b % c", "((a * b) % c)")
         self._test("a $ b $ c", "((a $ b) $ c)")
+        self._test("a .or. b", "(a .or. b)")
+        self._test("a .and. b", "(a .and. b)")
+        self._test("a .and. b .or. c", "((a .and. b) .or. c)")
+        self._test("a .or. b .and. c", "(a .or. (b .and. c))")
+        self._test("!a .and. !b .or. !c", "(((!a) .and. (!b)) .or. (!c))")
+        self._test("!(a .or. b .and. c)", "(!(a .or. (b .and. c)))")
 
     def test_grouping(self):
         self._test("a + (b + c) + d", "((a + (b + c)) + d)")

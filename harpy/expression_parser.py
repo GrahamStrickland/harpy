@@ -37,7 +37,7 @@ class ExpressionParser(Parser):
         # Register the simple operator parselets.
         self.prefix(token=TokenType.PLUS, precedence=Precedence.PREFIX)
         self.prefix(token=TokenType.MINUS, precedence=Precedence.PREFIX)
-        self.prefix(token=TokenType.BANG, precedence=Precedence.PREFIX)
+        self.prefix(token=TokenType.NOT, precedence=Precedence.PREFIX)
 
         self.infix_right(token=TokenType.PLUSEQ, precedence=Precedence.SUMEQ)
         self.infix_right(token=TokenType.MINUSEQ, precedence=Precedence.SUMEQ)
@@ -45,6 +45,9 @@ class ExpressionParser(Parser):
         self.infix_right(token=TokenType.DIVEQ, precedence=Precedence.MULTEQ)
         self.infix_right(token=TokenType.MODEQ, precedence=Precedence.MULTEQ)
         self.infix_right(token=TokenType.EXPEQ, precedence=Precedence.EXPEQ)
+
+        self.infix_right(token=TokenType.OR, precedence=Precedence.OR)
+        self.infix_right(token=TokenType.AND, precedence=Precedence.AND)
 
         self.infix_left(token=TokenType.EQ1, precedence=Precedence.EQRELATION)
         self.infix_left(token=TokenType.EQ2, precedence=Precedence.EQRELATION)

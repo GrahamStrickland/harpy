@@ -38,6 +38,51 @@ class TestLexer:
 
         assert str(obs) == str(expected)
 
+    def test_logical_operators(self):
+        obs = self._get_obs(source="a .and. b")
+        expected = [
+            Token(TokenType.NAME, "a"),
+            Token(TokenType.AND, ".and."),
+            Token(TokenType.NAME, "b"),
+        ]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="a .and. !b")
+        expected = [
+            Token(TokenType.NAME, "a"),
+            Token(TokenType.AND, ".and."),
+            Token(TokenType.NOT, "!"),
+            Token(TokenType.NAME, "b"),
+        ]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="!a .and. !b")
+        expected = [
+            Token(TokenType.NOT, "!"),
+            Token(TokenType.NAME, "a"),
+            Token(TokenType.AND, ".and."),
+            Token(TokenType.NOT, "!"),
+            Token(TokenType.NAME, "b"),
+        ]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="!a .and. !b .or. !c")
+        expected = [
+            Token(TokenType.NOT, "!"),
+            Token(TokenType.NAME, "a"),
+            Token(TokenType.AND, ".and."),
+            Token(TokenType.NOT, "!"),
+            Token(TokenType.NAME, "b"),
+            Token(TokenType.OR, ".or."),
+            Token(TokenType.NOT, "!"),
+            Token(TokenType.NAME, "c"),
+        ]
+
+        assert str(obs) == str(expected)
+
     def test_relations(self):
         obs = self._get_obs(source="a == b")
         expected = [
