@@ -9,11 +9,19 @@ class ProcedureStatement(Statement):
     _name: str
     _params: list[str]
     _body: list[Statement]
+    _static: bool
 
-    def __init__(self, name: str, params: list[str], body: list[Statement]):
+    def __init__(
+        self,
+        name: str,
+        params: list[str],
+        body: list[Statement],
+        static: bool = False,
+    ):
         self._name = name
         self._params = params
         self._body = body
+        self._static = static
 
     @override
     def print(self) -> str:
@@ -26,4 +34,4 @@ class ProcedureStatement(Statement):
 
         body = "\n".join([stmt.print() for stmt in self._body])
 
-        return f"procedure {self._name}({params})\n{body}\nreturn"
+        return f"{'static ' if self._static else ''}procedure {self._name}({params})\n{body}\nreturn"

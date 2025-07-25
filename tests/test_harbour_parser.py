@@ -31,6 +31,20 @@ class TestHarbourParser:
             "procedure a(b, c, d)\nlocal (c := b)\nreturn",
         )
 
+    def test__statics(self):
+        self._test(
+            "static a := b",
+            "static (a := b)",
+        )
+        self._test(
+            "static function a()\n\n    local c := b\n\nreturn c",
+            "static function a()\nlocal (c := b)\nreturn c",
+        )
+        self._test(
+            "function a()\n\n    static c := b\n\nreturn c",
+            "function a()\nstatic (c := b)\nreturn c",
+        )
+
     def test__if_stmt(self):
         self._test(
             "if a(b, c, d)\n\n    e()\n\nendif",

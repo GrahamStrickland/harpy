@@ -1,22 +1,9 @@
-from typing import override
-
 from ..expressions import Expression
-from .statement import Statement
+from .variable_declaration import VariableDeclaration
 
 
-class LocalVariableDeclaration(Statement):
-    """Represents a local variable declaration, e.g. `local a := 1`."""
-
-    _name: str
-    _assign_expr: Expression | None
+class LocalVariableDeclaration(VariableDeclaration):
+    """Represents a local variable declaration, e.g. `local a` or `local b := 1`."""
 
     def __init__(self, name: str, assign_expr: Expression | None):
-        self._name = name
-        self._assign_expr = assign_expr
-
-    @override
-    def print(self) -> str:
-        if self._assign_expr is None:
-            return f"local {self._name}"
-        else:
-            return f"local {self._assign_expr.print()}"
+        super().__init__(variable_type="local", name=name, assign_expr=assign_expr)

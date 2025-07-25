@@ -1,12 +1,13 @@
 from typing import override
 
 from .expression_parser import ExpressionParser
+from .expressions import AssignExpression
 from .lexer import Lexer
 from .parser import Parser
 from .source_reader import SourceReader
 from .statements import (CallStatement, FunctionStatement, IfStatement,
                          LocalVariableDeclaration, ProcedureStatement,
-                         Statement)
+                         Statement, StaticVariableDeclaration)
 from .token import Token
 from .token_type import TokenType
 
@@ -36,6 +37,14 @@ class HarbourParser(Parser):
                 return None
             elif token_type.keyword() is not None:
                 match token_type:
+                    case TokenType.STATIC:
+                        match self._reader.look_ahead(0).get_type():
+                            case TokenType.FUNCTION:
+                                return self._function_defn(static=True)
+                            case TokenType.PROCEDURE:
+                                return self._procedure_defn(static=True)
+                            case _:
+                                return self._static_decln_stmt()
                     case TokenType.FUNCTION:
                         return self._function_defn()
                     case TokenType.PROCEDURE:
@@ -51,7 +60,10 @@ class HarbourParser(Parser):
             else:
                 return self._call_stmt(token)
 
-    def _function_defn(self) -> FunctionStatement:
+    def _function_defn(self, static: bool = False) -> FunctionStatement:
+        if static:
+            _ = self._reader.consume(TokenType.FUNCTION)
+
         name = self._reader.consume(TokenType.NAME)
 
         _ = self._reader.consume(TokenType.LEFT_PAREN)
@@ -74,9 +86,12 @@ class HarbourParser(Parser):
         self._reader.consume(TokenType.RETURN)
         retval = self._expression_parser.parse()
 
-        return FunctionStatement(name=name, params=params, body=body, retval=retval)
+        return FunctionStatement(name=name, params=params, body=body, retval=retval, static=static)
 
-    def _procedure_defn(self) -> ProcedureStatement:
+    def _procedure_defn(self, static: bool = False) -> ProcedureStatement:
+        if static:
+            _ = self._reader.consume(TokenType.PROCEDURE)
+            
         name = self._reader.consume(TokenType.NAME)
 
         _ = self._reader.consume(TokenType.LEFT_PAREN)
@@ -98,15 +113,15 @@ class HarbourParser(Parser):
 
         self._reader.consume(TokenType.RETURN)
 
-        return ProcedureStatement(name=name, params=params, body=body)
+        return ProcedureStatement(name=name, params=params, body=body, static=static)
 
-    def _local_decln_stmt(self) -> LocalVariableDeclaration:
+    def _var_decln_stmt(self, decln_type: str) -> tuple[str, AssignExpression | None]:
         assign_expr = None
 
         token = self._reader.look_ahead(0)
         if token.get_type() != TokenType.NAME:
             raise SyntaxError(
-                f"Expected name after local keyword, found '{token.get_text()}'"
+                f"Expected name after {decln_type} keyword, found '{token.get_text()}'"
             )
 
         name = token
@@ -116,7 +131,13 @@ class HarbourParser(Parser):
         else:
             name = self._reader.consume(TokenType.NAME)
 
-        return LocalVariableDeclaration(name=name, assign_expr=assign_expr)
+        return name, assign_expr
+
+    def _local_decln_stmt(self) -> LocalVariableDeclaration:
+        return LocalVariableDeclaration(*self._var_decln_stmt("local"))
+
+    def _static_decln_stmt(self) -> StaticVariableDeclaration:
+        return StaticVariableDeclaration(*self._var_decln_stmt("static"))
 
     def _if_stmt(self) -> IfStatement:
         ifcond = self._expression_parser.parse()

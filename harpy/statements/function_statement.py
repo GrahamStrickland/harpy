@@ -11,14 +11,21 @@ class FunctionStatement(Statement):
     _params: list[str]
     _body: list[Statement]
     _retval: Expression
+    _static: bool
 
     def __init__(
-        self, name: str, params: list[str], body: list[Statement], retval: Expression
+        self,
+        name: str,
+        params: list[str],
+        body: list[Statement],
+        retval: Expression,
+        static: bool = False,
     ):
         self._name = name
         self._params = params
         self._body = body
         self._retval = retval
+        self._static = static
 
     @override
     def print(self) -> str:
@@ -31,4 +38,4 @@ class FunctionStatement(Statement):
 
         body = "\n".join([stmt.print() for stmt in self._body])
 
-        return f"function {self._name}({params})\n{body}\nreturn {self._retval.print()}"
+        return f"{'static ' if self._static else ''}function {self._name}({params})\n{body}\nreturn {self._retval.print()}"
