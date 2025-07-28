@@ -67,7 +67,9 @@ class TestLexer:
         with pytest.raises(SyntaxError, match="Invalid numeric literal '123a'"):
             _ = self._get_obs(source="123a")
 
-        with pytest.raises(SyntaxError, match="Second decimal point found in literal '1.1.'."):
+        with pytest.raises(
+            SyntaxError, match="Second decimal point found in literal '1.1.'."
+        ):
             _ = self._get_obs(source="1.1.1")
 
     def test_str_literal(self):
@@ -78,6 +80,40 @@ class TestLexer:
 
         obs = self._get_obs(source='"This is also a string"')
         expected = [Token(TokenType.STR_LITERAL, '"This is also a string"')]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="[Also a string]")
+        expected = [Token(TokenType.STR_LITERAL, "[Also a string]")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="['Actually a hash key']")
+        expected = [
+            Token(TokenType.LEFT_BRACKET, "["),
+            Token(TokenType.STR_LITERAL, "'Actually a hash key'"),
+            Token(TokenType.RIGHT_BRACKET, "]"),
+        ]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="function a(b)\n    local i := 1\nreturn b[i]")
+        expected = [
+            Token(TokenType.FUNCTION, "function"),
+            Token(TokenType.NAME, "a"),
+            Token(TokenType.LEFT_PAREN, "("),
+            Token(TokenType.NAME, "b"),
+            Token(TokenType.RIGHT_PAREN, ")"),
+            Token(TokenType.LOCAL, "local"),
+            Token(TokenType.NAME, "i"),
+            Token(TokenType.ASSIGN, ":="),
+            Token(TokenType.NUM_LITERAL, "1"),
+            Token(TokenType.RETURN, "return"),
+            Token(TokenType.NAME, "b"),
+            Token(TokenType.LEFT_BRACKET, "["),
+            Token(TokenType.NAME, "i"),
+            Token(TokenType.RIGHT_BRACKET, "]"),
+        ]
 
         assert str(obs) == str(expected)
 

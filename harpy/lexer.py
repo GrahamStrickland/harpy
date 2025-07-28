@@ -16,6 +16,7 @@ class Lexer:
     _keywords: dict[str, TokenType]
     _simple_operators: dict[str, TokenType]
     _compound_operatos: dict[str, TokenType]
+    _names: list[str]
 
     def __init__(self, text: str):
         """Creates a new Lexer to tokenize the given string.
@@ -29,6 +30,7 @@ class Lexer:
         self._keywords = {}
         self._compound_operators = {}
         self._simple_operators = {}
+        self._names = []
 
         for type in TokenType:
             keyword = type.keyword()
@@ -64,8 +66,13 @@ class Lexer:
                             return self._read_block_comment()
                         case _:
                             return Token(self._simple_operators[c], c)
+                case "[":
+                    if self._peek().isalpha():
+                        return self._read_str_literal_or_bracket(c)
+                    else:
+                        return Token(self._simple_operators[c], c)
                 case '"' | "'":
-                    return self._read_str_literal(c)
+                    return self._read_str_literal_or_bracket(c)
                 case ".":
                     if self._peek().isalpha():
                         return self._read_bool_literal_or_logical()
@@ -76,8 +83,6 @@ class Lexer:
                 case _:
                     if (kw := self._read_keyword(c)) is not None:
                         return kw
-                    elif (op := self._read_logical(c)) is not None:
-                        return op
                     elif c + (c1 := self._peek()) in self._compound_operators:
                         self._advance()
                         return Token(self._compound_operators[c + c1], c + c1)
@@ -156,45 +161,57 @@ class Lexer:
             match c.lower():
                 case "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9":
                     literal += c
+                    self._advance()
                 case "x":
                     if literal == "0":
                         literal += c
                         hexnum = True
+                        self._advance()
                     else:
-                        raise SyntaxError(f"Unterminated hexadecimal literal '{literal + c}'.")
+                        raise SyntaxError(
+                            f"Unterminated hexadecimal literal '{literal + c}'."
+                        )
                 case "a" | "b" | "c" | "d" | "e" | "f":
                     if hexnum:
                         literal += c
+                        self._advance()
                     else:
                         raise SyntaxError(f"Invalid numeric literal '{literal + c}'.")
                 case ".":
                     if not dotfound:
                         literal += c
                         dotfound = True
+                        self._advance()
                     else:
-                        raise SyntaxError(f"Second decimal point found in literal '{literal + c}'.")
+                        raise SyntaxError(
+                            f"Second decimal point found in literal '{literal + c}'."
+                        )
                 case "\0":
                     return Token(TokenType.NUM_LITERAL, literal)
-
-            self._advance()
+                case _:
+                    return Token(TokenType.NUM_LITERAL, literal)
 
         return Token(TokenType.NUM_LITERAL, literal)
 
-    def _read_str_literal(self, c: str) -> Token:
+    def _read_str_literal_or_bracket(self, c: str) -> Token:
+        start_index = self._index
         literal = c
-        endquote = c
+        endquote = "]" if c == "[" else c
 
         while (c := self._peek()) != endquote:
             match c:
                 case "\0":
                     if len(literal) > 1 and literal[-1:] == endquote:
-                        return Token(TokenType.STR_LITERAL, literal + self._advance())
-
+                        break
                     raise SyntaxError(f"Unterminated string literal '{literal}'.")
                 case _:
                     literal += c
 
             self._advance()
+
+        if endquote == "]" and literal[1:] in self._names:
+            self._index = start_index
+            return Token(TokenType.LEFT_BRACKET, "[")
 
         return Token(TokenType.STR_LITERAL, literal + self._advance())
 
@@ -210,27 +227,17 @@ class Lexer:
         self._index = start_index
         return None
 
-    def _read_logical(self, op: str) -> Token | None:
-        if op != ".":
-            return None
-
-        while (c := self._advance()) != ".":
-            op += c
-        op += c  # Final '.'.
-
-        if op.lower() not in self._compound_operators:
-            raise SyntaxError(f"Unterminated logical operator '{op}'.")
-
-        return Token(self._compound_operators[op.lower()], op)
-
     def _read_name(self) -> Token:
         start = self._index - 1
         while self._index < len(self._text):
             if not self._text[self._index].isalpha():
                 break
-            self._index += 1
+            self._advance()
 
         name = self._text[start : self._index]
+
+        self._names.append(name)
+
         return Token(TokenType.NAME, name)
 
     def _peek(self) -> str:

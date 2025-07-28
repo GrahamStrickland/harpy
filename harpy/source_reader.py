@@ -39,7 +39,7 @@ class SourceReader:
 
         if expected is not None and token.get_type() != expected:
             raise RuntimeError(
-                f"Expected token type {expected.get_type()} and found '{token.get_type()}'"
+                f"Expected token type '{expected.name}' and found '{token.get_type().name}'"
             )
 
         return self._read.popleft()

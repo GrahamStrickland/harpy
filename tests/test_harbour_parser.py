@@ -31,6 +31,28 @@ class TestHarbourParser:
             "procedure a(b, c, d)\nlocal (c := b)\nreturn",
         )
 
+    def test__local_decln_stmt_indexing(self):
+        self._test(
+            "function a(b)\n\n    local c := b[1]\n\nreturn c",
+            "function a(b)\nlocal (c := b[1])\nreturn c",
+        )
+        self._test(
+            "function a(b)\n\n    local c := b['key']\n\nreturn c",
+            "function a(b)\nlocal (c := b['key'])\nreturn c",
+        )
+        self._test(
+            "function a(b)\n\n    local c := b[[key]]\n\nreturn c",
+            "function a(b)\nlocal (c := b[[key]])\nreturn c",
+        )
+        self._test(
+            "function a()\n\n    local b := [hello]\n\nreturn b",
+            "function a()\nlocal (b := [hello])\nreturn b",
+        )
+        self._test(
+            "function a(b)\n\n    local c := b[1,2]\n\nreturn c",
+            "function a(b)\nlocal (c := b[1, 2])\nreturn c",
+        )
+
     def test__statics(self):
         self._test(
             "static a := b",

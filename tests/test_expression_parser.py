@@ -58,6 +58,11 @@ class TestExpressionParser:
         self._test("a ^ (b + c)", "(a ^ (b + c))")
         self._test("(!a)", "(!a)")
 
+    def test_literals(self):
+        self._test(".t.", ".t.")
+        self._test("123", "123")
+        self._test("'hello'", "'hello'")
+
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected
         pretty-printed result.

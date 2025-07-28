@@ -86,12 +86,14 @@ class HarbourParser(Parser):
         self._reader.consume(TokenType.RETURN)
         retval = self._expression_parser.parse()
 
-        return FunctionStatement(name=name, params=params, body=body, retval=retval, static=static)
+        return FunctionStatement(
+            name=name, params=params, body=body, retval=retval, static=static
+        )
 
     def _procedure_defn(self, static: bool = False) -> ProcedureStatement:
         if static:
             _ = self._reader.consume(TokenType.PROCEDURE)
-            
+
         name = self._reader.consume(TokenType.NAME)
 
         _ = self._reader.consume(TokenType.LEFT_PAREN)

@@ -2,6 +2,7 @@ from .assign_parselet import AssignParselet
 from .binary_operator_parselet import BinaryOperatorParselet
 from .call_parselet import CallParselet
 from .group_parselet import GroupParselet
+from .index_parselet import IndexParselet
 from .infix_parselet import InfixParselet
 from .name_parselet import NameParselet
 from .postfix_operator_parselet import PostfixOperatorParselet
@@ -13,6 +14,7 @@ __all__ = [
     "BinaryOperatorParselet",
     "CallParselet",
     "GroupParselet",
+    "IndexParselet",
     "InfixParselet",
     "NameParselet",
     "PostfixOperatorParselet",

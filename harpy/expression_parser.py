@@ -1,10 +1,10 @@
 from typing import override
 
-from .expressions import Expression
+from .expressions import Expression, LiteralExpression
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
-                        GroupParselet, InfixParselet, NameParselet,
-                        PostfixOperatorParselet, PrefixOperatorParselet,
-                        PrefixParselet)
+                        GroupParselet, IndexParselet, InfixParselet,
+                        NameParselet, PostfixOperatorParselet,
+                        PrefixOperatorParselet, PrefixParselet)
 from .parser import Parser
 from .precedence import Precedence
 from .source_reader import SourceReader
@@ -33,6 +33,7 @@ class ExpressionParser(Parser):
         self.register(token=TokenType.ASSIGN, parselet=AssignParselet())
         self.register(token=TokenType.LEFT_PAREN, parselet=GroupParselet())
         self.register(token=TokenType.LEFT_PAREN, parselet=CallParselet())
+        self.register(token=TokenType.LEFT_BRACKET, parselet=IndexParselet())
 
         # Register the simple operator parselets.
         self.prefix(token=TokenType.PLUS, precedence=Precedence.PREFIX)
@@ -114,7 +115,9 @@ class ExpressionParser(Parser):
     def parse(self, precedence: int = 0) -> Expression | None:
         token = self._reader.look_ahead(0)
 
-        if not token.get_type().keyword():
+        if token.get_type().literal() is not None:
+            return LiteralExpression(literal=self._reader.consume())
+        elif token.get_type().keyword() is None:
             token = self._reader.consume()
             prefix = self._prefix_parselets[token.get_type()]
 

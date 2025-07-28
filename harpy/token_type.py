@@ -5,72 +5,87 @@ class TokenType(Enum):
     # Punctuation and grouping
     LEFT_PAREN = 0
     RIGHT_PAREN = 1
-    COMMA = 2
+    LEFT_BRACKET = 2
+    RIGHT_BRACKET = 3
+    LEFT_BRACE = 4
+    RIGHT_BRACE = 5
+    COMMA = 6
 
     # Assignment operators
-    ASSIGN = 3
-    PLUSEQ = 4
-    MINUSEQ = 5
-    MULTEQ = 6
-    DIVEQ = 7
-    MODEQ = 8
-    EXPEQ = 9
+    ASSIGN = 7
+    PLUSEQ = 8
+    MINUSEQ = 9
+    MULTEQ = 10
+    DIVEQ = 11
+    MODEQ = 12
+    EXPEQ = 13
 
     # Logical operators
-    OR = 10
-    AND = 11
-    NOT = 12
+    OR = 14
+    AND = 15
+    NOT = 16
 
     # Relational operators
-    EQ1 = 13
-    EQ2 = 14
-    NE1 = 15
-    NE2 = 16
-    LE = 17
-    GE = 18
-    LT = 19
-    GT = 20
+    EQ1 = 17
+    EQ2 = 18
+    NE1 = 19
+    NE2 = 20
+    LE = 21
+    GE = 22
+    LT = 23
+    GT = 24
 
     # Arithmetic operators
-    DOLLAR = 21
-    PLUS = 22
-    MINUS = 23
-    ASTERISK = 24
-    SLASH = 25
-    PERCENT = 26
-    CARET = 27
-    QUESTION = 28
-    COLON = 29
+    DOLLAR = 25
+    PLUS = 26
+    MINUS = 27
+    ASTERISK = 28
+    SLASH = 29
+    PERCENT = 30
+    CARET = 31
+    QUESTION = 32
+    COLON = 33
 
     # Keywords
-    FUNCTION = 30
-    PROCEDURE = 31
-    RETURN = 32
-    NIL = 33
-    LOCAL = 34
-    STATIC = 35
-    IIF = 36
-    IF = 37
-    ELSE = 38
-    ELSEIF = 39
-    END = 40
-    ENDIF = 41
-    ENDERR = 42
-    
+    FUNCTION = 34
+    PROCEDURE = 35
+    RETURN = 36
+    NIL = 37
+    LOCAL = 38
+    STATIC = 39
+    IIF = 40
+    IF = 41
+    ELSE = 42
+    ELSEIF = 43
+    END = 44
+    ENDIF = 45
+    ENDERR = 46
+
     # Literals
-    STR_LITERAL = 43
-    NUM_LITERAL = 44
-    BOOL_LITERAL = 45
+    STR_LITERAL = 47
+    NUM_LITERAL = 48
+    BOOL_LITERAL = 49
 
     # Identifiers
-    NAME = 43
+    NAME = 50
 
     # Comments
-    BLOCK_COMMENT = 44
-    LINE_COMMENT = 45
+    BLOCK_COMMENT = 51
+    LINE_COMMENT = 52
 
     # Spacing
-    EOF = 46
+    EOF = 53
+
+    def literal(self) -> str | None:
+        match self:
+            case TokenType.BOOL_LITERAL:
+                return "bool"
+            case TokenType.NUM_LITERAL:
+                return "num"
+            case TokenType.STR_LITERAL:
+                return "str"
+            case _:
+                return None
 
     def keyword(self) -> str | None:
         match self:
@@ -138,6 +153,14 @@ class TokenType(Enum):
                 return "("
             case TokenType.RIGHT_PAREN:
                 return ")"
+            case TokenType.LEFT_BRACKET:
+                return "["
+            case TokenType.RIGHT_BRACKET:
+                return "]"
+            case TokenType.LEFT_BRACE:
+                return "{"
+            case TokenType.RIGHT_BRACE:
+                return "}"
             case TokenType.COMMA:
                 return ","
             case TokenType.EQ2:
