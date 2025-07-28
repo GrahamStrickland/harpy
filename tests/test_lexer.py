@@ -19,6 +19,84 @@ class TestLexer:
 
         assert str(obs) == str(expected)
 
+    def test_bool_literal(self):
+        obs = self._get_obs(source=".t.")
+        expected = [Token(TokenType.BOOL_LITERAL, ".t.")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source=".F.")
+        expected = [Token(TokenType.BOOL_LITERAL, ".F.")]
+
+        assert str(obs) == str(expected)
+
+    def test_num_literal(self):
+        obs = self._get_obs(source="0")
+        expected = [Token(TokenType.NUM_LITERAL, "0")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="123")
+        expected = [Token(TokenType.NUM_LITERAL, "123")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="50000")
+        expected = [Token(TokenType.NUM_LITERAL, "50000")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="12000.123")
+        expected = [Token(TokenType.NUM_LITERAL, "12000.123")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="0xABAB")
+        expected = [Token(TokenType.NUM_LITERAL, "0xABAB")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source=".12")
+        expected = [Token(TokenType.NUM_LITERAL, ".12")]
+
+        assert str(obs) == str(expected)
+
+        with pytest.raises(SyntaxError, match="Unterminated hexadecimal literal '1x'"):
+            _ = self._get_obs(source="1x001")
+
+        with pytest.raises(SyntaxError, match="Invalid numeric literal '123a'"):
+            _ = self._get_obs(source="123a")
+
+        with pytest.raises(SyntaxError, match="Second decimal point found in literal '1.1.'."):
+            _ = self._get_obs(source="1.1.1")
+
+    def test_str_literal(self):
+        obs = self._get_obs(source="'This is a string'")
+        expected = [Token(TokenType.STR_LITERAL, "'This is a string'")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source='"This is also a string"')
+        expected = [Token(TokenType.STR_LITERAL, '"This is also a string"')]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source='""')
+        expected = [Token(TokenType.STR_LITERAL, '""')]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="''")
+        expected = [Token(TokenType.STR_LITERAL, "''")]
+
+        assert str(obs) == str(expected)
+
+        with pytest.raises(SyntaxError):
+            _ = self._get_obs(source="'This string does not finish")
+
+        with pytest.raises(SyntaxError):
+            _ = self._get_obs(source="'")
+
     def test_assign_vs_comma(self):
         obs = self._get_obs(source="a := b")
         expected = [

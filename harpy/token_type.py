@@ -56,6 +56,11 @@ class TokenType(Enum):
     END = 40
     ENDIF = 41
     ENDERR = 42
+    
+    # Literals
+    STR_LITERAL = 43
+    NUM_LITERAL = 44
+    BOOL_LITERAL = 45
 
     # Identifiers
     NAME = 43

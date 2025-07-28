@@ -64,6 +64,15 @@ class Lexer:
                             return self._read_block_comment()
                         case _:
                             return Token(self._simple_operators[c], c)
+                case '"' | "'":
+                    return self._read_str_literal(c)
+                case ".":
+                    if self._peek().isalpha():
+                        return self._read_bool_literal_or_logical()
+                    else:
+                        return self._read_num_literal(c)
+                case "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9":
+                    return self._read_num_literal(c)
                 case _:
                     if (kw := self._read_keyword(c)) is not None:
                         return kw
@@ -119,6 +128,75 @@ class Lexer:
                     raise SyntaxError("Unterminated block comment.")
                 case _:
                     pass  # Do nothing, keep advancing.
+
+    def _read_bool_literal_or_logical(self) -> Token:
+        literal = "."
+
+        while (c := self._advance()) not in (".", "\0"):
+            literal += c
+
+        literal += "."
+
+        match literal.lower():
+            case ".t." | ".f.":
+                return Token(TokenType.BOOL_LITERAL, literal)
+            case ".or.":
+                return Token(TokenType.OR, literal)
+            case ".and.":
+                return Token(TokenType.AND, literal)
+            case _:
+                raise SyntaxError(f"Unable to read token '{literal}'.")
+
+    def _read_num_literal(self, c: str) -> Token:
+        literal = c
+        dotfound = False
+        hexnum = False
+
+        while not (c := self._peek()).isspace():
+            match c.lower():
+                case "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9":
+                    literal += c
+                case "x":
+                    if literal == "0":
+                        literal += c
+                        hexnum = True
+                    else:
+                        raise SyntaxError(f"Unterminated hexadecimal literal '{literal + c}'.")
+                case "a" | "b" | "c" | "d" | "e" | "f":
+                    if hexnum:
+                        literal += c
+                    else:
+                        raise SyntaxError(f"Invalid numeric literal '{literal + c}'.")
+                case ".":
+                    if not dotfound:
+                        literal += c
+                        dotfound = True
+                    else:
+                        raise SyntaxError(f"Second decimal point found in literal '{literal + c}'.")
+                case "\0":
+                    return Token(TokenType.NUM_LITERAL, literal)
+
+            self._advance()
+
+        return Token(TokenType.NUM_LITERAL, literal)
+
+    def _read_str_literal(self, c: str) -> Token:
+        literal = c
+        endquote = c
+
+        while (c := self._peek()) != endquote:
+            match c:
+                case "\0":
+                    if len(literal) > 1 and literal[-1:] == endquote:
+                        return Token(TokenType.STR_LITERAL, literal + self._advance())
+
+                    raise SyntaxError(f"Unterminated string literal '{literal}'.")
+                case _:
+                    literal += c
+
+            self._advance()
+
+        return Token(TokenType.STR_LITERAL, literal + self._advance())
 
     def _read_keyword(self, kw: str) -> Token | None:
         start_index = self._index
