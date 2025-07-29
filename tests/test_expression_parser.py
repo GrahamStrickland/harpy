@@ -10,10 +10,12 @@ class TestExpressionParser:
         self._test("a(b, c)", "a(b, c)")
         self._test("a(b)(c)", "a(b)(c)")
         self._test("a(b) + c(d)", "(a(b) + c(d))")
+        self._test("a(@b) + c(@d)", "(a((@b)) + c((@d)))")
 
     def test_unary_precedence(self):
         self._test("!-+a", "(!(-(+a)))")
         self._test("!!!a", "(!(!(!a)))")
+        self._test("@a", "(@a)")
 
     def test_unary_binary_precedence(self):
         self._test("-a * b", "((-a) * b)")

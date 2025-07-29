@@ -41,6 +41,7 @@ class ExpressionParser(Parser):
         self.prefix(token=TokenType.PLUS, precedence=Precedence.PREFIX)
         self.prefix(token=TokenType.MINUS, precedence=Precedence.PREFIX)
         self.prefix(token=TokenType.NOT, precedence=Precedence.PREFIX)
+        self.prefix(token=TokenType.AT, precedence=Precedence.PREFIX)
 
         self.infix_right(token=TokenType.PLUSEQ, precedence=Precedence.SUMEQ)
         self.infix_right(token=TokenType.MINUSEQ, precedence=Precedence.SUMEQ)

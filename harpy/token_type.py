@@ -36,45 +36,48 @@ class TokenType(Enum):
     GT = 24
 
     # Arithmetic operators
-    DOLLAR = 25
-    PLUS = 26
-    MINUS = 27
-    ASTERISK = 28
-    SLASH = 29
-    PERCENT = 30
-    CARET = 31
+    PLUS = 25
+    MINUS = 26
+    ASTERISK = 27
+    SLASH = 28
+    PERCENT = 29
+    CARET = 30
+
+    # Miscellaneous operators
+    DOLLAR = 31
     QUESTION = 32
     COLON = 33
+    AT = 34
 
     # Keywords
-    FUNCTION = 34
-    PROCEDURE = 35
-    RETURN = 36
-    NIL = 37
-    LOCAL = 38
-    STATIC = 39
-    IIF = 40
-    IF = 41
-    ELSE = 42
-    ELSEIF = 43
-    END = 44
-    ENDIF = 45
-    ENDERR = 46
+    FUNCTION = 35
+    PROCEDURE = 36
+    RETURN = 37
+    NIL = 38
+    LOCAL = 39
+    STATIC = 40
+    IIF = 41
+    IF = 42
+    ELSE = 43
+    ELSEIF = 44
+    END = 45
+    ENDIF = 46
+    ENDERR = 47
 
     # Literals
-    STR_LITERAL = 47
-    NUM_LITERAL = 48
-    BOOL_LITERAL = 49
+    STR_LITERAL = 48
+    NUM_LITERAL = 49
+    BOOL_LITERAL = 50
 
     # Identifiers
-    NAME = 50
+    NAME = 51
 
     # Comments
-    BLOCK_COMMENT = 51
-    LINE_COMMENT = 52
+    BLOCK_COMMENT = 52
+    LINE_COMMENT = 53
 
     # Spacing
-    EOF = 53
+    EOF = 54
 
     def literal(self) -> str | None:
         match self:
@@ -191,5 +194,7 @@ class TokenType(Enum):
                 return "?"
             case TokenType.COLON:
                 return ":"
+            case TokenType.AT:
+                return "@"
             case _:
                 return None
