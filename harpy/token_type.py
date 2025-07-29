@@ -72,12 +72,64 @@ class TokenType(Enum):
     # Identifiers
     NAME = 51
 
+    # Preprocessor directives
+    INCLUDE_DIRECTIVE = 52
+    DEFINE_DIRECTIVE = 53
+    IFDEF_DIRECTIVE = 54
+    IFNDEF_DIRECTIVE = 55
+    ELIF_DIRECTIVE = 56
+    ELSE_DIRECTIVE = 57
+    ENDIF_DIRECTIVE = 58
+    UNDEF_DIRECTIVE = 59
+    PRAGMA_DIRECTIVE = 60
+    COMMAND_DIRECTIVE = 61
+    XCOMMAND_DIRECTIVE = 62
+    TRANSLATE_DIRECTIVE = 63
+    XTRANSLATE_DIRECTIVE = 64
+    ERROR_DIRECTIVE = 65
+    STDOUT_DIRECTIVE = 66
+
     # Comments
-    BLOCK_COMMENT = 52
-    LINE_COMMENT = 53
+    BLOCK_COMMENT = 67
+    LINE_COMMENT = 68
 
     # Spacing
-    EOF = 54
+    EOF = 69
+
+    def preprocessor_directive(self) -> str | None:
+        match self:
+            case TokenType.INCLUDE_DIRECTIVE:
+                return "include"
+            case TokenType.DEFINE_DIRECTIVE:
+                return "define"
+            case TokenType.IFDEF_DIRECTIVE:
+                return "ifdef"
+            case TokenType.IFNDEF_DIRECTIVE:
+                return "ifndef"
+            case TokenType.ELIF_DIRECTIVE:
+                return "elif"
+            case TokenType.ELSE_DIRECTIVE:
+                return "else"
+            case TokenType.ENDIF_DIRECTIVE:
+                return "endif"
+            case TokenType.UNDEF_DIRECTIVE:
+                return "undef"
+            case TokenType.PRAGMA_DIRECTIVE:
+                return "pragma"
+            case TokenType.COMMAND_DIRECTIVE:
+                return "command"
+            case TokenType.XCOMMAND_DIRECTIVE:
+                return "xcommand"
+            case TokenType.TRANSLATE_DIRECTIVE:
+                return "translate"
+            case TokenType.XTRANSLATE_DIRECTIVE:
+                return "xtranslate"
+            case TokenType.ERROR_DIRECTIVE:
+                return "error"
+            case TokenType.STDOUT_DIRECTIVE:
+                return "stdout"
+            case _:
+                return None
 
     def literal(self) -> str | None:
         match self:

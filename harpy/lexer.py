@@ -13,6 +13,7 @@ class Lexer:
 
     _index: int
     _text: str
+    _directives: dict[str, TokenType]
     _keywords: dict[str, TokenType]
     _simple_operators: dict[str, TokenType]
     _compound_operatos: dict[str, TokenType]
@@ -27,12 +28,18 @@ class Lexer:
 
         self._index = 0
         self._text = text
+        self._directives = {}
         self._keywords = {}
         self._compound_operators = {}
         self._simple_operators = {}
         self._names = []
 
         for type in TokenType:
+            directive = type.preprocessor_directive()
+            if directive is not None:
+                self._directives[directive] = type
+                continue
+
             keyword = type.keyword()
             if keyword is not None:
                 self._keywords[keyword] = type
@@ -53,10 +60,11 @@ class Lexer:
 
     def __next__(self):
         while self._index < len(self._text):
-            c = self._text[self._index]
-            self._index += 1
+            c = self._advance() 
 
             match c:
+                case "#":
+                    return self._read_preprocessor_directive()
                 case "/":
                     # Potential comments.
                     match self._peek():
@@ -99,8 +107,27 @@ class Lexer:
         # parser's lookahead doesn't have to worry about running out of tokens.
         return Token(TokenType.EOF, "\0")
 
+    def _read_preprocessor_directive(self) -> Token:
+        start_index = self._index - 1
+        directive = ""
+
+        while (c := self._advance()).isalpha():
+            directive += c
+
+        if directive.lower() in self._directives:
+            while True:
+                match self._peek():
+                    case "\n" | "\r" | "\0":
+                       return Token(self._directives[directive.lower()], self._text[start_index : self._index])
+                    case _:
+                        self._advance()
+
+        self._index = start_index + 1
+
+        return Token(TokenType.NE1, "#")
+
     def _read_line_comment(self) -> Token:
-        start = self._index - 1
+        start_index = self._index - 1
 
         # Consume second '/'.
         self._advance()
@@ -109,7 +136,7 @@ class Lexer:
             match self._peek():
                 case "\n" | "\r" | "\0":
                     return Token(
-                        TokenType.LINE_COMMENT, self._text[start : self._index]
+                        TokenType.LINE_COMMENT, self._text[start_index : self._index]
                     )
                 case _:
                     self._advance()

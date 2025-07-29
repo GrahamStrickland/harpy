@@ -19,6 +19,22 @@ class TestLexer:
 
         assert str(obs) == str(expected)
 
+    def test_preprocessor_directive(self):
+        obs = self._get_obs(source="#define slBool .f.")
+        expected = [Token(TokenType.DEFINE_DIRECTIVE, "#define slBool .f.")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="#ifdef SOMETHING")
+        expected = [Token(TokenType.IFDEF_DIRECTIVE, "#ifdef SOMETHING")]
+
+        assert str(obs) == str(expected)
+
+        obs = self._get_obs(source="#pragma -ko+")
+        expected = [Token(TokenType.PRAGMA_DIRECTIVE, "#pragma -ko+")]
+
+        assert str(obs) == str(expected)
+
     def test_bool_literal(self):
         obs = self._get_obs(source=".t.")
         expected = [Token(TokenType.BOOL_LITERAL, ".t.")]
