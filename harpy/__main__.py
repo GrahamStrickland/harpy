@@ -16,16 +16,16 @@ def main():
     )
     args = argparse.parse_args()
 
+    base, ext = path.splitext(args.src)
+    if ext not in ("prg", "ch"):
+        raise RuntimeError(f"Invalid source path '{args.src}' with extension '{ext}'")
+
     lexer = Lexer(text=args.src)
     parser = HarbourParser(lexer=lexer)
 
     result = parser.parse()
-    base, ext = path.splitext(args.src)
-    if ext == "prg" or "ch":
-        with open(path.join(base, "py"), "w", encoding="utf-8") as outfile:
-            outfile.write(result)
-    else:
-        raise RuntimeError(f"Invalid source path '{args.src}' with extension '{ext}'")
+    with open(path.join(base, "py"), "w", encoding="utf-8") as outfile:
+        outfile.write("\n".join(result))
 
 
 if __name__ == "__main__":

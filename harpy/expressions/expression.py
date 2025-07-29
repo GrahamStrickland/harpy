@@ -1,10 +1,5 @@
-from abc import ABC, abstractmethod
+from ..ast_node import ASTNode
 
 
-class Expression(ABC):
+class Expression(ASTNode):
     """Interface for all expression AST node classes."""
-
-    @abstractmethod
-    def print(self) -> str:
-        """Pretty-print the expression to a string."""
-        pass

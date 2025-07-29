@@ -92,9 +92,9 @@ class TestHarbourParser:
         lexer = Lexer(text=source)
         parser = HarbourParser(lexer=lexer)
 
-        result = parser.parse()
+        root = parser.parse()
         actual = ""
-        for stmt in result:
+        for stmt in root:
             actual += stmt.print()
 
         assert actual == expected

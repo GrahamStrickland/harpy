@@ -5,6 +5,7 @@ from .expressions import AssignExpression
 from .lexer import Lexer
 from .parser import Parser
 from .source_reader import SourceReader
+from .source_root import SourceRoot 
 from .statements import (CallStatement, FunctionStatement, IfStatement,
                          LocalVariableDeclaration, ProcedureStatement,
                          Statement, StaticVariableDeclaration)
@@ -25,11 +26,12 @@ class HarbourParser(Parser):
         self._statements = []
 
     @override
-    def parse(self) -> list[Statement]:
+    def parse(self) -> SourceRoot:
+        source_root = SourceRoot()
         while (stmt := self.statement()) is not None:
-            self._statements.append(stmt)
+            source_root.add(node=stmt)
 
-        return self._statements
+        return source_root
 
     def statement(self) -> Statement | None:
         for token in self._reader:
