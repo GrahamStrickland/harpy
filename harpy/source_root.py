@@ -19,5 +19,4 @@ class SourceRoot:
         if len(self._nodes) == 0:
             raise StopIteration("No more nodes in source root")
 
-        return self._nodes.pop(0) 
-
+        return self._nodes.pop(0)

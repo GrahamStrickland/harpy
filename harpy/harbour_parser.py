@@ -5,7 +5,7 @@ from .expressions import AssignExpression
 from .lexer import Lexer
 from .parser import Parser
 from .source_reader import SourceReader
-from .source_root import SourceRoot 
+from .source_root import SourceRoot
 from .statements import (CallStatement, FunctionStatement, IfStatement,
                          LocalVariableDeclaration, ProcedureStatement,
                          Statement, StaticVariableDeclaration)

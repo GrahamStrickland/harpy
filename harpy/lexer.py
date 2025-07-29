@@ -60,7 +60,7 @@ class Lexer:
 
     def __next__(self):
         while self._index < len(self._text):
-            c = self._advance() 
+            c = self._advance()
 
             match c:
                 case "#":
@@ -118,7 +118,10 @@ class Lexer:
             while True:
                 match self._peek():
                     case "\n" | "\r" | "\0":
-                       return Token(self._directives[directive.lower()], self._text[start_index : self._index])
+                        return Token(
+                            self._directives[directive.lower()],
+                            self._text[start_index : self._index],
+                        )
                     case _:
                         self._advance()
 
