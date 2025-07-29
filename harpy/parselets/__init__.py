@@ -5,6 +5,7 @@ from .group_parselet import GroupParselet
 from .index_parselet import IndexParselet
 from .infix_parselet import InfixParselet
 from .name_parselet import NameParselet
+from .object_access_parselet import ObjectAccessParselet
 from .postfix_operator_parselet import PostfixOperatorParselet
 from .prefix_operator_parselet import PrefixOperatorParselet
 from .prefix_parselet import PrefixParselet
@@ -17,6 +18,7 @@ __all__ = [
     "IndexParselet",
     "InfixParselet",
     "NameParselet",
+    "ObjectAccessParselet",
     "PostfixOperatorParselet",
     "PrefixOperatorParselet",
     "PrefixParselet",

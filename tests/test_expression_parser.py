@@ -63,6 +63,16 @@ class TestExpressionParser:
         self._test("123", "123")
         self._test("'hello'", "'hello'")
 
+    def test_object_access(self):
+        self._test("a:b", "a:b")
+        self._test("a:b:c", "a:b:c")
+        self._test("a:b()", "a:b()")
+        self._test("a:b(c)", "a:b(c)")
+        self._test("a:b():c", "a:b():c")
+        self._test("a:b()[1]", "a:b()[1]")
+        self._test("a:b()['key']", "a:b()['key']")
+        self._test("a:b()[1 + c]", "a:b()[(1 + c)]")
+
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected
         pretty-printed result.

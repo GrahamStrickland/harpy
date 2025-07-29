@@ -3,8 +3,9 @@ from typing import override
 from .expressions import Expression, LiteralExpression
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
                         GroupParselet, IndexParselet, InfixParselet,
-                        NameParselet, PostfixOperatorParselet,
-                        PrefixOperatorParselet, PrefixParselet)
+                        NameParselet, ObjectAccessParselet,
+                        PostfixOperatorParselet, PrefixOperatorParselet,
+                        PrefixParselet)
 from .parser import Parser
 from .precedence import Precedence
 from .source_reader import SourceReader
@@ -34,6 +35,7 @@ class ExpressionParser(Parser):
         self.register(token=TokenType.LEFT_PAREN, parselet=GroupParselet())
         self.register(token=TokenType.LEFT_PAREN, parselet=CallParselet())
         self.register(token=TokenType.LEFT_BRACKET, parselet=IndexParselet())
+        self.register(token=TokenType.COLON, parselet=ObjectAccessParselet())
 
         # Register the simple operator parselets.
         self.prefix(token=TokenType.PLUS, precedence=Precedence.PREFIX)
@@ -115,21 +117,25 @@ class ExpressionParser(Parser):
     def parse(self, precedence: int = 0) -> Expression | None:
         token = self._reader.look_ahead(0)
 
-        if token.get_type().literal() is not None:
-            return LiteralExpression(literal=self._reader.consume())
-        elif token.get_type().keyword() is None:
+        if token.get_type().keyword() is None:
             token = self._reader.consume()
-            prefix = self._prefix_parselets[token.get_type()]
+            if token.get_type().literal() is not None:
+                left = LiteralExpression(literal=token)
+            else:
+                prefix = self._prefix_parselets[token.get_type()]
 
-            if prefix is None:
-                raise SyntaxError(f"Could not parse '{token.get_text()}'.")
+                if prefix is None:
+                    raise SyntaxError(f"Could not parse '{token.get_text()}'.")
 
-            left = prefix.parse(parser=self, token=token)
+                left = prefix.parse(parser=self, token=token)
 
             while precedence < self._get_precedence():
                 token = self._reader.consume()
-                infix = self._infix_parselets[token.get_type()]
-                left = infix.parse(parser=self, left=left, token=token)
+                if token.get_type().literal() is not None:
+                    left = LiteralExpression(literal=self._reader.consume())
+                else:
+                    infix = self._infix_parselets[token.get_type()]
+                    left = infix.parse(parser=self, left=left, token=token)
 
             return left
 
