@@ -28,7 +28,7 @@ class SourceReader:
         else:
             token = self._read[0]
 
-        return token.get_type() == expected
+        return token.type == expected
 
     def consume(self, expected: TokenType | None = None) -> Token:
         # Make sure we've read the token.
@@ -37,9 +37,9 @@ class SourceReader:
         else:
             token = self._read[0]
 
-        if expected is not None and token.get_type() != expected:
+        if expected is not None and token.type != expected:
             raise RuntimeError(
-                f"Expected token type '{expected.name}' and found '{token.get_type().name}'"
+                f"Expected token type '{expected.name}' and found '{token.type.name}'"
             )
 
         return self._read.popleft()

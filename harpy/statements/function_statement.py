@@ -32,9 +32,9 @@ class FunctionStatement(Statement):
         params = ""
         for i, param in enumerate(self._params):
             if i != len(self._params) - 1:
-                params += param.get_text() + ", "
+                params += param.text + ", "
             else:
-                params += param.get_text()
+                params += param.text
 
         body = "\n".join([stmt.print() for stmt in self._body])
 

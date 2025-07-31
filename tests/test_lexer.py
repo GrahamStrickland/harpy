@@ -9,71 +9,93 @@ class TestLexer:
     def test__next__(self):
         obs = self._get_obs(source="from + offset(time)")
         expected = [
-            Token(TokenType.NAME, "from"),
-            Token(TokenType.PLUS, "+"),
-            Token(TokenType.NAME, "offset"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.NAME, "time"),
-            Token(TokenType.RIGHT_PAREN, ")"),
+            Token(type=TokenType.NAME, text="from", line=1, position=4),
+            Token(type=TokenType.PLUS, text="+", line=1, position=6),
+            Token(type=TokenType.NAME, text="offset", line=1, position=13),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=1, position=14),
+            Token(type=TokenType.NAME, text="time", line=1, position=18),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=1, position=19),
         ]
 
         assert str(obs) == str(expected)
 
     def test_preprocessor_directive(self):
         obs = self._get_obs(source="#define slBool .f.")
-        expected = [Token(TokenType.DEFINE_DIRECTIVE, "#define slBool .f.")]
+        expected = [
+            Token(
+                type=TokenType.DEFINE_DIRECTIVE,
+                text="#define slBool .f.",
+                line=1,
+                position=18,
+            )
+        ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="#ifdef SOMETHING")
-        expected = [Token(TokenType.IFDEF_DIRECTIVE, "#ifdef SOMETHING")]
+        expected = [
+            Token(
+                type=TokenType.IFDEF_DIRECTIVE,
+                text="#ifdef SOMETHING",
+                line=1,
+                position=16,
+            )
+        ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="#pragma -ko+")
-        expected = [Token(TokenType.PRAGMA_DIRECTIVE, "#pragma -ko+")]
+        expected = [
+            Token(
+                type=TokenType.PRAGMA_DIRECTIVE, text="#pragma -ko+", line=1, position=12
+            )
+        ]
 
         assert str(obs) == str(expected)
 
     def test_bool_literal(self):
         obs = self._get_obs(source=".t.")
-        expected = [Token(TokenType.BOOL_LITERAL, ".t.")]
+        expected = [Token(type=TokenType.BOOL_LITERAL, text=".t.", line=1, position=3)]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source=".F.")
-        expected = [Token(TokenType.BOOL_LITERAL, ".F.")]
+        expected = [Token(type=TokenType.BOOL_LITERAL, text=".F.", line=1, position=3)]
 
         assert str(obs) == str(expected)
 
     def test_num_literal(self):
         obs = self._get_obs(source="0")
-        expected = [Token(TokenType.NUM_LITERAL, "0")]
+        expected = [Token(type=TokenType.NUM_LITERAL, text="0", line=1, position=1)]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="123")
-        expected = [Token(TokenType.NUM_LITERAL, "123")]
+        expected = [Token(type=TokenType.NUM_LITERAL, text="123", line=1, position=3)]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="50000")
-        expected = [Token(TokenType.NUM_LITERAL, "50000")]
+        expected = [Token(type=TokenType.NUM_LITERAL, text="50000", line=1, position=5)]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="12000.123")
-        expected = [Token(TokenType.NUM_LITERAL, "12000.123")]
+        expected = [
+            Token(type=TokenType.NUM_LITERAL, text="12000.123", line=1, position=9)
+        ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="0xABAB")
-        expected = [Token(TokenType.NUM_LITERAL, "0xABAB")]
+        expected = [
+            Token(type=TokenType.NUM_LITERAL, text="0xABAB", line=1, position=6)
+        ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source=".12")
-        expected = [Token(TokenType.NUM_LITERAL, ".12")]
+        expected = [Token(type=TokenType.NUM_LITERAL, text=".12", line=1, position=3)]
 
         assert str(obs) == str(expected)
 
@@ -90,56 +112,74 @@ class TestLexer:
 
     def test_str_literal(self):
         obs = self._get_obs(source="'This is a string'")
-        expected = [Token(TokenType.STR_LITERAL, "'This is a string'")]
+        expected = [
+            Token(
+                type=TokenType.STR_LITERAL,
+                text="'This is a string'",
+                line=1,
+                position=18,
+            )
+        ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source='"This is also a string"')
-        expected = [Token(TokenType.STR_LITERAL, '"This is also a string"')]
+        expected = [
+            Token(TokenType.STR_LITERAL, '"This is also a string"', line=1, position=23)
+        ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="[Also a string]")
-        expected = [Token(TokenType.STR_LITERAL, "[Also a string]")]
+        expected = [
+            Token(
+                type=TokenType.STR_LITERAL, text="[Also a string]", line=1, position=15
+            )
+        ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="['Actually a hash key']")
         expected = [
-            Token(TokenType.LEFT_BRACKET, "["),
-            Token(TokenType.STR_LITERAL, "'Actually a hash key'"),
-            Token(TokenType.RIGHT_BRACKET, "]"),
+            Token(type=TokenType.LEFT_BRACKET, text="[", line=1, position=1),
+            Token(
+                type=TokenType.STR_LITERAL,
+                text="'Actually a hash key'",
+                line=1,
+                position=22,
+            ),
+            Token(type=TokenType.RIGHT_BRACKET, text="]", line=1, position=23),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="function a(b)\n    local i := 1\nreturn b[i]")
         expected = [
-            Token(TokenType.FUNCTION, "function"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.NAME, "b"),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.LOCAL, "local"),
-            Token(TokenType.NAME, "i"),
-            Token(TokenType.ASSIGN, ":="),
-            Token(TokenType.NUM_LITERAL, "1"),
-            Token(TokenType.RETURN, "return"),
-            Token(TokenType.NAME, "b"),
-            Token(TokenType.LEFT_BRACKET, "["),
-            Token(TokenType.NAME, "i"),
-            Token(TokenType.RIGHT_BRACKET, "]"),
+            Token(type=TokenType.FUNCTION, text="function", line=1, position=8),
+            Token(type=TokenType.NAME, text="a", line=1, position=10),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=1, position=11),
+            Token(type=TokenType.NAME, text="b", line=1, position=12),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=1, position=13),
+            Token(type=TokenType.LOCAL, text="local", line=2, position=9),
+            Token(type=TokenType.NAME, text="i", line=2, position=11),
+            Token(type=TokenType.ASSIGN, text=":=", line=2, position=14),
+            Token(type=TokenType.NUM_LITERAL, text="1", line=2, position=16),
+            Token(type=TokenType.RETURN, text="return", line=3, position=6),
+            Token(type=TokenType.NAME, text="b", line=3, position=8),
+            Token(type=TokenType.LEFT_BRACKET, text="[", line=3, position=9),
+            Token(type=TokenType.NAME, text="i", line=3, position=10),
+            Token(type=TokenType.RIGHT_BRACKET, text="]", line=3, position=11),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source='""')
-        expected = [Token(TokenType.STR_LITERAL, '""')]
+        expected = [Token(TokenType.STR_LITERAL, '""', line=1, position=2)]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="''")
-        expected = [Token(TokenType.STR_LITERAL, "''")]
+        expected = [Token(type=TokenType.STR_LITERAL, text="''", line=1, position=2)]
 
         assert str(obs) == str(expected)
 
@@ -152,18 +192,18 @@ class TestLexer:
     def test_assign_vs_comma(self):
         obs = self._get_obs(source="a := b")
         expected = [
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.ASSIGN, ":="),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.NAME, text="a", line=1, position=1),
+            Token(type=TokenType.ASSIGN, text=":=", line=1, position=4),
+            Token(type=TokenType.NAME, text="b", line=1, position=6),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="a:b")
         expected = [
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.COLON, ":"),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.NAME, text="a", line=1, position=1),
+            Token(type=TokenType.COLON, text=":", line=1, position=2),
+            Token(type=TokenType.NAME, text="b", line=1, position=3),
         ]
 
         assert str(obs) == str(expected)
@@ -171,44 +211,44 @@ class TestLexer:
     def test_logical_operators(self):
         obs = self._get_obs(source="a .and. b")
         expected = [
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.AND, ".and."),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.NAME, text="a", line=1, position=1),
+            Token(type=TokenType.AND, text=".and.", line=1, position=7),
+            Token(type=TokenType.NAME, text="b", line=1, position=9),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="a .and. !b")
         expected = [
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.AND, ".and."),
-            Token(TokenType.NOT, "!"),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.NAME, text="a", line=1, position=1),
+            Token(type=TokenType.AND, text=".and.", line=1, position=7),
+            Token(type=TokenType.NOT, text="!", line=1, position=9),
+            Token(type=TokenType.NAME, text="b", line=1, position=10),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="!a .and. !b")
         expected = [
-            Token(TokenType.NOT, "!"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.AND, ".and."),
-            Token(TokenType.NOT, "!"),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.NOT, text="!", line=1, position=1),
+            Token(type=TokenType.NAME, text="a", line=1, position=2),
+            Token(type=TokenType.AND, text=".and.", line=1, position=8),
+            Token(type=TokenType.NOT, text="!", line=1, position=10),
+            Token(type=TokenType.NAME, text="b", line=1, position=11),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="!a .and. !b .or. !c")
         expected = [
-            Token(TokenType.NOT, "!"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.AND, ".and."),
-            Token(TokenType.NOT, "!"),
-            Token(TokenType.NAME, "b"),
-            Token(TokenType.OR, ".or."),
-            Token(TokenType.NOT, "!"),
-            Token(TokenType.NAME, "c"),
+            Token(type=TokenType.NOT, text="!", line=1, position=1),
+            Token(type=TokenType.NAME, text="a", line=1, position=2),
+            Token(type=TokenType.AND, text=".and.", line=1, position=8),
+            Token(type=TokenType.NOT, text="!", line=1, position=10),
+            Token(type=TokenType.NAME, text="b", line=1, position=11),
+            Token(type=TokenType.OR, text=".or.", line=1, position=16),
+            Token(type=TokenType.NOT, text="!", line=1, position=18),
+            Token(type=TokenType.NAME, text="c", line=1, position=19),
         ]
 
         assert str(obs) == str(expected)
@@ -216,31 +256,45 @@ class TestLexer:
     def test_relations(self):
         obs = self._get_obs(source="a == b")
         expected = [
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.EQ1, "=="),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.NAME, text="a", line=1, position=1),
+            Token(type=TokenType.EQ1, text="==", line=1, position=4),
+            Token(type=TokenType.NAME, text="b", line=1, position=6),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="a <= b")
         expected = [
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.LE, "<="),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.NAME, text="a", line=1, position=1),
+            Token(type=TokenType.LE, text="<=", line=1, position=4),
+            Token(type=TokenType.NAME, text="b", line=1, position=6),
         ]
 
         assert str(obs) == str(expected)
 
     def test_line_comment(self):
         obs = self._get_obs(source="// This is a line comment.")
-        expected = [Token(TokenType.LINE_COMMENT, "// This is a line comment.")]
+        expected = [
+            Token(
+                type=TokenType.LINE_COMMENT,
+                text="// This is a line comment.",
+                line=1,
+                position=26,
+            )
+        ]
 
         assert str(obs) == str(expected)
 
     def test_block_comment(self):
         obs = self._get_obs(source="/* This is a block comment.*/")
-        expected = [Token(TokenType.BLOCK_COMMENT, "/* This is a block comment.*/")]
+        expected = [
+            Token(
+                type=TokenType.BLOCK_COMMENT,
+                text="/* This is a block comment.*/",
+                line=1,
+                position=29,
+            )
+        ]
 
         assert str(obs) == str(expected)
 
@@ -256,6 +310,8 @@ class TestLexer:
             Token(
                 TokenType.BLOCK_COMMENT,
                 "/* This is also a\n * block\n * comment.\n */",
+                line=2,
+                position=0,
             )
         ]
 
@@ -270,29 +326,29 @@ class TestLexer:
     def test_function_def(self):
         obs = self._get_obs(source="FUNCTION a()\nRETURN b")
         expected = [
-            Token(TokenType.FUNCTION, "FUNCTION"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.RETURN, "RETURN"),
-            Token(TokenType.NAME, "b"),
+            Token(type=TokenType.FUNCTION, text="FUNCTION", line=1, position=8),
+            Token(type=TokenType.NAME, text="a", line=1, position=10),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=1, position=11),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=1, position=12),
+            Token(type=TokenType.RETURN, text="RETURN", line=2, position=6),
+            Token(type=TokenType.NAME, text="b", line=2, position=8),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="function a(b, c, d)\n\nreturn e")
         expected = [
-            Token(TokenType.FUNCTION, "function"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.NAME, "b"),
-            Token(TokenType.COMMA, ","),
-            Token(TokenType.NAME, "c"),
-            Token(TokenType.COMMA, ","),
-            Token(TokenType.NAME, "d"),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.RETURN, "return"),
-            Token(TokenType.NAME, "e"),
+            Token(type=TokenType.FUNCTION, text="function", line=1, position=8),
+            Token(type=TokenType.NAME, text="a", line=1, position=10),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=1, position=11),
+            Token(type=TokenType.NAME, text="b", line=1, position=12),
+            Token(type=TokenType.COMMA, text=",", line=1, position=13),
+            Token(type=TokenType.NAME, text="c", line=1, position=15),
+            Token(type=TokenType.COMMA, text=",", line=1, position=16),
+            Token(type=TokenType.NAME, text="d", line=1, position=18),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=1, position=19),
+            Token(type=TokenType.RETURN, text="return", line=3, position=6),
+            Token(type=TokenType.NAME, text="e", line=3, position=8),
         ]
 
         assert str(obs) == str(expected)
@@ -300,53 +356,53 @@ class TestLexer:
     def test_procedure_def(self):
         obs = self._get_obs(source="procedure a()\nRETURN")
         expected = [
-            Token(TokenType.PROCEDURE, "procedure"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.RETURN, "RETURN"),
+            Token(type=TokenType.PROCEDURE, text="procedure", line=1, position=9),
+            Token(type=TokenType.NAME, text="a", line=1, position=11),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=1, position=12),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=1, position=13),
+            Token(type=TokenType.RETURN, text="RETURN", line=2, position=6),
         ]
 
         assert str(obs) == str(expected)
 
         obs = self._get_obs(source="procedure a(b, c, d)\n\nreturn")
         expected = [
-            Token(TokenType.PROCEDURE, "procedure"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.NAME, "b"),
-            Token(TokenType.COMMA, ","),
-            Token(TokenType.NAME, "c"),
-            Token(TokenType.COMMA, ","),
-            Token(TokenType.NAME, "d"),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.RETURN, "return"),
+            Token(type=TokenType.PROCEDURE, text="procedure", line=1, position=9),
+            Token(type=TokenType.NAME, text="a", line=1, position=11),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=1, position=12),
+            Token(type=TokenType.NAME, text="b", line=1, position=13),
+            Token(type=TokenType.COMMA, text=",", line=1, position=14),
+            Token(type=TokenType.NAME, text="c", line=1, position=16),
+            Token(type=TokenType.COMMA, text=",", line=1, position=17),
+            Token(type=TokenType.NAME, text="d", line=1, position=19),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=1, position=20),
+            Token(type=TokenType.RETURN, text="return", line=3, position=6),
         ]
 
         assert str(obs) == str(expected)
 
     def test_if_else(self):
         obs = self._get_obs(
-            source="if a <= b\n    b()\nelseif c\n    d()\nelse    e()\nendif"
+            source="if a <= b\n    b()\nelseif c\n    d()\nelse\n    e()\nendif"
         )
         expected = [
-            Token(TokenType.IF, "if"),
-            Token(TokenType.NAME, "a"),
-            Token(TokenType.LE, "<="),
-            Token(TokenType.NAME, "b"),
-            Token(TokenType.NAME, "b"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.ELSEIF, "elseif"),
-            Token(TokenType.NAME, "c"),
-            Token(TokenType.NAME, "d"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.ELSE, "else"),
-            Token(TokenType.NAME, "e"),
-            Token(TokenType.LEFT_PAREN, "("),
-            Token(TokenType.RIGHT_PAREN, ")"),
-            Token(TokenType.ENDIF, "endif"),
+            Token(type=TokenType.IF, text="if", line=1, position=2),
+            Token(type=TokenType.NAME, text="a", line=1, position=4),
+            Token(type=TokenType.LE, text="<=", line=1, position=7),
+            Token(type=TokenType.NAME, text="b", line=1, position=9),
+            Token(type=TokenType.NAME, text="b", line=2, position=5),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=2, position=6),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=2, position=7),
+            Token(type=TokenType.ELSEIF, text="elseif", line=3, position=6),
+            Token(type=TokenType.NAME, text="c", line=3, position=8),
+            Token(type=TokenType.NAME, text="d", line=4, position=5),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=4, position=6),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=4, position=7),
+            Token(type=TokenType.ELSE, text="else", line=5, position=4),
+            Token(type=TokenType.NAME, text="e", line=6, position=5),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=6, position=6),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=6, position=7),
+            Token(type=TokenType.ENDIF, text="endif", line=7, position=5),
         ]
 
         assert str(obs) == str(expected)
@@ -355,7 +411,7 @@ class TestLexer:
         lexer = Lexer(text=source)
         obs = []
         for token in lexer:
-            if token.get_type() == TokenType.EOF:
+            if token.type == TokenType.EOF:
                 break
             else:
                 obs.append(token)

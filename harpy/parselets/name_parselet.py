@@ -8,4 +8,4 @@ class NameParselet(PrefixParselet):
     """Simple parselet for a named variable like 'abc'."""
 
     def parse(self, parser: Parser, token: Token) -> Expression:
-        return NameExpression(name=token.get_text())
+        return NameExpression(name=token.text)

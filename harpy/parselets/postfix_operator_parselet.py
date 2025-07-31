@@ -14,7 +14,7 @@ class PostfixOperatorParselet(InfixParselet):
         self._precedence = precedence
 
     def parse(self, parser: Parser, left: Expression, token: Token) -> Expression:
-        return PostfixExpression(left=left, operator=token.get_type())
+        return PostfixExpression(left=left, operator=token.type)
 
     def get_precedence(self) -> int:
         return self._precedence

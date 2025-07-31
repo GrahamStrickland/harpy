@@ -118,30 +118,30 @@ class ExpressionParser(Parser):
     def parse(self, precedence: int = 0) -> Expression | None:
         token = self._reader.look_ahead(0)
 
-        if token.get_type().keyword() is None:
+        if token.type.keyword() is None:
             token = self._reader.consume()
-            if token.get_type().literal() is not None:
+            if token.type.literal() is not None:
                 left = LiteralExpression(literal=token)
             else:
-                prefix = self._prefix_parselets[token.get_type()]
+                prefix = self._prefix_parselets[token.type]
 
                 if prefix is None:
-                    raise SyntaxError(f"Could not parse '{token.get_text()}'.")
+                    raise SyntaxError(f"Could not parse '{token.text}'.")
 
                 left = prefix.parse(parser=self, token=token)
 
             while precedence < self._get_precedence():
                 token = self._reader.consume()
-                if token.get_type().literal() is not None:
+                if token.type.literal() is not None:
                     left = LiteralExpression(literal=self._reader.consume())
                 else:
-                    infix = self._infix_parselets[token.get_type()]
+                    infix = self._infix_parselets[token.type]
                     left = infix.parse(parser=self, left=left, token=token)
 
             return left
 
     def _get_precedence(self) -> int:
-        type = self._reader.look_ahead(0).get_type()
+        type = self._reader.look_ahead(0).type
         parser = self._infix_parselets[type] if type in self._infix_parselets else None
 
         if parser is not None:

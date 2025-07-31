@@ -18,6 +18,9 @@ class Lexer:
     _simple_operators: dict[str, TokenType]
     _compound_operatos: dict[str, TokenType]
     _names: list[str]
+    _line: int
+    _pos: int
+    _reset_index: int
 
     def __init__(self, text: str):
         """Creates a new Lexer to tokenize the given string.
@@ -26,13 +29,16 @@ class Lexer:
             text (str): String to tokenize.
         """
 
-        self._index = 0
         self._text = text
         self._directives = {}
         self._keywords = {}
         self._compound_operators = {}
         self._simple_operators = {}
         self._names = []
+        self._line = 1
+        self._index = 0
+        self._pos = 0
+        self._reset_index = 0
 
         for type in TokenType:
             directive = type.preprocessor_directive()
@@ -73,12 +79,22 @@ class Lexer:
                         case "*":
                             return self._read_block_comment()
                         case _:
-                            return Token(self._simple_operators[c], c)
+                            return Token(
+                                type=self._simple_operators[c],
+                                text=c,
+                                line=self._line,
+                                position=self._pos,
+                            )
                 case "[":
                     if self._peek().isalpha():
                         return self._read_str_literal_or_bracket(c)
                     else:
-                        return Token(self._simple_operators[c], c)
+                        return Token(
+                            type=self._simple_operators[c],
+                            text=c,
+                            line=self._line,
+                            position=self._pos,
+                        )
                 case '"' | "'":
                     return self._read_str_literal_or_bracket(c)
                 case ".":
@@ -93,22 +109,36 @@ class Lexer:
                         return kw
                     elif c + (c1 := self._peek()) in self._compound_operators:
                         self._advance()
-                        return Token(self._compound_operators[c + c1], c + c1)
+                        return Token(
+                            type=self._compound_operators[c + c1],
+                            text=c + c1,
+                            line=self._line,
+                            position=self._pos,
+                        )
                     elif c in self._simple_operators:
-                        return Token(self._simple_operators[c], c)
+                        return Token(
+                            type=self._simple_operators[c],
+                            text=c,
+                            line=self._line,
+                            position=self._pos,
+                        )
                     elif c.isalpha():
                         return self._read_name()
                     else:
+                        if c == "\n":
+                            self._line += 1
+                            self._pos = 0
                         # Ignore all other characters (whitespace, etc.)
                         pass
 
         # Once we've reached the end of the string, just return EOF tokens. We'll
         # just keep returning them as many times as we're asked so that the
         # parser's lookahead doesn't have to worry about running out of tokens.
-        return Token(TokenType.EOF, "\0")
+        return Token(type=TokenType.EOF, text="\0", line=self._line, position=self._pos)
 
     def _read_preprocessor_directive(self) -> Token:
         start_index = self._index - 1
+        self._set_reset_index(index=start_index)
         directive = ""
 
         while (c := self._advance()).isalpha():
@@ -119,15 +149,17 @@ class Lexer:
                 match self._peek():
                     case "\n" | "\r" | "\0":
                         return Token(
-                            self._directives[directive.lower()],
-                            self._text[start_index : self._index],
+                            type=self._directives[directive.lower()],
+                            text=self._text[start_index : self._index],
+                            line=self._line,
+                            position=self._pos,
                         )
                     case _:
                         self._advance()
 
-        self._index = start_index + 1
+        self._reset(offset=1)
 
-        return Token(TokenType.NE1, "#")
+        return Token(type=TokenType.NE1, text="#", line=self._line, position=self._pos)
 
     def _read_line_comment(self) -> Token:
         start_index = self._index - 1
@@ -139,13 +171,16 @@ class Lexer:
             match self._peek():
                 case "\n" | "\r" | "\0":
                     return Token(
-                        TokenType.LINE_COMMENT, self._text[start_index : self._index]
+                        type=TokenType.LINE_COMMENT,
+                        text=self._text[start_index : self._index],
+                        line=self._line,
+                        position=self._pos,
                     )
                 case _:
                     self._advance()
 
     def _read_block_comment(self) -> Token:
-        start = self._index - 1
+        start_index = self._index - 1
 
         while True:
             match self._advance():
@@ -153,7 +188,10 @@ class Lexer:
                     match self._advance():
                         case "/":
                             return Token(
-                                TokenType.BLOCK_COMMENT, self._text[start : self._index]
+                                type=TokenType.BLOCK_COMMENT,
+                                text=self._text[start_index : self._index],
+                                line=self._line,
+                                position=self._pos,
                             )
                         case "\0":
                             raise SyntaxError("Unterminated block comment.")
@@ -174,11 +212,26 @@ class Lexer:
 
         match literal.lower():
             case ".t." | ".f.":
-                return Token(TokenType.BOOL_LITERAL, literal)
+                return Token(
+                    type=TokenType.BOOL_LITERAL,
+                    text=literal,
+                    line=self._line,
+                    position=self._pos,
+                )
             case ".or.":
-                return Token(TokenType.OR, literal)
+                return Token(
+                    type=TokenType.OR,
+                    text=literal,
+                    line=self._line,
+                    position=self._pos,
+                )
             case ".and.":
-                return Token(TokenType.AND, literal)
+                return Token(
+                    type=TokenType.AND,
+                    text=literal,
+                    line=self._line,
+                    position=self._pos,
+                )
             case _:
                 raise SyntaxError(f"Unable to read token '{literal}'.")
 
@@ -217,14 +270,30 @@ class Lexer:
                             f"Second decimal point found in literal '{literal + c}'."
                         )
                 case "\0":
-                    return Token(TokenType.NUM_LITERAL, literal)
+                    return Token(
+                        type=TokenType.NUM_LITERAL,
+                        text=literal,
+                        line=self._line,
+                        position=self._pos,
+                    )
                 case _:
-                    return Token(TokenType.NUM_LITERAL, literal)
+                    return Token(
+                        type=TokenType.NUM_LITERAL,
+                        text=literal,
+                        line=self._line,
+                        position=self._pos,
+                    )
 
-        return Token(TokenType.NUM_LITERAL, literal)
+        return Token(
+            type=TokenType.NUM_LITERAL,
+            text=literal,
+            line=self._line,
+            position=self._pos,
+        )
 
     def _read_str_literal_or_bracket(self, c: str) -> Token:
         start_index = self._index
+        self._set_reset_index(index=start_index)
         literal = c
         endquote = "]" if c == "[" else c
 
@@ -240,35 +309,55 @@ class Lexer:
             self._advance()
 
         if endquote == "]" and literal[1:] in self._names:
-            self._index = start_index
-            return Token(TokenType.LEFT_BRACKET, "[")
+            self._reset()
+            return Token(
+                type=TokenType.LEFT_BRACKET,
+                text="[",
+                line=self._line,
+                position=self._pos,
+            )
 
-        return Token(TokenType.STR_LITERAL, literal + self._advance())
+        return Token(
+            type=TokenType.STR_LITERAL,
+            text=literal + self._advance(),
+            line=self._line,
+            position=self._pos,
+        )
 
     def _read_keyword(self, kw: str) -> Token | None:
-        start_index = self._index
+        self._set_reset_index(index=self._index)
 
-        while (c := self._advance()).isalpha():
+        while (c := self._peek()).isalpha():
             kw += c
+            self._advance()
 
         if kw.lower() in self._keywords:
-            return Token(self._keywords[kw.lower()], kw)
+            return Token(
+                type=self._keywords[kw.lower()],
+                text=kw,
+                line=self._line,
+                position=self._pos,
+            )
 
-        self._index = start_index
+        self._reset()
         return None
 
     def _read_name(self) -> Token:
-        start = self._index - 1
-        while self._index < len(self._text):
+        start_index = self._index - 1
+        self._set_reset_index(index=start_index)
+
+        while self._peek() != "\0":
             if not self._text[self._index].isalpha():
                 break
             self._advance()
 
-        name = self._text[start : self._index]
+        name = self._text[start_index : self._index]
 
         self._names.append(name)
 
-        return Token(TokenType.NAME, name)
+        return Token(
+            type=TokenType.NAME, text=name, line=self._line, position=self._pos
+        )
 
     def _peek(self) -> str:
         if len(self._text) > self._index:
@@ -283,5 +372,18 @@ class Lexer:
             c = self._text[self._index]
             if len(self._text) > self._index:
                 self._index += 1
+                self._pos += 1
 
         return c
+
+    def _set_reset_index(self, index: int):
+        self._reset_index = index
+
+    def _reset(self, offset: int = 0):
+        self._pos -= self._index - self._reset_index + offset
+        if (
+            self._pos < 0
+        ):  # Be careful not to reset further than the same line, since the line number will now be incorrect
+            self._pos = 0
+        self._index = self._reset_index + offset
+        self._reset_index = 0

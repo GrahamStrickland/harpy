@@ -24,7 +24,7 @@ class BinaryOperatorParselet(InfixParselet):
         take *this* parselet's result as its left-hand argument.
         """
         right = parser.parse(self._precedence - (1 if self._is_right else 0))
-        return OperatorExpression(left=left, operator=token.get_type(), right=right)
+        return OperatorExpression(left=left, operator=token.type, right=right)
 
     def get_precedence(self) -> int:
         return self._precedence

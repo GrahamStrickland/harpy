@@ -22,7 +22,7 @@ class PrefixOperatorParselet(PrefixParselet):
         """
         right = parser.parse(self._precedence)
 
-        return PrefixExpression(operator=token.get_type(), right=right)
+        return PrefixExpression(operator=token.type, right=right)
 
     def get_precedence(self) -> int:
         return self._precedence

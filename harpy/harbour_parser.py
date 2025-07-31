@@ -35,12 +35,12 @@ class HarbourParser(Parser):
 
     def statement(self) -> Statement | None:
         for token in self._reader:
-            if (token_type := token.get_type()) == TokenType.EOF:
+            if (token_type := token.type) == TokenType.EOF:
                 return None
             elif token_type.keyword() is not None:
                 match token_type:
                     case TokenType.STATIC:
-                        match self._reader.look_ahead(0).get_type():
+                        match self._reader.look_ahead(0).type:
                             case TokenType.FUNCTION:
                                 return self._function_defn(static=True)
                             case TokenType.PROCEDURE:
@@ -57,7 +57,7 @@ class HarbourParser(Parser):
                         return self._if_stmt()
                     case _:
                         raise SyntaxError(
-                            f"Expected statement, found '{token.get_text()}'"
+                            f"Expected statement, found '{token.text}'"
                         )
             else:
                 return self._call_stmt(token)
@@ -123,14 +123,14 @@ class HarbourParser(Parser):
         assign_expr = None
 
         token = self._reader.look_ahead(0)
-        if token.get_type() != TokenType.NAME:
+        if token.type != TokenType.NAME:
             raise SyntaxError(
-                f"Expected name after {decln_type} keyword, found '{token.get_text()}'"
+                f"Expected name after {decln_type} keyword, found '{token.text}'"
             )
 
         name = token
         token = self._reader.look_ahead(1)
-        if token.get_type() == TokenType.ASSIGN:
+        if token.type == TokenType.ASSIGN:
             assign_expr = self._expression_parser.parse()
         else:
             name = self._reader.consume(TokenType.NAME)
@@ -178,13 +178,13 @@ class HarbourParser(Parser):
         )
 
     def _call_stmt(self, name: Token):
-        if name.get_type() != TokenType.NAME:
-            raise SyntaxError(f"Expected call expression, found '{name.get_text()}'")
+        if name.type != TokenType.NAME:
+            raise SyntaxError(f"Expected call expression, found '{name.text}'")
         self._reader.put_back(name)
 
         call_expr = None
         token = self._reader.look_ahead(1)
-        if token.get_type() == TokenType.LEFT_PAREN:
+        if token.type == TokenType.LEFT_PAREN:
             call_expr = self._expression_parser.parse()
 
         return CallStatement(call_expr=call_expr)

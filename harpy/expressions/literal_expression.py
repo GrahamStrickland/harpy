@@ -14,4 +14,4 @@ class LiteralExpression(Expression):
 
     @override
     def print(self):
-        return self._literal.get_text()
+        return self._literal.text
