@@ -1,10 +1,10 @@
 from typing import override
 
-from ..expressions import CallExpression, Expression
+from harpy.ast.expressions import CallExpression, Expression
+from harpy.lexer import Token, TokenType
+
 from ..parser import Parser
 from ..precedence import Precedence
-from ..token import Token
-from ..token_type import TokenType
 from .infix_parselet import InfixParselet
 
 

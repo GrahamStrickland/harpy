@@ -15,7 +15,9 @@ class Token:
         self.text = text
         self.end = position + 1
         self.start = self.end - len(self.text)
-        if self.start < 1:
+        if (
+            self.start < 1
+        ):  # A bit hacky, could this go wrong for block comments/preprocessor directives?
             self.start = 1
         self.line = line
 
@@ -24,5 +26,9 @@ class Token:
 
     def __repr__(self) -> str:
         return "{}({}, {}):{}:{}".format(
-            type(self).__name__, repr(self.type), f"'{self.text}'", str(self.line), str(self.start)
+            type(self).__name__,
+            repr(self.type),
+            f"'{self.text}'",
+            str(self.line),
+            str(self.start),
         )

@@ -1,16 +1,15 @@
 from typing import override
 
+from harpy.ast import SourceRoot
+from harpy.ast.expressions import AssignExpression
+from harpy.ast.statements import (CallStatement, FunctionStatement,
+                                  IfStatement, LocalVariableDeclaration,
+                                  ProcedureStatement, Statement,
+                                  StaticVariableDeclaration)
+from harpy.lexer import Lexer, SourceReader, Token, TokenType
+
 from .expression_parser import ExpressionParser
-from .expressions import AssignExpression
-from .lexer import Lexer
 from .parser import Parser
-from .source_reader import SourceReader
-from .source_root import SourceRoot
-from .statements import (CallStatement, FunctionStatement, IfStatement,
-                         LocalVariableDeclaration, ProcedureStatement,
-                         Statement, StaticVariableDeclaration)
-from .token import Token
-from .token_type import TokenType
 
 
 class HarbourParser(Parser):
@@ -56,9 +55,7 @@ class HarbourParser(Parser):
                     case TokenType.IF:
                         return self._if_stmt()
                     case _:
-                        raise SyntaxError(
-                            f"Expected statement, found '{token.text}'"
-                        )
+                        raise SyntaxError(f"Expected statement, found '{token.text}'")
             else:
                 return self._call_stmt(token)
 

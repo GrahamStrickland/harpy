@@ -1,5 +1,4 @@
-from ..harpy.harbour_parser import HarbourParser
-from ..harpy.lexer import Lexer
+from harpy import HarbourParser, Lexer
 
 
 class TestHarbourParser:

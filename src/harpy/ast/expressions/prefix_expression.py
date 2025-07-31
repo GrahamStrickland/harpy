@@ -1,6 +1,7 @@
 from typing import override
 
-from ..token_type import TokenType
+from harpy.lexer.token_type import TokenType
+
 from .expression import Expression
 
 

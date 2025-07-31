@@ -1,6 +1,4 @@
-from ..harpy.expression_parser import ExpressionParser
-from ..harpy.lexer import Lexer
-from ..harpy.source_reader import SourceReader
+from harpy import ExpressionParser, Lexer, SourceReader
 
 
 class TestExpressionParser:

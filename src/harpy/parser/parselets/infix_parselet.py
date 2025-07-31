@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from ..expressions import Expression
-from ..token import Token
+from harpy.ast.expressions import Expression
+from harpy.lexer import Token
 
 
 class InfixParselet(ABC):

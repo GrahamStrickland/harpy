@@ -1,8 +1,8 @@
 from argparse import ArgumentParser
 from os import path
 
-from .harbour_parser import HarbourParser
-from .lexer import Lexer
+from harpy.lexer import Lexer
+from harpy.parser import HarbourParser
 
 
 def main():

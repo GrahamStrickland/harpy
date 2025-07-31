@@ -1,6 +1,7 @@
-from ..expressions import Expression, NameExpression
+from harpy.ast.expressions import Expression, NameExpression
+from harpy.lexer import Token
+
 from ..parser import Parser
-from ..token import Token
 from .prefix_parselet import PrefixParselet
 
 

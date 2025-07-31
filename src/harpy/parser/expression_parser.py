@@ -1,6 +1,8 @@
 from typing import override
 
-from .expressions import Expression, LiteralExpression
+from harpy.ast.expressions import Expression, LiteralExpression
+from harpy.lexer import SourceReader, Token, TokenType
+
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
                         GroupParselet, IndexParselet, InfixParselet,
                         NameParselet, ObjectAccessParselet,
@@ -8,9 +10,6 @@ from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
                         PrefixParselet)
 from .parser import Parser
 from .precedence import Precedence
-from .source_reader import SourceReader
-from .token import Token
-from .token_type import TokenType
 
 
 class ExpressionParser(Parser):

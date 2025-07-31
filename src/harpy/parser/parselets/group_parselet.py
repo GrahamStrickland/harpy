@@ -1,9 +1,9 @@
 from typing import override
 
-from ..expressions import Expression
+from harpy.ast.expressions import Expression
+from harpy.lexer import Token, TokenType
+
 from ..parser import Parser
-from ..token import Token
-from ..token_type import TokenType
 from .prefix_parselet import PrefixParselet
 
 

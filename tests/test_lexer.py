@@ -1,8 +1,6 @@
 import pytest
 
-from ..harpy.lexer import Lexer
-from ..harpy.token import Token
-from ..harpy.token_type import TokenType
+from harpy import Lexer, Token, TokenType
 
 
 class TestLexer:
@@ -47,7 +45,10 @@ class TestLexer:
         obs = self._get_obs(source="#pragma -ko+")
         expected = [
             Token(
-                type=TokenType.PRAGMA_DIRECTIVE, text="#pragma -ko+", line=1, position=12
+                type=TokenType.PRAGMA_DIRECTIVE,
+                text="#pragma -ko+",
+                line=1,
+                position=12,
             )
         ]
 
