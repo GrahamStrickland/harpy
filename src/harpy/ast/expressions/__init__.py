@@ -1,6 +1,8 @@
+from .array_declaration_expression import ArrayDeclarationExpression
 from .assign_expression import AssignExpression
 from .call_expression import CallExpression
 from .expression import Expression
+from .hash_declaration_expression import HashDeclarationExpression
 from .index_expression import IndexExpression
 from .literal_expression import LiteralExpression
 from .name_expression import NameExpression
@@ -10,10 +12,12 @@ from .postfix_expression import PostfixExpression
 from .prefix_expression import PrefixExpression
 
 __all__ = [
+    "ArrayDeclarationExpression",
     "AssignExpression",
     "CallExpression",
     "Expression",
     "IndexExpression",
+    "HashDeclarationExpression",
     "LiteralExpression",
     "NameExpression",
     "ObjectAccessExpression",

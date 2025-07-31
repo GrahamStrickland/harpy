@@ -7,7 +7,7 @@ class CallExpression(Expression):
     """A function call like `a(b, c, d)`."""
 
     _function: Expression
-    _args: Expression
+    _args: list[Expression]
 
     def __init__(self, function: Expression, args: list[Expression]):
         self._function = function

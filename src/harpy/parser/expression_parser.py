@@ -4,10 +4,10 @@ from harpy.ast.expressions import Expression, LiteralExpression
 from harpy.lexer import SourceReader, Token, TokenType
 
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
-                        GroupParselet, IndexParselet, InfixParselet,
-                        NameParselet, ObjectAccessParselet,
-                        PostfixOperatorParselet, PrefixOperatorParselet,
-                        PrefixParselet)
+                        ContainerDeclarationParselet, GroupParselet, 
+                        IndexParselet, InfixParselet, NameParselet, 
+                        ObjectAccessParselet, PostfixOperatorParselet, 
+                        PrefixOperatorParselet, PrefixParselet)
 from .parser import Parser
 from .precedence import Precedence
 
@@ -34,6 +34,7 @@ class ExpressionParser(Parser):
         self.register(token=TokenType.LEFT_PAREN, parselet=GroupParselet())
         self.register(token=TokenType.LEFT_PAREN, parselet=CallParselet())
         self.register(token=TokenType.LEFT_BRACKET, parselet=IndexParselet())
+        self.register(token=TokenType.LEFT_BRACE, parselet=ContainerDeclarationParselet())
         self.register(token=TokenType.COLON, parselet=ObjectAccessParselet())
 
         # Register the simple operator parselets.
@@ -122,10 +123,10 @@ class ExpressionParser(Parser):
             if token.type.literal() is not None:
                 left = LiteralExpression(literal=token)
             else:
-                prefix = self._prefix_parselets[token.type]
+                prefix = self._prefix_parselets.get(token)
 
                 if prefix is None:
-                    raise SyntaxError(f"Could not parse '{token.text}'.")
+                    raise SyntaxError(f"Could not parse token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}.")
 
                 left = prefix.parse(parser=self, token=token)
 
@@ -134,7 +135,7 @@ class ExpressionParser(Parser):
                 if token.type.literal() is not None:
                     left = LiteralExpression(literal=self._reader.consume())
                 else:
-                    infix = self._infix_parselets[token.type]
+                    infix = self._infix_parselets.get(token.type)
                     left = infix.parse(parser=self, left=left, token=token)
 
             return left

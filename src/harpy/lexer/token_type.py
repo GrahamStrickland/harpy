@@ -48,53 +48,54 @@ class TokenType(Enum):
     QUESTION = 32
     COLON = 33
     AT = 34
+    HASHOP = 35
 
     # Keywords
-    FUNCTION = 35
-    PROCEDURE = 36
-    RETURN = 37
-    NIL = 38
-    LOCAL = 39
-    STATIC = 40
-    IIF = 41
-    IF = 42
-    ELSE = 43
-    ELSEIF = 44
-    END = 45
-    ENDIF = 46
-    ENDERR = 47
+    FUNCTION = 36
+    PROCEDURE = 37
+    RETURN = 38
+    NIL = 39
+    LOCAL = 40
+    STATIC = 41
+    IIF = 42
+    IF = 43
+    ELSE = 44
+    ELSEIF = 45
+    END = 46
+    ENDIF = 47
+    ENDERR = 48
 
     # Literals
-    STR_LITERAL = 48
-    NUM_LITERAL = 49
-    BOOL_LITERAL = 50
+    STR_LITERAL = 49
+    NUM_LITERAL = 50
+    BOOL_LITERAL = 51
 
     # Identifiers
-    NAME = 51
+    NAME = 52
 
     # Preprocessor directives
-    INCLUDE_DIRECTIVE = 52
-    DEFINE_DIRECTIVE = 53
-    IFDEF_DIRECTIVE = 54
-    IFNDEF_DIRECTIVE = 55
-    ELIF_DIRECTIVE = 56
-    ELSE_DIRECTIVE = 57
-    ENDIF_DIRECTIVE = 58
-    UNDEF_DIRECTIVE = 59
-    PRAGMA_DIRECTIVE = 60
-    COMMAND_DIRECTIVE = 61
-    XCOMMAND_DIRECTIVE = 62
-    TRANSLATE_DIRECTIVE = 63
-    XTRANSLATE_DIRECTIVE = 64
-    ERROR_DIRECTIVE = 65
-    STDOUT_DIRECTIVE = 66
+    INCLUDE_DIRECTIVE = 53
+    DEFINE_DIRECTIVE = 54
+    IFDEF_DIRECTIVE = 55
+    IFNDEF_DIRECTIVE = 56
+    ELIF_DIRECTIVE = 57
+    ELSE_DIRECTIVE = 58
+    ENDIF_DIRECTIVE = 59
+    UNDEF_DIRECTIVE = 60
+    PRAGMA_DIRECTIVE = 61
+    COMMAND_DIRECTIVE = 62
+    XCOMMAND_DIRECTIVE = 63
+    TRANSLATE_DIRECTIVE = 64
+    XTRANSLATE_DIRECTIVE = 65
+    ERROR_DIRECTIVE = 66
+    STDOUT_DIRECTIVE = 67
 
     # Comments
-    BLOCK_COMMENT = 67
-    LINE_COMMENT = 68
+    BLOCK_COMMENT = 68
+    LINE_COMMENT = 69
 
     # Spacing
-    EOF = 69
+    EOF = 70
 
     def preprocessor_directive(self) -> str | None:
         match self:
@@ -201,6 +202,10 @@ class TokenType(Enum):
                 return "<="
             case TokenType.GE:
                 return ">="
+            case TokenType.HASHOP:
+                return "=>"
+            case _:
+                return None
 
     def simple_operator(self) -> str | None:
         match self:

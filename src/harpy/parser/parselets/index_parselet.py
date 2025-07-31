@@ -9,7 +9,7 @@ from .infix_parselet import InfixParselet
 
 
 class IndexParselet(InfixParselet):
-    """Parselet to parse a function call like `a[b]`."""
+    """Parselet to parse an array index expression like `a[b]`."""
 
     @override
     def parse(self, parser: Parser, left: Expression, token: Token):

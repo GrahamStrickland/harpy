@@ -197,14 +197,12 @@ class Lexer:
                             raise SyntaxError("Unterminated block comment.")
                         case _:
                             if c == "\n":
-                                self._line += 1
                                 self._pos = 0
                             pass  # Do nothing, keep advancing.
                 case "\0":
                     raise SyntaxError("Unterminated block comment.")
                 case _:
                     if c == "\n":
-                        self._line += 1
                         self._pos = 0
                     pass  # Do nothing, keep advancing.
 

@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 
+from harpy.ast.expressions import Expression
+
 
 class Parser(ABC):
     @abstractmethod
-    def parse(self):
+    def parse(self) -> Expression:
         pass
