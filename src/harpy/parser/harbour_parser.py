@@ -1,6 +1,6 @@
 from typing import override
 
-from harpy.ast import SourceRoot
+from harpy.ast import Comment, PreprocessorDirective, SourceRoot
 from harpy.ast.expressions import AssignExpression
 from harpy.ast.statements import (CallStatement, FunctionStatement,
                                   IfStatement, LocalVariableDeclaration,
@@ -27,37 +27,55 @@ class HarbourParser(Parser):
     @override
     def parse(self) -> SourceRoot:
         source_root = SourceRoot()
-        while (stmt := self.statement()) is not None:
-            source_root.add(node=stmt)
-
-        return source_root
-
-    def statement(self) -> Statement | None:
         for token in self._reader:
-            if (token_type := token.type) == TokenType.EOF:
-                return None
-            elif token_type.keyword() is not None:
-                match token_type:
-                    case TokenType.STATIC:
-                        match self._reader.look_ahead(0).type:
-                            case TokenType.FUNCTION:
-                                return self._function_defn(static=True)
-                            case TokenType.PROCEDURE:
-                                return self._procedure_defn(static=True)
-                            case _:
-                                return self._static_decln_stmt()
-                    case TokenType.FUNCTION:
-                        return self._function_defn()
-                    case TokenType.PROCEDURE:
-                        return self._procedure_defn()
-                    case TokenType.LOCAL:
-                        return self._local_decln_stmt()
-                    case TokenType.IF:
-                        return self._if_stmt()
-                    case _:
-                        raise SyntaxError(f"Expected statement, found '{token.text}'")
+            if token.type == TokenType.EOF:
+                return source_root
+            elif (directive := self.preprocessor_directive(token=token)) is not None:
+                source_root.add(node=directive)
+            elif (stmt := self.comment(token=token)) is not None:
+                source_root.add(node=token)
+            elif (stmt := self.statement(token=token)) is not None:
+                source_root.add(node=stmt)
             else:
-                return self._call_stmt(token)
+                raise SyntaxError(f"Unable to parse AST node from token '{token.text}' of type '{token.type}' on line {token.line} column {token.start}.")
+
+    def preprocessor_directive(self, token: Token) -> PreprocessorDirective | None:
+        if token.type.preprocessor_directive() is not None:
+            return PreprocessorDirective(token=token)
+
+        return None
+
+    def comment(self, token) -> Comment | None:
+        if token.type in (TokenType.BLOCK_COMMENT, TokenType.LINE_COMMENT):
+            return Comment(token=token)
+
+        return None
+
+    def statement(self, token: Token) -> Statement | None:
+        if token.type.keyword() is not None:
+            match token.type:
+                case TokenType.STATIC:
+                    match self._reader.look_ahead(0).type:
+                        case TokenType.FUNCTION:
+                            return self._function_defn(static=True)
+                        case TokenType.PROCEDURE:
+                            return self._procedure_defn(static=True)
+                        case _:
+                            return self._static_decln_stmt()
+                case TokenType.FUNCTION:
+                    return self._function_defn()
+                case TokenType.PROCEDURE:
+                    return self._procedure_defn()
+                case TokenType.LOCAL:
+                    return self._local_decln_stmt()
+                case TokenType.IF:
+                    return self._if_stmt()
+                case _:
+                    raise SyntaxError(f"Expected statement, found '{token.text}'")
+        elif (stmt := self._call_stmt(token)) is not None:
+            return stmt
+        else:
+            return None
 
     def _function_defn(self, static: bool = False) -> FunctionStatement:
         if static:
@@ -80,7 +98,7 @@ class HarbourParser(Parser):
         body = []
 
         while not self._reader.match(TokenType.RETURN):
-            body.append(self.statement())
+            body.append(self.statement(token=self._reader.consume()))
 
         self._reader.consume(TokenType.RETURN)
         retval = self._expression_parser.parse()
@@ -110,7 +128,7 @@ class HarbourParser(Parser):
         body = []
 
         while not self._reader.match(TokenType.RETURN):
-            body.append(self.statement())
+            body.append(self.statement(token=self._reader.consume()))
 
         self._reader.consume(TokenType.RETURN)
 
@@ -151,7 +169,7 @@ class HarbourParser(Parser):
             if self._reader.match(TokenType.ELSE):
                 self._reader.consume(TokenType.ELSE)
                 while not self._reader.match(TokenType.ENDIF):
-                    elsebody.append(self.statement())
+                    elsebody.append(self.statement(token=self._reader.consume()))
                 break
             elif self._reader.match(TokenType.ELSEIF):
                 self._reader.consume(TokenType.ELSEIF)
@@ -160,10 +178,10 @@ class HarbourParser(Parser):
                 while not self._reader.match(TokenType.ELSE) and not self._reader.match(
                     TokenType.ELSEIF
                 ):
-                    elifbody.append(self.statement())
+                    elifbody.append(self.statement(token=self._reader.consume()))
                 elifs.append((elifcond, elifbody))
             else:
-                ifbody.append(self.statement())
+                ifbody.append(self.statement(token=self._reader.consume()))
 
         self._reader.consume(TokenType.ENDIF)
 
@@ -174,9 +192,9 @@ class HarbourParser(Parser):
             elsebody=elsebody,
         )
 
-    def _call_stmt(self, name: Token):
+    def _call_stmt(self, name: Token) -> CallStatement | None:
         if name.type != TokenType.NAME:
-            raise SyntaxError(f"Expected call expression, found '{name.text}'")
+            return None
         self._reader.put_back(name)
 
         call_expr = None

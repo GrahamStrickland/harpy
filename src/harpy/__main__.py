@@ -1,5 +1,5 @@
+import os
 from argparse import ArgumentParser
-from os import path
 
 from harpy.lexer import Lexer
 from harpy.parser import HarbourParser
@@ -16,17 +16,29 @@ def main():
     )
     args = argparse.parse_args()
 
-    base, ext = path.splitext(args.src)
-    if ext not in ("prg", "ch"):
-        raise RuntimeError(f"Invalid source path '{args.src}' with extension '{ext}'")
+    base, ext = os.path.splitext(args.src)
+    if ext not in (".prg", ".ch"):
+        raise RuntimeError(f"Invalid source path '{args.src}' with extension '{ext}'.")
+    elif not os.path.exists(args.src):
+        raise FileNotFoundError(f"Source file '{args.src}' not found.")
+    elif not os.path.isfile(args.src):
+        raise FileNotFoundError(f"Invalid source file '{args.src}'.")
 
-    lexer = Lexer(text=args.src)
-    parser = HarbourParser(lexer=lexer)
+    output = False
+    with open(args.src, "r", encoding="utf-8") as infile:
+        text = infile.read()
+        output = len(text) > 0
 
-    result = parser.parse()
-    with open(path.join(base, "py"), "w", encoding="utf-8") as outfile:
-        outfile.write("\n".join(result))
+        lexer = Lexer(text=text)
+        parser = HarbourParser(lexer=lexer)
+        result = parser.parse()
 
+    if output:
+        with open(base + ".py", "w", encoding="utf-8") as outfile:
+            outfile.writelines([line for line in result])
+    else:
+        raise ValueError(f"File with path '{args.src}' is empty.")
+            
 
 if __name__ == "__main__":
     main()

@@ -183,7 +183,7 @@ class Lexer:
         start_index = self._index - 1
 
         while True:
-            match self._advance():
+            match (c := self._advance()):
                 case "*":
                     match self._advance():
                         case "/":
@@ -196,10 +196,16 @@ class Lexer:
                         case "\0":
                             raise SyntaxError("Unterminated block comment.")
                         case _:
+                            if c == "\n":
+                                self._line += 1
+                                self._pos = 0
                             pass  # Do nothing, keep advancing.
                 case "\0":
                     raise SyntaxError("Unterminated block comment.")
                 case _:
+                    if c == "\n":
+                        self._line += 1
+                        self._pos = 0
                     pass  # Do nothing, keep advancing.
 
     def _read_bool_literal_or_logical(self) -> Token:
@@ -347,7 +353,7 @@ class Lexer:
         self._set_reset_index(index=start_index)
 
         while self._peek() != "\0":
-            if not self._text[self._index].isalpha():
+            if not self._text[self._index].isalnum():
                 break
             self._advance()
 
