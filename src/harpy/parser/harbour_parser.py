@@ -5,7 +5,8 @@ from harpy.ast.expressions import AssignExpression
 from harpy.ast.statements import (AssignmentStatement, CallStatement,
                                   FunctionStatement, IfStatement,
                                   LocalVariableDeclaration, ProcedureStatement,
-                                  Statement, StaticVariableDeclaration)
+                                  Statement, StaticVariableDeclaration,
+                                  WhileLoopStatement)
 from harpy.lexer import Lexer, SourceReader, Token, TokenType
 
 from .expression_parser import ExpressionParser
@@ -32,8 +33,8 @@ class HarbourParser(Parser):
                 return source_root
             elif (directive := self.preprocessor_directive(token=token)) is not None:
                 source_root.add(node=directive)
-            elif (stmt := self.comment(token=token)) is not None:
-                source_root.add(node=token)
+            elif (comment := self.comment(token=token)) is not None:
+                source_root.add(node=comment)
             elif (stmt := self.statement(token=token)) is not None:
                 source_root.add(node=stmt)
             else:
@@ -72,6 +73,8 @@ class HarbourParser(Parser):
                     return self._local_decln_stmt()
                 case TokenType.IF:
                     return self._if_stmt()
+                case TokenType.WHILE:
+                    return self._while_loop()
                 case _:
                     raise SyntaxError(f"Expected statement, found '{token.text}'")
         elif (stmt := self._call_stmt(token)) is not None:
@@ -197,6 +200,22 @@ class HarbourParser(Parser):
             elifs=elifs,
             elsebody=elsebody,
         )
+
+    def _while_loop(self) -> WhileLoopStatement:
+        cond = self._expression_parser.parse()
+        body = []
+
+        while not self._reader.match(TokenType.END) and not self._reader.match(TokenType.ENDWHILE):
+            body.append(self.statement(token=self._reader.consume()))
+
+        if self._reader.match(TokenType.END):
+            self._reader.consume(TokenType.END)
+            if self._reader.match(TokenType.WHILE):
+                self._reader.consume(TokenType.WHILE)
+        else:
+            self._reader.consume(TokenType.ENDWHILE)
+
+        return WhileLoopStatement(cond=cond, body=body)
 
     def _call_stmt(self, name: Token) -> CallStatement | None:
         if name.type != TokenType.NAME:

@@ -92,6 +92,24 @@ class TestHarbourParser:
             "if a(b, c, d)\ne()\nelseif f(b)\ng()\nelse\nh()\nendif",
         )
 
+    def test__while_loop(self):
+        self._test(
+            "while a(b, c, d)\n\n    e()\n\nend",
+            "while a(b, c, d)\ne()\nend while",
+        )
+        self._test(
+            "while a(b, c, d)\n\n    e()\n    f()\n\nend",
+            "while a(b, c, d)\ne()\nf()\nend while",
+        )
+        self._test(
+            "while a(b, c, d)\n\n    e()\n    f()\n\nend while",
+            "while a(b, c, d)\ne()\nf()\nend while",
+        )
+        self._test(
+            "while a(b, c, d)\n\n    e()\n    f()\n\nendwhile",
+            "while a(b, c, d)\ne()\nf()\nend while",
+        )
+
     def test_assignment_stmt(self):
         self._test(
             "if a(b, c, d)\n\n    e := 1\n\nendif",

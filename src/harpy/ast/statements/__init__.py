@@ -6,6 +6,7 @@ from .local_variable_declaration import LocalVariableDeclaration
 from .procedure_statement import ProcedureStatement
 from .statement import Statement
 from .static_variable_declaration import StaticVariableDeclaration
+from .while_loop_statement import WhileLoopStatement
 
 __all__ = [
     "AssignmentStatement",
@@ -16,4 +17,5 @@ __all__ = [
     "ProcedureStatement",
     "Statement",
     "StaticVariableDeclaration",
+    "WhileLoopStatement",
 ]

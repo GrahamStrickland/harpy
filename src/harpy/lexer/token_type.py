@@ -65,38 +65,40 @@ class TokenType(Enum):
     END = 47
     ENDIF = 48
     ENDERR = 49
+    WHILE = 50
+    ENDWHILE = 51
 
     # Literals
-    STR_LITERAL = 50
-    NUM_LITERAL = 51
-    BOOL_LITERAL = 52
+    STR_LITERAL = 52
+    NUM_LITERAL = 53
+    BOOL_LITERAL = 54
 
     # Identifiers
-    NAME = 53
+    NAME = 55
 
     # Preprocessor directives
-    INCLUDE_DIRECTIVE = 54
-    DEFINE_DIRECTIVE = 55
-    IFDEF_DIRECTIVE = 56
-    IFNDEF_DIRECTIVE = 57
-    ELIF_DIRECTIVE = 58
-    ELSE_DIRECTIVE = 59
-    ENDIF_DIRECTIVE = 60
-    UNDEF_DIRECTIVE = 61
-    PRAGMA_DIRECTIVE = 62
-    COMMAND_DIRECTIVE = 63
-    XCOMMAND_DIRECTIVE = 64
-    TRANSLATE_DIRECTIVE = 65
-    XTRANSLATE_DIRECTIVE = 66
-    ERROR_DIRECTIVE = 67
-    STDOUT_DIRECTIVE = 68
+    INCLUDE_DIRECTIVE = 56
+    DEFINE_DIRECTIVE = 57
+    IFDEF_DIRECTIVE = 58
+    IFNDEF_DIRECTIVE = 59
+    ELIF_DIRECTIVE = 60
+    ELSE_DIRECTIVE = 61
+    ENDIF_DIRECTIVE = 62
+    UNDEF_DIRECTIVE = 63
+    PRAGMA_DIRECTIVE = 64
+    COMMAND_DIRECTIVE = 65
+    XCOMMAND_DIRECTIVE = 66
+    TRANSLATE_DIRECTIVE = 67
+    XTRANSLATE_DIRECTIVE = 68
+    ERROR_DIRECTIVE = 69
+    STDOUT_DIRECTIVE = 70
 
     # Comments
-    BLOCK_COMMENT = 69
-    LINE_COMMENT = 70
+    BLOCK_COMMENT = 71
+    LINE_COMMENT = 72
 
     # Spacing
-    EOF = 71
+    EOF = 73
 
     def preprocessor_directive(self) -> str | None:
         match self:
@@ -174,6 +176,10 @@ class TokenType(Enum):
                 return "endif"
             case TokenType.ENDERR:
                 return "enderr"
+            case TokenType.WHILE:
+                return "while"
+            case TokenType.ENDWHILE:
+                return "endwhile"
             case _:
                 return None
 

@@ -31,11 +31,11 @@ def main():
 
         lexer = Lexer(text=text)
         parser = HarbourParser(lexer=lexer)
-        result = parser.parse()
+        root = parser.parse()
 
     if output:
         with open(base + ".py", "w", encoding="utf-8") as outfile:
-            outfile.writelines([line for line in result])
+            outfile.writelines([node.print() for node in root])
     else:
         raise ValueError(f"File with path '{args.src}' is empty.")
 
