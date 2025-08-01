@@ -181,30 +181,31 @@ class Lexer:
 
     def _read_block_comment(self) -> Token:
         start_index = self._index - 1
+        start_line = self._line
 
         while True:
             match c := self._advance():
                 case "*":
-                    match self._advance():
+                    match c1 := self._advance():
                         case "/":
                             return Token(
                                 type=TokenType.BLOCK_COMMENT,
                                 text=self._text[start_index : self._index],
-                                line=self._line,
+                                line=start_line,
                                 position=self._pos,
                             )
                         case "\0":
                             raise SyntaxError("Unterminated block comment.")
                         case _:
-                            if c == "\n":
+                            if c1 == "\n":
+                                self._line += 1
                                 self._pos = 0
-                            pass  # Do nothing, keep advancing.
                 case "\0":
                     raise SyntaxError("Unterminated block comment.")
                 case _:
                     if c == "\n":
+                        self._line += 1
                         self._pos = 0
-                    pass  # Do nothing, keep advancing.
 
     def _read_bool_literal_or_logical(self) -> Token:
         literal = "."

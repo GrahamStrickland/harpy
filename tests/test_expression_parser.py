@@ -87,7 +87,10 @@ class TestExpressionParser:
         self._test("a := { 'b' => 1 }", "(a := { 'b' => 1 })")
         self._test("a := { 'b' => 1, 'c' => 2 }", "(a := { 'b' => 1, 'c' => 2 })")
         self._test("a := { 'b' => 1, 'c' => d() }", "(a := { 'b' => 1, 'c' => d() })")
-        self._test("a := { ;\n    'b' => 1, ;\n    'c' => d() ;\n}", "(a := { 'b' => 1, 'c' => d() })")
+        self._test(
+            "a := { ;\n    'b' => 1, ;\n    'c' => d() ;\n}",
+            "(a := { 'b' => 1, 'c' => d() })",
+        )
 
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected
