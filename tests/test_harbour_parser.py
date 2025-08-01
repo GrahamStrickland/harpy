@@ -84,6 +84,10 @@ class TestHarbourParser:
             "if a(b, c, d)\ne()\nelse\nf()\nendif",
         )
         self._test(
+            "if a(b, c, d)\n\n    e()\n\nelseif f(b)\n\n    g()\n\n\n\nendif",
+            "if a(b, c, d)\ne()\nelseif f(b)\ng()\nendif",
+        )
+        self._test(
             "if a(b, c, d)\n\n    e()\n\nelseif f(b)\n\n    g()\n\nelse\n\n    h()\n\nendif",
             "if a(b, c, d)\ne()\nelseif f(b)\ng()\nelse\nh()\nendif",
         )
