@@ -179,7 +179,7 @@ class HarbourParser(Parser):
                 self._reader.consume(TokenType.ELSEIF)
                 elifcond = self._expression_parser.parse()
                 elifbody = []
-                while not self._reader.match(TokenType.ELSE) and not self._reader.match(
+                while not self._reader.match(TokenType.ENDIF) and not self._reader.match(TokenType.ELSE) and not self._reader.match(
                     TokenType.ELSEIF
                 ):
                     elifbody.append(self.statement(token=self._reader.consume()))
