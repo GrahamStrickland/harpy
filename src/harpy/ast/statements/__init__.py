@@ -1,3 +1,4 @@
+from .assignment_statement import AssignmentStatement
 from .call_statement import CallStatement
 from .function_statement import FunctionStatement
 from .if_statement import IfStatement
@@ -7,6 +8,7 @@ from .statement import Statement
 from .static_variable_declaration import StaticVariableDeclaration
 
 __all__ = [
+    "AssignmentStatement",
     "CallStatement",
     "FunctionStatement",
     "IfStatement",

@@ -351,7 +351,7 @@ class Lexer:
         self._set_reset_index(index=start_index)
 
         while self._peek() != "\0":
-            if not self._text[self._index].isalnum():
+            if not self._text[self._index].isalnum() and self._text[self._index] != "_":
                 break
             self._advance()
 

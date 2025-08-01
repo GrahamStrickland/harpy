@@ -88,6 +88,12 @@ class TestHarbourParser:
             "if a(b, c, d)\ne()\nelseif f(b)\ng()\nelse\nh()\nendif",
         )
 
+    def test_assignment_stmt(self):
+        self._test(
+            "if a(b, c, d)\n\n    e := 1\n\nendif",
+            "if a(b, c, d)\n(e := 1)\nendif",
+        )
+
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected
         pretty-printed result.
@@ -97,7 +103,7 @@ class TestHarbourParser:
 
         root = parser.parse()
         actual = ""
-        for stmt in root:
-            actual += stmt.print()
+        for node in root:
+            actual += node.print()
 
         assert actual == expected

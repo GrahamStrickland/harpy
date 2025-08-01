@@ -2,10 +2,10 @@ from typing import override
 
 from harpy.ast import Comment, PreprocessorDirective, SourceRoot
 from harpy.ast.expressions import AssignExpression
-from harpy.ast.statements import (CallStatement, FunctionStatement,
-                                  IfStatement, LocalVariableDeclaration,
-                                  ProcedureStatement, Statement,
-                                  StaticVariableDeclaration)
+from harpy.ast.statements import (AssignmentStatement, CallStatement,
+                                  FunctionStatement, IfStatement,
+                                  LocalVariableDeclaration, ProcedureStatement,
+                                  Statement, StaticVariableDeclaration)
 from harpy.lexer import Lexer, SourceReader, Token, TokenType
 
 from .expression_parser import ExpressionParser
@@ -75,6 +75,8 @@ class HarbourParser(Parser):
                 case _:
                     raise SyntaxError(f"Expected statement, found '{token.text}'")
         elif (stmt := self._call_stmt(token)) is not None:
+            return stmt
+        elif (stmt := self._assign_stmt(token)) is not None:
             return stmt
         else:
             return None
@@ -197,11 +199,24 @@ class HarbourParser(Parser):
     def _call_stmt(self, name: Token) -> CallStatement | None:
         if name.type != TokenType.NAME:
             return None
-        self._reader.put_back(name)
 
         call_expr = None
-        token = self._reader.look_ahead(1)
+        token = self._reader.look_ahead(0)
         if token.type == TokenType.LEFT_PAREN:
+            self._reader.put_back(name)
             call_expr = self._expression_parser.parse()
+        else:
+            return None
 
         return CallStatement(call_expr=call_expr)
+
+    def _assign_stmt(self, name: Token) -> AssignmentStatement | None:
+        if name.type != TokenType.NAME:
+            return None
+
+        token = self._reader.look_ahead(0)
+        if token.type == TokenType.ASSIGN:
+            self._reader.put_back(name)
+            return AssignmentStatement(assign_expr=self._expression_parser.parse())
+        else:
+            return None
