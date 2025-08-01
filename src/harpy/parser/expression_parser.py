@@ -118,7 +118,7 @@ class ExpressionParser(Parser):
     def parse(self, precedence: int = 0) -> Expression | None:
         token = self._reader.look_ahead(0)
 
-        if token.type.keyword() is None:
+        if token.type.keyword() is None or token.type == TokenType.NIL:
             token = self._reader.consume()
             if token.type.literal() is not None:
                 left = LiteralExpression(literal=token)

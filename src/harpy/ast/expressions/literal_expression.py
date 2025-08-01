@@ -6,7 +6,7 @@ from .expression import Expression
 
 
 class LiteralExpression(Expression):
-    """A boolean, numeric, or string literal, e.g., .t., 123, or 'hello'."""
+    """A boolean, numeric, string, or nil literal, e.g., `.t.`, `123`, `'hello'`, or `NIL`."""
 
     _literal: Expression
 

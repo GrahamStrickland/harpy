@@ -62,6 +62,8 @@ class TestExpressionParser:
         self._test(".t.", ".t.")
         self._test("123", "123")
         self._test("'hello'", "'hello'")
+        self._test("NIL", "NIL")
+        self._test("nil", "nil")
 
     def test_object_access(self):
         self._test("a:b", "a:b")

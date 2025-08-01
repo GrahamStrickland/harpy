@@ -58,6 +58,10 @@ class TestHarbourParser:
             "static (a := b)",
         )
         self._test(
+            "static a := nil",
+            "static (a := nil)",
+        )
+        self._test(
             "static function a()\n\n    local c := b\n\nreturn c",
             "static function a()\nlocal (c := b)\nreturn c",
         )

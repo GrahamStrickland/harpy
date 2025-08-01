@@ -17,8 +17,11 @@ class ContainerDeclarationParselet(PrefixParselet):
         keyvalues = {}
 
         if parser.match(TokenType.RIGHT_BRACE):
+            parser.consume(TokenType.RIGHT_BRACE)
             return ArrayDeclarationExpression(elems=elems)
         elif parser.match(TokenType.HASHOP):
+            parser.consume(TokenType.HASHOP)
+            parser.consume(TokenType.RIGHT_BRACE)
             return HashDeclarationExpression(keyvalues=keyvalues)
         else:
             first_expr = parser.parse()

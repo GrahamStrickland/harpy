@@ -140,6 +140,8 @@ class TokenType(Enum):
                 return "num"
             case TokenType.STR_LITERAL:
                 return "str"
+            case TokenType.NIL:
+                return "nil"
             case _:
                 return None
 
