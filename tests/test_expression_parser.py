@@ -92,6 +92,12 @@ class TestExpressionParser:
             "(a := { 'b' => 1, 'c' => d() })",
         )
 
+    def test_codeblock(self):
+        self._test("a := { || b() }", "(a := { || b() })")
+        self._test("a := { |b| c(b) }", "(a := { |b| c(b) })")
+        self._test("a := { |b,c| d(b, c) }", "(a := { |b, c| d(b, c) })")
+        self._test("a := { |b,c| d(b), e(c) }", "(a := { |b, c| d(b), e(c) })")
+
     def test_conditional(self):
         self._test("a := iif(b, 1, 0)", "(a := iif(b, 1, 0))")
 

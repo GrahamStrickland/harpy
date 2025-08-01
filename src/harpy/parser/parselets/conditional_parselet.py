@@ -12,7 +12,7 @@ class ConditionalParselet(PrefixParselet):
     """Parselet for the conditional or 'ternary' operator, like `iif(a, b, c)`."""
 
     @override
-    def parse(self, parser: Parser, token: Token):
+    def parse(self, parser: Parser, token: Token) -> ConditionalExpression:
         parser.consume(TokenType.LEFT_PAREN)
 
         if_arm = parser.parse()

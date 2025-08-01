@@ -12,7 +12,7 @@ class CallParselet(InfixParselet):
     """Parselet to parse a function call like `a(b, c, d)`."""
 
     @override
-    def parse(self, parser: Parser, left: Expression, token: Token):
+    def parse(self, parser: Parser, left: Expression, token: Token) -> CallExpression:
         # Parse the comma-separated arguments until we hit ", )".
         args: list[Expression] = []
 

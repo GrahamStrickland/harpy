@@ -4,10 +4,11 @@ from harpy.ast.expressions import Expression, LiteralExpression
 from harpy.lexer import SourceReader, Token, TokenType
 
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
-                        ContainerDeclarationParselet, ConditionalParselet,
-                        GroupParselet, IndexParselet, InfixParselet, NameParselet,
-                        ObjectAccessParselet, PostfixOperatorParselet,
-                        PrefixOperatorParselet, PrefixParselet)
+                        CodeblockParselet, ContainerDeclarationParselet, 
+                        ConditionalParselet, GroupParselet, IndexParselet, 
+                        InfixParselet, NameParselet, ObjectAccessParselet, 
+                        PostfixOperatorParselet, PrefixOperatorParselet, 
+                        PrefixParselet)
 from .parser import Parser
 from .precedence import Precedence
 
@@ -36,6 +37,9 @@ class ExpressionParser(Parser):
         self.register(token=TokenType.LEFT_BRACKET, parselet=IndexParselet())
         self.register(
             token=TokenType.LEFT_BRACE, parselet=ContainerDeclarationParselet()
+        )
+        self.register(
+            token=TokenType.LEFT_BRACE, parselet=CodeblockParselet()
         )
         self.register(token=TokenType.COLON, parselet=ObjectAccessParselet())
         self.register(token=TokenType.IIF, parselet=ConditionalParselet())
@@ -126,13 +130,19 @@ class ExpressionParser(Parser):
             if token.type.literal() is not None:
                 left = LiteralExpression(literal=token)
             else:
-                prefix = self._prefix_parselets.get(token.type)
+                if token.type == TokenType.LEFT_BRACE:
+                    next_token = self._reader.look_ahead(0)
+                    if next_token.type == TokenType.PIPE:
+                        prefix = CodeblockParselet()
+                    else:
+                        prefix = ContainerDeclarationParselet()
+                else:
+                    prefix = self._prefix_parselets.get(token.type)
 
                 if prefix is None:
                     raise SyntaxError(
                         f"Could not parse token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}."
                     )
-
                 left = prefix.parse(parser=self, token=token)
 
             while precedence < self._get_precedence():

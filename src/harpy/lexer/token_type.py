@@ -10,92 +10,93 @@ class TokenType(Enum):
     LEFT_BRACE = 4
     RIGHT_BRACE = 5
     COMMA = 6
+    PIPE = 7
 
     # Assignment operators
-    ASSIGN = 7
-    PLUSEQ = 8
-    MINUSEQ = 9
-    MULTEQ = 10
-    DIVEQ = 11
-    MODEQ = 12
-    EXPEQ = 13
+    ASSIGN = 8
+    PLUSEQ = 9
+    MINUSEQ = 10
+    MULTEQ = 11
+    DIVEQ = 12
+    MODEQ = 13
+    EXPEQ = 14
 
     # Logical operators
-    OR = 14
-    AND = 15
-    NOT = 16
+    OR = 15
+    AND = 16
+    NOT = 17
 
     # Relational operators
-    EQ1 = 17
-    EQ2 = 18
-    NE1 = 19
-    NE2 = 20
-    LE = 21
-    GE = 22
-    LT = 23
-    GT = 24
+    EQ1 = 18
+    EQ2 = 19
+    NE1 = 20
+    NE2 = 21
+    LE = 22
+    GE = 23
+    LT = 24
+    GT = 25
 
     # Arithmetic operators
-    PLUS = 25
-    MINUS = 26
-    ASTERISK = 27
-    SLASH = 28
-    PERCENT = 29
-    CARET = 30
+    PLUS = 26
+    MINUS = 27
+    ASTERISK = 28
+    SLASH = 29
+    PERCENT = 30
+    CARET = 31
 
     # Miscellaneous operators
-    DOLLAR = 31
-    QUESTION = 32
-    COLON = 33
-    AT = 34
-    HASHOP = 35
+    DOLLAR = 32
+    QUESTION = 33
+    COLON = 34
+    AT = 35
+    HASHOP = 36
 
     # Keywords
-    FUNCTION = 36
-    PROCEDURE = 37
-    RETURN = 38
-    NIL = 39
-    LOCAL = 40
-    STATIC = 41
-    IIF = 42
-    IF = 43
-    ELSE = 44
-    ELSEIF = 45
-    END = 46
-    ENDIF = 47
-    ENDERR = 48
+    FUNCTION = 37
+    PROCEDURE = 38
+    RETURN = 39
+    NIL = 40
+    LOCAL = 41
+    STATIC = 42
+    IIF = 43
+    IF = 44
+    ELSE = 45
+    ELSEIF = 46
+    END = 47
+    ENDIF = 48
+    ENDERR = 49
 
     # Literals
-    STR_LITERAL = 49
-    NUM_LITERAL = 50
-    BOOL_LITERAL = 51
+    STR_LITERAL = 50
+    NUM_LITERAL = 51
+    BOOL_LITERAL = 52
 
     # Identifiers
-    NAME = 52
+    NAME = 53
 
     # Preprocessor directives
-    INCLUDE_DIRECTIVE = 53
-    DEFINE_DIRECTIVE = 54
-    IFDEF_DIRECTIVE = 55
-    IFNDEF_DIRECTIVE = 56
-    ELIF_DIRECTIVE = 57
-    ELSE_DIRECTIVE = 58
-    ENDIF_DIRECTIVE = 59
-    UNDEF_DIRECTIVE = 60
-    PRAGMA_DIRECTIVE = 61
-    COMMAND_DIRECTIVE = 62
-    XCOMMAND_DIRECTIVE = 63
-    TRANSLATE_DIRECTIVE = 64
-    XTRANSLATE_DIRECTIVE = 65
-    ERROR_DIRECTIVE = 66
-    STDOUT_DIRECTIVE = 67
+    INCLUDE_DIRECTIVE = 54
+    DEFINE_DIRECTIVE = 55
+    IFDEF_DIRECTIVE = 56
+    IFNDEF_DIRECTIVE = 57
+    ELIF_DIRECTIVE = 58
+    ELSE_DIRECTIVE = 59
+    ENDIF_DIRECTIVE = 60
+    UNDEF_DIRECTIVE = 61
+    PRAGMA_DIRECTIVE = 62
+    COMMAND_DIRECTIVE = 63
+    XCOMMAND_DIRECTIVE = 64
+    TRANSLATE_DIRECTIVE = 65
+    XTRANSLATE_DIRECTIVE = 66
+    ERROR_DIRECTIVE = 67
+    STDOUT_DIRECTIVE = 68
 
     # Comments
-    BLOCK_COMMENT = 68
-    LINE_COMMENT = 69
+    BLOCK_COMMENT = 69
+    LINE_COMMENT = 70
 
     # Spacing
-    EOF = 70
+    EOF = 71
 
     def preprocessor_directive(self) -> str | None:
         match self:
@@ -223,6 +224,8 @@ class TokenType(Enum):
                 return "{"
             case TokenType.RIGHT_BRACE:
                 return "}"
+            case TokenType.PIPE:
+                return "|"
             case TokenType.COMMA:
                 return ","
             case TokenType.EQ2:
