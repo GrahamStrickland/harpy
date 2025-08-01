@@ -4,9 +4,9 @@ from harpy.ast.expressions import Expression, LiteralExpression
 from harpy.lexer import SourceReader, Token, TokenType
 
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
-                        ContainerDeclarationParselet, GroupParselet, 
-                        IndexParselet, InfixParselet, NameParselet, 
-                        ObjectAccessParselet, PostfixOperatorParselet, 
+                        ContainerDeclarationParselet, GroupParselet,
+                        IndexParselet, InfixParselet, NameParselet,
+                        ObjectAccessParselet, PostfixOperatorParselet,
                         PrefixOperatorParselet, PrefixParselet)
 from .parser import Parser
 from .precedence import Precedence
@@ -34,7 +34,9 @@ class ExpressionParser(Parser):
         self.register(token=TokenType.LEFT_PAREN, parselet=GroupParselet())
         self.register(token=TokenType.LEFT_PAREN, parselet=CallParselet())
         self.register(token=TokenType.LEFT_BRACKET, parselet=IndexParselet())
-        self.register(token=TokenType.LEFT_BRACE, parselet=ContainerDeclarationParselet())
+        self.register(
+            token=TokenType.LEFT_BRACE, parselet=ContainerDeclarationParselet()
+        )
         self.register(token=TokenType.COLON, parselet=ObjectAccessParselet())
 
         # Register the simple operator parselets.
@@ -126,7 +128,9 @@ class ExpressionParser(Parser):
                 prefix = self._prefix_parselets.get(token.type)
 
                 if prefix is None:
-                    raise SyntaxError(f"Could not parse token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}.")
+                    raise SyntaxError(
+                        f"Could not parse token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}."
+                    )
 
                 left = prefix.parse(parser=self, token=token)
 

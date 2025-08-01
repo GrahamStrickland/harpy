@@ -6,6 +6,7 @@ from harpy.lexer import Token
 
 class PreprocessorDirective(ASTNode):
     """AST node class for preprocessor directives."""
+
     _token: Token
 
     def __init__(self, token):

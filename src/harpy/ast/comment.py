@@ -6,6 +6,7 @@ from harpy.lexer import Token
 
 class Comment(ASTNode):
     """AST node class for line and block comments."""
+
     _token: Token
 
     def __init__(self, token):

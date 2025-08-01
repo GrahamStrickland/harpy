@@ -37,7 +37,9 @@ class HarbourParser(Parser):
             elif (stmt := self.statement(token=token)) is not None:
                 source_root.add(node=stmt)
             else:
-                raise SyntaxError(f"Unable to parse AST node from token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}.")
+                raise SyntaxError(
+                    f"Unable to parse AST node from token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}."
+                )
 
     def preprocessor_directive(self, token: Token) -> PreprocessorDirective | None:
         if token.type.preprocessor_directive() is not None:

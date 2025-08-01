@@ -183,7 +183,7 @@ class Lexer:
         start_index = self._index - 1
 
         while True:
-            match (c := self._advance()):
+            match c := self._advance():
                 case "*":
                     match self._advance():
                         case "/":

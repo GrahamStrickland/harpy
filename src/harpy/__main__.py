@@ -38,7 +38,7 @@ def main():
             outfile.writelines([line for line in result])
     else:
         raise ValueError(f"File with path '{args.src}' is empty.")
-            
+
 
 if __name__ == "__main__":
     main()
