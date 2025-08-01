@@ -123,7 +123,7 @@ class ExpressionParser(Parser):
             if token.type.literal() is not None:
                 left = LiteralExpression(literal=token)
             else:
-                prefix = self._prefix_parselets.get(token)
+                prefix = self._prefix_parselets.get(token.type)
 
                 if prefix is None:
                     raise SyntaxError(f"Could not parse token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}.")

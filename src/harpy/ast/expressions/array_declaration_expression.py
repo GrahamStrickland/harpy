@@ -14,9 +14,11 @@ class ArrayDeclarationExpression(Expression):
     @override
     def print(self):
         elemstr = ""
-        for i, arg in enumerate(self._args):
-            elemstr += arg.print()
-            if i < len(self._args) - 1:
+        for i, elem in enumerate(self._elems):
+            elemstr += elem.print()
+            if i < len(self._elems) - 1:
                 elemstr += ", "
+            else:
+                elemstr += " "
 
         return "{ " + elemstr + "}"

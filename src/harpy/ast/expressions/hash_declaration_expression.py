@@ -8,18 +8,23 @@ class HashDeclarationExpression(Expression):
 
     _keyvalues: dict[Expression, Expression]
 
-    def __init__(self, elems: list[Expression]):
-        self._keyvalues = elems
+    def __init__(self, keyvalues: dict[Expression, Expression]):
+        self._keyvalues = keyvalues
 
     @override
     def print(self):
-        i = 1
+        i = 0
         hashstr = ""
 
-        for k, v in self._keyvalues:
-            hashstr += f"{k.print()} => {v.print()}"
-            if i < len(self._keyvalues) - 1:
-                hashstr += ", "
-                i += 1
+        if len(self._keyvalues) > 0:
+            for k, v in self._keyvalues.items():
+                hashstr += f"{k.print()} => {v.print()}"
+                if i < len(self._keyvalues) - 1:
+                    hashstr += ", "
+                    i += 1
+                else:
+                    hashstr += " "
 
-        return "{ " + hashstr + "}"
+            return "{ " + hashstr + "}"
+
+        return "{ => }"

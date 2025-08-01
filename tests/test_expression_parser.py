@@ -74,11 +74,18 @@ class TestExpressionParser:
         self._test("a:b()[1 + c]", "a:b()[(1 + c)]")
 
     def test_array_declaration(self):
-        self._test("a := { }", "a := { }")
-        self._test("a := { 1 }", "a := { 1 }")
-        self._test("a := { 1, 2 }", "a := { 1, 2 }")
-        self._test("a := { 1, b() }", "a := { 1, b() }")
-        self._test("a := { ;\n    1, ;\n    b() ;\n}", "a := { 1, b() }")
+        self._test("a := { }", "(a := { })")
+        self._test("a := { 1 }", "(a := { 1 })")
+        self._test("a := { 1, 2 }", "(a := { 1, 2 })")
+        self._test("a := { 1, b() }", "(a := { 1, b() })")
+        self._test("a := { ;\n    1, ;\n    b() ;\n}", "(a := { 1, b() })")
+
+    def test_hash_declaration(self):
+        self._test("a := { => }", "(a := { => })")
+        self._test("a := { 'b' => 1 }", "(a := { 'b' => 1 })")
+        self._test("a := { 'b' => 1, 'c' => 2 }", "(a := { 'b' => 1, 'c' => 2 })")
+        self._test("a := { 'b' => 1, 'c' => d() }", "(a := { 'b' => 1, 'c' => d() })")
+        self._test("a := { ;\n    'b' => 1, ;\n    'c' => d() ;\n}", "(a := { 'b' => 1, 'c' => d() })")
 
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected

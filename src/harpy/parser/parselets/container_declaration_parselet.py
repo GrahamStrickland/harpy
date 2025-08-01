@@ -1,18 +1,18 @@
 from typing import override
 
-from harpy.ast.expressions import ArrayDeclarationExpression, Expression, HashDeclarationExpression
+from harpy.ast.expressions import ArrayDeclarationExpression, HashDeclarationExpression
 from harpy.lexer import Token, TokenType
 
 from ..parser import Parser
 from ..precedence import Precedence
-from .infix_parselet import InfixParselet
+from .prefix_parselet import PrefixParselet
 
 
-class ContainerDeclarationParselet(InfixParselet):
+class ContainerDeclarationParselet(PrefixParselet):
     """Parselet to parse an array declaration like `{}` or `{a}` or a hash declaration like `{ => }` or `{ "a" => 1 }`."""
 
     @override
-    def parse(self, parser: Parser, left: Expression, token: Token):
+    def parse(self, parser: Parser, token: Token):
         elems = []
         keyvalues = {}
 
@@ -33,7 +33,7 @@ class ContainerDeclarationParselet(InfixParselet):
                     parser.consume(TokenType.HASHOP)
                     v = parser.parse()
 
-                    keyvalues.put(k, v)
+                    keyvalues[k] = v
             else:
                 elems = [first_expr]
 
@@ -48,7 +48,7 @@ class ContainerDeclarationParselet(InfixParselet):
 
         if len(elems) > 0:
             return ArrayDeclarationExpression(elems=elems)
-        if len(elems) > 0:
+        if len(keyvalues) > 0:
             return HashDeclarationExpression(keyvalues=keyvalues)
 
     @override
