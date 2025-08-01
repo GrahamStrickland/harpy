@@ -92,6 +92,9 @@ class TestExpressionParser:
             "(a := { 'b' => 1, 'c' => d() })",
         )
 
+    def test_conditional(self):
+        self._test("a := iif(b, 1, 0)", "(a := iif(b, 1, 0))")
+
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected
         pretty-printed result.

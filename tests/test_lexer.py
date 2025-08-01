@@ -408,6 +408,21 @@ class TestLexer:
 
         assert str(obs) == str(expected)
 
+    def test_conditional(self):
+        obs = self._get_obs(source="iif(a, b, c)")
+        expected = [
+            Token(type=TokenType.IIF, text="iif", line=1, position=3),
+            Token(type=TokenType.LEFT_PAREN, text="(", line=1, position=4),
+            Token(type=TokenType.NAME, text="a", line=1, position=5),
+            Token(type=TokenType.COMMA, text=",", line=1, position=6),
+            Token(type=TokenType.NAME, text="b", line=1, position=8),
+            Token(type=TokenType.COMMA, text=",", line=1, position=9),
+            Token(type=TokenType.NAME, text="c", line=1, position=11),
+            Token(type=TokenType.RIGHT_PAREN, text=")", line=1, position=12),
+        ]
+
+        assert str(obs) == str(expected)
+
     def _get_obs(self, source: str) -> list[Token]:
         lexer = Lexer(text=source)
         obs = []

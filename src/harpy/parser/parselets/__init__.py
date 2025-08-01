@@ -1,6 +1,7 @@
 from .assign_parselet import AssignParselet
 from .binary_operator_parselet import BinaryOperatorParselet
 from .call_parselet import CallParselet
+from .conditional_parselet import ConditionalParselet
 from .container_declaration_parselet import ContainerDeclarationParselet
 from .group_parselet import GroupParselet
 from .index_parselet import IndexParselet
@@ -15,6 +16,7 @@ __all__ = [
     "AssignParselet",
     "BinaryOperatorParselet",
     "CallParselet",
+    "ConditionalParselet",
     "ContainerDeclarationParselet",
     "GroupParselet",
     "IndexParselet",

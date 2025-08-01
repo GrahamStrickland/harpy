@@ -4,8 +4,8 @@ from harpy.ast.expressions import Expression, LiteralExpression
 from harpy.lexer import SourceReader, Token, TokenType
 
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
-                        ContainerDeclarationParselet, GroupParselet,
-                        IndexParselet, InfixParselet, NameParselet,
+                        ContainerDeclarationParselet, ConditionalParselet,
+                        GroupParselet, IndexParselet, InfixParselet, NameParselet,
                         ObjectAccessParselet, PostfixOperatorParselet,
                         PrefixOperatorParselet, PrefixParselet)
 from .parser import Parser
@@ -38,6 +38,7 @@ class ExpressionParser(Parser):
             token=TokenType.LEFT_BRACE, parselet=ContainerDeclarationParselet()
         )
         self.register(token=TokenType.COLON, parselet=ObjectAccessParselet())
+        self.register(token=TokenType.IIF, parselet=ConditionalParselet())
 
         # Register the simple operator parselets.
         self.prefix(token=TokenType.PLUS, precedence=Precedence.PREFIX)
@@ -120,7 +121,7 @@ class ExpressionParser(Parser):
     def parse(self, precedence: int = 0) -> Expression | None:
         token = self._reader.look_ahead(0)
 
-        if token.type.keyword() is None or token.type == TokenType.NIL:
+        if token.type.keyword() is None or token.type in (TokenType.NIL, TokenType.IIF):
             token = self._reader.consume()
             if token.type.literal() is not None:
                 left = LiteralExpression(literal=token)

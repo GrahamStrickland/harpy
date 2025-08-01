@@ -1,6 +1,7 @@
 from .array_declaration_expression import ArrayDeclarationExpression
 from .assign_expression import AssignExpression
 from .call_expression import CallExpression
+from .conditional_expression import ConditionalExpression
 from .expression import Expression
 from .hash_declaration_expression import HashDeclarationExpression
 from .index_expression import IndexExpression
@@ -15,6 +16,7 @@ __all__ = [
     "ArrayDeclarationExpression",
     "AssignExpression",
     "CallExpression",
+    "ConditionalExpression",
     "Expression",
     "IndexExpression",
     "HashDeclarationExpression",
