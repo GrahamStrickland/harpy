@@ -23,7 +23,9 @@ class ConditionalParselet(PrefixParselet):
 
         parser.consume(TokenType.RIGHT_PAREN)
 
-        return ConditionalExpression(if_arm=if_arm, then_arm=then_arm, else_arm=else_arm)
+        return ConditionalExpression(
+            if_arm=if_arm, then_arm=then_arm, else_arm=else_arm
+        )
 
     @override
     def get_precedence(self) -> int:

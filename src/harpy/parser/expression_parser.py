@@ -4,11 +4,11 @@ from harpy.ast.expressions import Expression, LiteralExpression
 from harpy.lexer import SourceReader, Token, TokenType
 
 from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
-                        CodeblockParselet, ContainerDeclarationParselet, 
-                        ConditionalParselet, GroupParselet, IndexParselet, 
-                        InfixParselet, NameParselet, ObjectAccessParselet, 
-                        PostfixOperatorParselet, PrefixOperatorParselet, 
-                        PrefixParselet)
+                        CodeblockParselet, ConditionalParselet,
+                        ContainerDeclarationParselet, GroupParselet,
+                        IndexParselet, InfixParselet, NameParselet,
+                        ObjectAccessParselet, PostfixOperatorParselet,
+                        PrefixOperatorParselet, PrefixParselet)
 from .parser import Parser
 from .precedence import Precedence
 
@@ -38,9 +38,7 @@ class ExpressionParser(Parser):
         self.register(
             token=TokenType.LEFT_BRACE, parselet=ContainerDeclarationParselet()
         )
-        self.register(
-            token=TokenType.LEFT_BRACE, parselet=CodeblockParselet()
-        )
+        self.register(token=TokenType.LEFT_BRACE, parselet=CodeblockParselet())
         self.register(token=TokenType.COLON, parselet=ObjectAccessParselet())
         self.register(token=TokenType.IIF, parselet=ConditionalParselet())
 

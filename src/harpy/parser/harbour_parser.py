@@ -205,7 +205,9 @@ class HarbourParser(Parser):
         cond = self._expression_parser.parse()
         body = []
 
-        while not self._reader.match(TokenType.END) and not self._reader.match(TokenType.ENDWHILE):
+        while not self._reader.match(TokenType.END) and not self._reader.match(
+            TokenType.ENDWHILE
+        ):
             body.append(self.statement(token=self._reader.consume()))
 
         if self._reader.match(TokenType.END):

@@ -1,6 +1,7 @@
 from typing import override
 
-from harpy.ast.expressions import CodeblockExpression, NameExpression, Expression
+from harpy.ast.expressions import (CodeblockExpression, Expression,
+                                   NameExpression)
 from harpy.lexer import Token, TokenType
 
 from ..parser import Parser

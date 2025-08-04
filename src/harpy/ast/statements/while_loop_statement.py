@@ -15,7 +15,7 @@ class WhileLoopStatement(Statement):
         cond: Expression,
         body: list[Statement],
     ):
-        self._cond = cond 
+        self._cond = cond
         self._body = body
 
     @override
