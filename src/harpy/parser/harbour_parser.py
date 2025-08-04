@@ -5,7 +5,8 @@ from harpy.ast.expressions import AssignExpression
 from harpy.ast.statements import (AssignmentStatement, CallStatement,
                                   FunctionStatement, IfStatement,
                                   LocalVariableDeclaration, ProcedureStatement,
-                                  Statement, StaticVariableDeclaration,
+                                  ReturnStatement, Statement,
+                                  StaticVariableDeclaration,
                                   WhileLoopStatement)
 from harpy.lexer import Lexer, SourceReader, Token, TokenType
 
@@ -19,11 +20,13 @@ class HarbourParser(Parser):
     _expression_parser: ExpressionParser
     _reader: SourceReader
     _statements: list[Statement]
+    _in_funcproc_def: bool
 
     def __init__(self, lexer: Lexer):
         self._reader = SourceReader(tokens=lexer)
         self._expression_parser = ExpressionParser(source_reader=self._reader)
         self._statements = []
+        self._in_funcproc_def = False
 
     @override
     def parse(self) -> SourceRoot:
@@ -57,18 +60,20 @@ class HarbourParser(Parser):
     def statement(self, token: Token) -> Statement | None:
         if token.type.keyword() is not None:
             match token.type:
+                case TokenType.RETURN:
+                    return self._return_stmt(token=token)
                 case TokenType.STATIC:
                     match self._reader.look_ahead(0).type:
                         case TokenType.FUNCTION:
-                            return self._function_defn(static=True)
+                            return self._function_def(static=True)
                         case TokenType.PROCEDURE:
-                            return self._procedure_defn(static=True)
+                            return self._procedure_def(static=True)
                         case _:
                             return self._static_decln_stmt()
                 case TokenType.FUNCTION:
-                    return self._function_defn()
+                    return self._function_def()
                 case TokenType.PROCEDURE:
-                    return self._procedure_defn()
+                    return self._procedure_def()
                 case TokenType.LOCAL:
                     return self._local_decln_stmt()
                 case TokenType.IF:
@@ -76,7 +81,9 @@ class HarbourParser(Parser):
                 case TokenType.WHILE:
                     return self._while_loop()
                 case _:
-                    raise SyntaxError(f"Expected statement, found '{token.text}'")
+                    raise SyntaxError(
+                        f"Expected statement, found '{token.text}' at line {token.line}, column {token.start}"
+                    )
         elif (stmt := self._call_stmt(token)) is not None:
             return stmt
         elif (stmt := self._assign_stmt(token)) is not None:
@@ -84,40 +91,53 @@ class HarbourParser(Parser):
         else:
             return None
 
-    def _function_defn(self, static: bool = False) -> FunctionStatement:
-        if static:
-            _ = self._reader.consume(TokenType.FUNCTION)
+    def _return_stmt(self, token: Token) -> ReturnStatement:
+        if not self._in_funcproc_def:
+            raise SyntaxError(
+                f"Encountered `return` statement outside of function/procedure definition at line {token.line}, column {token.start}."
+            )
 
-        name = self._reader.consume(TokenType.NAME)
+        retval = self._expression_parser.parse(optional=True)
 
-        _ = self._reader.consume(TokenType.LEFT_PAREN)
-        params = []
+        return ReturnStatement(retval=retval)
 
-        while not self._reader.match(TokenType.RIGHT_PAREN):
-            params.append(self._reader.consume(TokenType.NAME))
-            if self._reader.match(TokenType.COMMA):
-                self._reader.consume(TokenType.COMMA)
-            else:
-                break
-
-        _ = self._reader.consume(TokenType.RIGHT_PAREN)
-
-        body = []
-
-        while not self._reader.match(TokenType.RETURN):
-            body.append(self.statement(token=self._reader.consume()))
-
-        self._reader.consume(TokenType.RETURN)
-        retval = self._expression_parser.parse()
-
-        return FunctionStatement(
-            name=name, params=params, body=body, retval=retval, static=static
+    def _function_def(self, static: bool = False) -> FunctionStatement | None:
+        name, params, body, return_stmt = self._funcproc_def(
+            expected=TokenType.FUNCTION, static=static
         )
 
-    def _procedure_defn(self, static: bool = False) -> ProcedureStatement:
-        if static:
-            _ = self._reader.consume(TokenType.PROCEDURE)
+        return FunctionStatement(
+            name=name,
+            params=params,
+            body=body,
+            retval=return_stmt.return_value(),
+            static=static,
+        )
 
+    def _procedure_def(self, static: bool = False) -> ProcedureStatement | None:
+        name, params, body, _ = self._funcproc_def(
+            expected=TokenType.PROCEDURE, static=static
+        )
+
+        return ProcedureStatement(name=name, params=params, body=body, static=static)
+
+    def _funcproc_def(
+        self, expected: TokenType, static: bool = False
+    ) -> tuple[str, list[Token], list[Statement], ReturnStatement]:
+        if self._in_funcproc_def:
+            if static:
+                self._reader.put_back(TokenType.STATIC)
+            else:
+                self._reader.put_back(expected)
+
+            return None
+
+        self._in_funcproc_def = True
+
+        if static:
+            _ = self._reader.consume(expected)
+
+        self._in_funcproc_def = True
         name = self._reader.consume(TokenType.NAME)
 
         _ = self._reader.consume(TokenType.LEFT_PAREN)
@@ -134,12 +154,19 @@ class HarbourParser(Parser):
 
         body = []
 
-        while not self._reader.match(TokenType.RETURN):
-            body.append(self.statement(token=self._reader.consume()))
+        while (stmt := self.statement(token=self._reader.consume())) is not None:
+            body.append(stmt)
 
-        self._reader.consume(TokenType.RETURN)
+        if not isinstance(body[-1], ReturnStatement):
+            raise SyntaxError(
+                f"Invalid statement at end of function/procedure of type `{body[-1].__class__.__name__}`: '{body[-1].print()}', expected `return` statement."
+            )
+        else:
+            return_stmt = body.pop()
 
-        return ProcedureStatement(name=name, params=params, body=body, static=static)
+        self._in_funcproc_def = False
+
+        return name, params, body, return_stmt
 
     def _var_decln_stmt(self, decln_type: str) -> tuple[str, AssignExpression | None]:
         assign_expr = None
@@ -147,7 +174,7 @@ class HarbourParser(Parser):
         token = self._reader.look_ahead(0)
         if token.type != TokenType.NAME:
             raise SyntaxError(
-                f"Expected name after {decln_type} keyword, found '{token.text}'"
+                f"Expected name after {decln_type} keyword, found '{token.text}' at line {token.line}, column {token.start}."
             )
 
         name = token

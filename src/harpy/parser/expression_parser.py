@@ -120,7 +120,7 @@ class ExpressionParser(Parser):
             self._infix_parselets[token] = parselet
 
     @override
-    def parse(self, precedence: int = 0) -> Expression | None:
+    def parse(self, precedence: int = 0, optional: bool = False) -> Expression | None:
         token = self._reader.look_ahead(0)
 
         if token.type.keyword() is None or token.type in (TokenType.NIL, TokenType.IIF):
@@ -138,9 +138,13 @@ class ExpressionParser(Parser):
                     prefix = self._prefix_parselets.get(token.type)
 
                 if prefix is None:
-                    raise SyntaxError(
-                        f"Could not parse token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}."
-                    )
+                    if not optional:
+                        raise SyntaxError(
+                            f"Could not parse token '{token.text}' of type '{token.type}' on line {token.line}, column {token.start}."
+                        )
+                    else:
+                        return None
+
                 left = prefix.parse(parser=self, token=token)
 
             while precedence < self._get_precedence():

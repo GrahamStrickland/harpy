@@ -4,6 +4,7 @@ from .function_statement import FunctionStatement
 from .if_statement import IfStatement
 from .local_variable_declaration import LocalVariableDeclaration
 from .procedure_statement import ProcedureStatement
+from .return_statement import ReturnStatement
 from .statement import Statement
 from .static_variable_declaration import StaticVariableDeclaration
 from .while_loop_statement import WhileLoopStatement
@@ -15,6 +16,7 @@ __all__ = [
     "IfStatement",
     "LocalVariableDeclaration",
     "ProcedureStatement",
+    "ReturnStatement",
     "Statement",
     "StaticVariableDeclaration",
     "WhileLoopStatement",
