@@ -3,7 +3,7 @@ from typing import override
 from harpy.ast.expressions import AssignExpression, Expression
 from harpy.lexer import Token
 
-from ..parser import Parser
+from ..parser_base import ParserBase
 from ..precedence import Precedence
 from .infix_parselet import InfixParselet
 
@@ -15,7 +15,7 @@ class AssignParselet(InfixParselet):
     """
 
     @override
-    def parse(self, parser: Parser, left: Expression, token: Token):
+    def parse(self, parser: ParserBase, left: Expression, token: Token):
         del token
 
         right = parser.parse(Precedence.ASSIGNMENT.value - 1)

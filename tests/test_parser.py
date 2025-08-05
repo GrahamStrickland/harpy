@@ -1,7 +1,7 @@
-from harpy import Comment, HarbourParser, Lexer
+from harpy import Comment, Parser, Lexer
 
 
-class TestHarbourParser:
+class TestParser:
     def test__function_defn(self):
         self._test(
             "function a()\n\n    local c := b\n\nreturn c",
@@ -125,7 +125,7 @@ class TestHarbourParser:
         pretty-printed result.
         """
         lexer = Lexer(text=source)
-        parser = HarbourParser(lexer=lexer)
+        parser = Parser(lexer=lexer)
 
         root = parser.parse()
         actual = ""

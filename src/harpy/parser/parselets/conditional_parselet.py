@@ -3,7 +3,7 @@ from typing import override
 from harpy.ast.expressions import ConditionalExpression
 from harpy.lexer import Token, TokenType
 
-from ..parser import Parser
+from ..parser_base import ParserBase
 from ..precedence import Precedence
 from .prefix_parselet import PrefixParselet
 
@@ -12,7 +12,7 @@ class ConditionalParselet(PrefixParselet):
     """Parselet for the conditional or 'ternary' operator, like `iif(a, b, c)`."""
 
     @override
-    def parse(self, parser: Parser, token: Token) -> ConditionalExpression:
+    def parse(self, parser: ParserBase, token: Token) -> ConditionalExpression:
         del token
 
         parser.consume(TokenType.LEFT_PAREN)

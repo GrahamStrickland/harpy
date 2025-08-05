@@ -1,7 +1,7 @@
 from harpy.ast.expressions import Expression, OperatorExpression
 from harpy.lexer import Token
 
-from ..parser import Parser
+from ..parser_base import ParserBase
 from .infix_parselet import InfixParselet
 
 
@@ -18,7 +18,7 @@ class BinaryOperatorParselet(InfixParselet):
         self._precedence = precedence
         self._is_right = is_right
 
-    def parse(self, parser: Parser, left: Expression, token: Token) -> Expression:
+    def parse(self, parser: ParserBase, left: Expression, token: Token) -> Expression:
         """To handle right-associative operators like '^', we allow a slightly
         lower precedence when parsing the right-hand side. This will let a
         parselet with the same precedence appear on the right, which will then

@@ -1,7 +1,7 @@
 from harpy.ast.expressions import Expression, PostfixExpression
 from harpy.lexer import Token
 
-from ..parser import Parser
+from ..parser_base import ParserBase
 from .infix_parselet import InfixParselet
 
 
@@ -14,7 +14,7 @@ class PostfixOperatorParselet(InfixParselet):
     def __init__(self, precedence: int):
         self._precedence = precedence
 
-    def parse(self, parser: Parser, left: Expression, token: Token) -> Expression:
+    def parse(self, parser: ParserBase, left: Expression, token: Token) -> Expression:
         return PostfixExpression(left=left, operator=token.type)
 
     def get_precedence(self) -> int:

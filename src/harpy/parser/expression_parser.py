@@ -9,11 +9,11 @@ from .parselets import (AssignParselet, BinaryOperatorParselet, CallParselet,
                         IndexParselet, InfixParselet, NameParselet,
                         ObjectAccessParselet, PostfixOperatorParselet,
                         PrefixOperatorParselet, PrefixParselet)
-from .parser import Parser
+from .parser_base import ParserBase
 from .precedence import Precedence
 
 
-class ExpressionParser(Parser):
+class ExpressionParser(ParserBase):
     """Extends the generic Parser class with support for parsing the Harbour
     expression grammar.
     """

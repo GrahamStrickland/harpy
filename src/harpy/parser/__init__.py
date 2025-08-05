@@ -1,7 +1,7 @@
 from .expression_parser import ExpressionParser
-from .harbour_parser import HarbourParser
+from .parser import Parser
 
 __all__ = [
     "ExpressionParser",
-    "HarbourParser",
+    "Parser",
 ]

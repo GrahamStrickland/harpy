@@ -4,7 +4,7 @@ from harpy.ast.expressions import (ArrayDeclarationExpression,
                                    HashDeclarationExpression)
 from harpy.lexer import Token, TokenType
 
-from ..parser import Parser
+from ..parser_base import ParserBase
 from ..precedence import Precedence
 from .prefix_parselet import PrefixParselet
 
@@ -13,7 +13,7 @@ class ContainerDeclarationParselet(PrefixParselet):
     """Parselet to parse an array declaration like `{}` or `{a}` or a hash declaration like `{ => }` or `{ "a" => 1 }`."""
 
     @override
-    def parse(self, parser: Parser, token: Token):
+    def parse(self, parser: ParserBase, token: Token):
         del token
 
         elems = []

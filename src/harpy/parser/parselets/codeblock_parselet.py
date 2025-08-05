@@ -4,7 +4,7 @@ from harpy.ast.expressions import (CodeblockExpression, Expression,
                                    NameExpression)
 from harpy.lexer import Token, TokenType
 
-from ..parser import Parser
+from ..parser_base import ParserBase
 from ..precedence import Precedence
 from .prefix_parselet import PrefixParselet
 
@@ -13,7 +13,7 @@ class CodeblockParselet(PrefixParselet):
     """Parselet for a codeblock like `{ |a| b, c }`."""
 
     @override
-    def parse(self, parser: Parser, token: Token):
+    def parse(self, parser: ParserBase, token: Token):
         del token
 
         parser.consume(TokenType.PIPE)
@@ -44,7 +44,7 @@ class CodeblockParselet(PrefixParselet):
     def get_precedence(self) -> int:
         return Precedence.NONE.value
 
-    def _parse_param(self, parser: Parser) -> NameExpression:
+    def _parse_param(self, parser: ParserBase) -> NameExpression:
         name = parser.parse()
         if not isinstance(name, NameExpression):
             raise SyntaxError(

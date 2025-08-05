@@ -3,7 +3,7 @@ from typing import override
 from harpy.ast.expressions import CallExpression, Expression
 from harpy.lexer import Token, TokenType
 
-from ..parser import Parser
+from ..parser_base import ParserBase
 from ..precedence import Precedence
 from .infix_parselet import InfixParselet
 
@@ -12,7 +12,7 @@ class CallParselet(InfixParselet):
     """Parselet to parse a function call like `a(b, c, d)`."""
 
     @override
-    def parse(self, parser: Parser, left: Expression, token: Token) -> CallExpression:
+    def parse(self, parser: ParserBase, left: Expression, token: Token) -> CallExpression:
         del token
 
         # Parse the comma-separated arguments until we hit ", )".
