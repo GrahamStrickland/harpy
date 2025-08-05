@@ -13,6 +13,8 @@ class IndexParselet(InfixParselet):
 
     @override
     def parse(self, parser: Parser, left: Expression, token: Token):
+        del token
+
         index_exprs = [parser.parse()]
 
         if not parser.match(TokenType.RIGHT_BRACKET):

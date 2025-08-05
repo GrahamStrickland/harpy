@@ -19,6 +19,8 @@ class IfStatement(Statement):
         ifbody: list[Statement],
         elsebody: list[Statement],
     ):
+        super().__init__()
+
         self._ifcond = ifcond
         self._elifs = elifs
         self._ifbody = ifbody

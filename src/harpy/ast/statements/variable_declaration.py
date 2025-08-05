@@ -12,6 +12,8 @@ class VariableDeclaration(Statement):
     _assign_expr: Expression | None
 
     def __init__(self, variable_type: str, name: str, assign_expr: Expression | None):
+        super().__init__()
+
         self._variable_type = variable_type
         self._name = name
         self._assign_expr = assign_expr

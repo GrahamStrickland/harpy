@@ -58,40 +58,51 @@ class HarbourParser(Parser):
         return None
 
     def statement(self, token: Token) -> Statement | None:
+        comments = []
+        while token.type.comment():
+            comments.append(token)
+            token = next(self._reader)
+
         if token.type.keyword() is not None:
             match token.type:
                 case TokenType.RETURN:
-                    return self._return_stmt(token=token)
+                    stmt = self._return_stmt(token=token)
                 case TokenType.STATIC:
                     match self._reader.look_ahead(0).type:
                         case TokenType.FUNCTION:
-                            return self._function_def(static=True)
+                            stmt = self._function_def(static=True)
                         case TokenType.PROCEDURE:
-                            return self._procedure_def(static=True)
+                            stmt = self._procedure_def(static=True)
                         case _:
-                            return self._static_decln_stmt()
+                            stmt = self._static_decln_stmt()
                 case TokenType.FUNCTION:
-                    return self._function_def()
+                    stmt = self._function_def()
                 case TokenType.PROCEDURE:
-                    return self._procedure_def()
+                    stmt = self._procedure_def()
                 case TokenType.LOCAL:
-                    return self._local_decln_stmt()
+                    stmt = self._local_decln_stmt()
                 case TokenType.IF:
-                    return self._if_stmt()
+                    stmt = self._if_stmt()
                 case TokenType.WHILE:
-                    return self._while_loop()
+                    stmt = self._while_loop()
                 case _:
                     raise SyntaxError(
                         f"Expected statement, found '{token.text}' at line {token.line}, column {token.start}"
                     )
         elif token.type == TokenType.EOF:
-            return None
+            stmt = None
         elif (stmt := self._call_stmt(token)) is not None:
-            return stmt
+            stmt = stmt
         elif (stmt := self._assign_stmt(token)) is not None:
-            return stmt
+            stmt = stmt
         else:
-            return None
+            stmt = None
+
+        if stmt is not None:
+            for comment in comments:
+                stmt.add_comment(comment)
+
+        return stmt
 
     def _return_stmt(self, token: Token) -> ReturnStatement:
         if not self._in_funcproc_def:

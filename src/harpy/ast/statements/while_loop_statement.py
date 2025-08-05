@@ -15,6 +15,8 @@ class WhileLoopStatement(Statement):
         cond: Expression,
         body: list[Statement],
     ):
+        super().__init__()
+
         self._cond = cond
         self._body = body
 

@@ -13,6 +13,8 @@ class CallParselet(InfixParselet):
 
     @override
     def parse(self, parser: Parser, left: Expression, token: Token) -> CallExpression:
+        del token
+
         # Parse the comma-separated arguments until we hit ", )".
         args: list[Expression] = []
 

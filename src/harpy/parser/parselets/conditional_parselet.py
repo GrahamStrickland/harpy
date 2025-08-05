@@ -13,6 +13,8 @@ class ConditionalParselet(PrefixParselet):
 
     @override
     def parse(self, parser: Parser, token: Token) -> ConditionalExpression:
+        del token
+
         parser.consume(TokenType.LEFT_PAREN)
 
         if_arm = parser.parse()

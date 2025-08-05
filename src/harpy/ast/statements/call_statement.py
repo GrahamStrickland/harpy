@@ -10,6 +10,8 @@ class CallStatement(Statement):
     _call_expr: CallExpression
 
     def __init__(self, call_expr: CallExpression):
+        super().__init__()
+
         self._call_expr = call_expr
 
     @override

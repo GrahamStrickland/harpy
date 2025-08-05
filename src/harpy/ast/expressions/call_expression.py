@@ -10,7 +10,8 @@ class CallExpression(Expression):
     _args: list[Expression]
 
     def __init__(self, function: Expression, args: list[Expression]):
-        self._left_expr = True
+        super().__init__(left_expr=True)
+
         self._function = function
         self._args = args
 

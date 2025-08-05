@@ -9,7 +9,8 @@ class NameExpression(Expression):
     _name: str
 
     def __init__(self, name: str):
-        self._left_expr = True
+        super().__init__(left_expr=True)
+
         self._name = name
 
     @override

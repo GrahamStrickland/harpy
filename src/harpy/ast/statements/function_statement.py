@@ -21,6 +21,8 @@ class FunctionStatement(Statement):
         retval: Expression,
         static: bool = False,
     ):
+        super().__init__()
+
         self._name = name
         self._params = params
         self._body = body

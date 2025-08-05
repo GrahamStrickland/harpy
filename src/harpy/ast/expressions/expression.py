@@ -6,5 +6,10 @@ class Expression(ASTNode):
 
     _left_expr: bool
 
+    def __init__(self, left_expr: bool):
+        super().__init__()
+
+        self._lext_expr = left_expr
+
     def left_expr(self) -> bool:
         return self._left_expr

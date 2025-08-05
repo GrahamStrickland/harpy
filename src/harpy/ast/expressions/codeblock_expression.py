@@ -11,7 +11,8 @@ class CodeblockExpression(Expression):
     _exprs: list[Expression]
 
     def __init__(self, params: list[NameExpression], exprs: list[Expression]):
-        self._left_expr = False
+        super().__init__(left_expr=False)
+
         self._params = params
         self._exprs = exprs
 

@@ -10,6 +10,8 @@ class AssignmentStatement(Statement):
     _assign_expr: Expression
 
     def __init__(self, assign_expr: Expression):
+        super().__init__()
+
         self._assign_expr = assign_expr
 
     @override

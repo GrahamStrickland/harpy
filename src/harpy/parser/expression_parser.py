@@ -123,9 +123,15 @@ class ExpressionParser(Parser):
     def parse(
         self, precedence: int = 0, optional: bool = False, reset: bool = False
     ) -> Expression | None:
+        self._comments = []
+
         if reset:
             self._reader.set_reset_point()
         token = self._reader.look_ahead(0)
+
+        while token.type.comment():
+            self._comments.append(self._reader.consume(expected=token.type))
+            token = self._reader.look_ahead(0)
 
         if token.type.keyword() is None or token.type in (TokenType.NIL, TokenType.IIF):
             token = self._reader.consume()
@@ -153,18 +159,29 @@ class ExpressionParser(Parser):
 
             while precedence < self._get_precedence():
                 token = self._reader.consume()
+                while token.type.comment():
+                    self._comments.append(token)
+                    token = self._reader.consume()
+
                 if token.type.literal() is not None:
                     left = LiteralExpression(literal=self._reader.consume())
                 else:
                     infix = self._infix_parselets.get(token.type)
                     left = infix.parse(parser=self, left=left, token=token)
 
+            for comment in self._comments:
+                left.add_comment(comment=comment)
+
             return left
 
     def match(self, expected: TokenType) -> bool:
+        self._comments.append(self._reader.consume_comments())
+
         return self._reader.match(expected)
 
     def consume(self, expected: TokenType | None = None) -> Token:
+        self._comments.append(self._reader.consume_comments())
+
         return self._reader.consume(expected)
 
     def unparse(self):

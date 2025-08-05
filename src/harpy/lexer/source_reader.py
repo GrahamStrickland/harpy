@@ -70,3 +70,11 @@ class SourceReader:
     def reset(self):
         for token in self._reset_buffer:
             self._read.appendleft(token)
+
+    def consume_comments(self) -> list[Token]:
+        comments = []
+
+        while self.match(TokenType.BLOCK_COMMENT) or self.match(TokenType.LINE_COMMENT):
+            comments.append(self.consume())
+
+        return comments

@@ -101,6 +101,11 @@ class TestExpressionParser:
     def test_conditional(self):
         self._test("a := iif(b, 1, 0)", "(a := iif(b, 1, 0))")
 
+    def test_comments(self):
+        self._test("a:b(c/* Not sure if this should be here */)", "a:b(c)")
+        self._test("a:b(/* Not sure if this should be here */c)", "a:b(c)")
+        self._test("a:b(c) // Comment at the end", "a:b(c)")
+
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected
         pretty-printed result.

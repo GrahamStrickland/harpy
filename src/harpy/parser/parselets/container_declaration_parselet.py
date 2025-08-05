@@ -14,6 +14,8 @@ class ContainerDeclarationParselet(PrefixParselet):
 
     @override
     def parse(self, parser: Parser, token: Token):
+        del token
+
         elems = []
         keyvalues = {}
 

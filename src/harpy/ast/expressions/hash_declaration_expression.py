@@ -9,7 +9,8 @@ class HashDeclarationExpression(Expression):
     _keyvalues: dict[Expression, Expression]
 
     def __init__(self, keyvalues: dict[Expression, Expression]):
-        self._left_expr = False
+        super().__init__(left_expr=False)
+
         self._keyvalues = keyvalues
 
     @override

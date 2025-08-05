@@ -103,48 +103,48 @@ class TokenType(Enum):
     def preprocessor_directive(self) -> str | None:
         match self:
             case TokenType.INCLUDE_DIRECTIVE:
-                return "include"
+                return "<include>"
             case TokenType.DEFINE_DIRECTIVE:
-                return "define"
+                return "<define>"
             case TokenType.IFDEF_DIRECTIVE:
-                return "ifdef"
+                return "<ifdef>"
             case TokenType.IFNDEF_DIRECTIVE:
-                return "ifndef"
+                return "<ifndef>"
             case TokenType.ELIF_DIRECTIVE:
-                return "elif"
+                return "<elif>"
             case TokenType.ELSE_DIRECTIVE:
-                return "else"
+                return "<else>"
             case TokenType.ENDIF_DIRECTIVE:
-                return "endif"
+                return "<endif>"
             case TokenType.UNDEF_DIRECTIVE:
-                return "undef"
+                return "<undef>"
             case TokenType.PRAGMA_DIRECTIVE:
-                return "pragma"
+                return "<pragma>"
             case TokenType.COMMAND_DIRECTIVE:
-                return "command"
+                return "<command>"
             case TokenType.XCOMMAND_DIRECTIVE:
-                return "xcommand"
+                return "<xcommand>"
             case TokenType.TRANSLATE_DIRECTIVE:
-                return "translate"
+                return "<translate>"
             case TokenType.XTRANSLATE_DIRECTIVE:
-                return "xtranslate"
+                return "<xtranslate>"
             case TokenType.ERROR_DIRECTIVE:
-                return "error"
+                return "<error>"
             case TokenType.STDOUT_DIRECTIVE:
-                return "stdout"
+                return "<stdout>"
             case _:
                 return None
 
     def literal(self) -> str | None:
         match self:
             case TokenType.BOOL_LITERAL:
-                return "bool"
+                return "<bool>"
             case TokenType.NUM_LITERAL:
-                return "num"
+                return "<num>"
             case TokenType.STR_LITERAL:
-                return "str"
+                return "<str>"
             case TokenType.NIL:
-                return "nil"
+                return "<nil>"
             case _:
                 return None
 
@@ -264,5 +264,14 @@ class TokenType(Enum):
                 return ":"
             case TokenType.AT:
                 return "@"
+            case _:
+                return None
+
+    def comment(self) -> str | None:
+        match self:
+            case TokenType.BLOCK_COMMENT:
+                return "<block_comment>"
+            case TokenType.LINE_COMMENT:
+                return "<line_comment>"
             case _:
                 return None

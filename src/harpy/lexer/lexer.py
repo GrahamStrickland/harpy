@@ -43,7 +43,7 @@ class Lexer:
         for type in TokenType:
             directive = type.preprocessor_directive()
             if directive is not None:
-                self._directives[directive] = type
+                self._directives[directive[1:-1]] = type
                 continue
 
             keyword = type.keyword()

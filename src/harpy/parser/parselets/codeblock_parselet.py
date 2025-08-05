@@ -14,6 +14,8 @@ class CodeblockParselet(PrefixParselet):
 
     @override
     def parse(self, parser: Parser, token: Token):
+        del token
+
         parser.consume(TokenType.PIPE)
 
         params: list[NameExpression] = []

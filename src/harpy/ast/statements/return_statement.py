@@ -10,6 +10,8 @@ class ReturnStatement(Statement):
     _retval: Expression | None
 
     def __init__(self, retval: Expression | None):
+        super().__init__()
+
         self._retval = retval
 
     @override

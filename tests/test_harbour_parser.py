@@ -1,4 +1,4 @@
-from harpy import HarbourParser, Lexer
+from harpy import Comment, HarbourParser, Lexer
 
 
 class TestHarbourParser:
@@ -88,7 +88,7 @@ class TestHarbourParser:
             "if a(b, c, d)\ne()\nelseif f(b)\ng()\nendif",
         )
         self._test(
-            "if a(b, c, d)\n\n    e()\n\nelseif f(b)\n\n    g()\n\nelse\n\n    h()\n\nendif",
+            "if a(b, /*@*/c, d)\n\n    e()\n\nelseif f(b)\n\n    g()\n\nelse\n\n    h()\n\nendif",
             "if a(b, c, d)\ne()\nelseif f(b)\ng()\nelse\nh()\nendif",
         )
 
@@ -106,7 +106,7 @@ class TestHarbourParser:
             "while a(b, c, d)\ne()\nf()\nend while",
         )
         self._test(
-            "while a(b, c, d)\n\n    e()\n    f()\n\nendwhile",
+            "  // Be careful with this\nwhile a(b, c, d)\n\n    e()\n    f()\n\nendwhile",
             "while a(b, c, d)\ne()\nf()\nend while",
         )
 
@@ -130,6 +130,7 @@ class TestHarbourParser:
         root = parser.parse()
         actual = ""
         for node in root:
-            actual += node.print()
+            if not isinstance(node, Comment):
+                actual += node.print()
 
         assert actual == expected
