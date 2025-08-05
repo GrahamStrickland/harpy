@@ -11,6 +11,7 @@ class ConditionalExpression(Expression):
     _else_arm: Expression
 
     def __init__(self, if_arm: Expression, then_arm: Expression, else_arm: Expression):
+        self._left_expr = True
         self._if_arm = if_arm
         self._then_arm = then_arm
         self._else_arm = else_arm

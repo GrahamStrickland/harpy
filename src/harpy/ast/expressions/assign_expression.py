@@ -6,13 +6,14 @@ from .expression import Expression
 class AssignExpression(Expression):
     """An assignment expression like `a := b`."""
 
-    _name: str
+    _name: Expression
     _right: Expression
 
-    def __init__(self, name: str, right: Expression):
-        self._name = name
+    def __init__(self, left: Expression, right: Expression):
+        self._left_expr = False
+        self._left = left
         self._right = right
 
     @override
     def print(self):
-        return f"({self._name} := {self._right.print()})"
+        return f"({self._left.print()} := {self._right.print()})"

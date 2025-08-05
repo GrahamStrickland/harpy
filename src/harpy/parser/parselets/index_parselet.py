@@ -26,4 +26,4 @@ class IndexParselet(InfixParselet):
 
     @override
     def get_precedence(self) -> int:
-        return Precedence.CALL.value
+        return Precedence.INDEX.value

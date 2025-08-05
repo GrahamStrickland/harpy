@@ -120,7 +120,11 @@ class ExpressionParser(Parser):
             self._infix_parselets[token] = parselet
 
     @override
-    def parse(self, precedence: int = 0, optional: bool = False) -> Expression | None:
+    def parse(
+        self, precedence: int = 0, optional: bool = False, reset: bool = False
+    ) -> Expression | None:
+        if reset:
+            self._reader.set_reset_point()
         token = self._reader.look_ahead(0)
 
         if token.type.keyword() is None or token.type in (TokenType.NIL, TokenType.IIF):
@@ -157,6 +161,15 @@ class ExpressionParser(Parser):
 
             return left
 
+    def match(self, expected: TokenType) -> bool:
+        return self._reader.match(expected)
+
+    def consume(self, expected: TokenType | None = None) -> Token:
+        return self._reader.consume(expected)
+
+    def unparse(self):
+        self._reader.reset()
+
     def _get_precedence(self) -> int:
         type = self._reader.look_ahead(0).type
         parser = self._infix_parselets[type] if type in self._infix_parselets else None
@@ -165,9 +178,3 @@ class ExpressionParser(Parser):
             return parser.get_precedence()
 
         return 0
-
-    def match(self, expected: TokenType) -> bool:
-        return self._reader.match(expected)
-
-    def consume(self, expected: TokenType | None = None) -> Token:
-        return self._reader.consume(expected)

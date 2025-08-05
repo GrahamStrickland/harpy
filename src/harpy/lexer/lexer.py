@@ -111,7 +111,7 @@ class Lexer:
                         self._advance()
                         return Token(
                             type=self._compound_operators[c + c1],
-                            text=c + c1,
+                            text=(c + c1),
                             line=self._line,
                             position=self._pos,
                         )

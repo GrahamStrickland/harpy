@@ -13,10 +13,12 @@ class ObjectAccessParselet(InfixParselet):
 
     @override
     def parse(self, parser: Parser, left: Expression, token: Token):
-        right = parser.parse()
+        del token
+
+        right = parser.parse(precedence=self.get_precedence())
 
         return ObjectAccessExpression(left=left, right=right)
 
     @override
     def get_precedence(self) -> int:
-        return Precedence.CALL.value
+        return Precedence.ACCESS.value

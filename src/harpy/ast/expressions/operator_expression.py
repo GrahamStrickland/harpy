@@ -13,6 +13,7 @@ class OperatorExpression(Expression):
     _operator: TokenType
 
     def __init__(self, left: Expression, operator: TokenType, right: Expression):
+        self._left_expr = False
         self._left = left
         self._right = right
         self._operator = operator

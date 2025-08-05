@@ -40,7 +40,7 @@ class CodeblockParselet(PrefixParselet):
 
     @override
     def get_precedence(self) -> int:
-        return Precedence.CALL.value
+        return Precedence.NONE.value
 
     def _parse_param(self, parser: Parser) -> NameExpression:
         name = parser.parse()

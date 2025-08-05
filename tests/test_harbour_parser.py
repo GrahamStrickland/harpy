@@ -115,6 +115,10 @@ class TestHarbourParser:
             "if a(b, c, d)\n\n    e := 1\n\nendif",
             "if a(b, c, d)\n(e := 1)\nendif",
         )
+        self._test(
+            "if a(b, c, d)\n\n    e:f := 1\n\nendif",
+            "if a(b, c, d)\n(e:f := 1)\nendif",
+        )
 
     def _test(self, source: str, expected: str):
         """Parses the given chunk of code and verifies that it matches the expected

@@ -84,6 +84,8 @@ class HarbourParser(Parser):
                     raise SyntaxError(
                         f"Expected statement, found '{token.text}' at line {token.line}, column {token.start}"
                     )
+        elif token.type == TokenType.EOF:
+            return None
         elif (stmt := self._call_stmt(token)) is not None:
             return stmt
         elif (stmt := self._assign_stmt(token)) is not None:
@@ -174,13 +176,13 @@ class HarbourParser(Parser):
         token = self._reader.look_ahead(0)
         if token.type != TokenType.NAME:
             raise SyntaxError(
-                f"Expected name after {decln_type} keyword, found '{token.text}' at line {token.line}, column {token.start}."
+                f"Expected name after '{decln_type}' keyword, found '{token.text}' at line {token.line}, column {token.start}."
             )
 
         name = token
         token = self._reader.look_ahead(1)
         if token.type == TokenType.ASSIGN:
-            assign_expr = self._expression_parser.parse()
+            assign_expr = self._expression_parser.parse(reset=True)
         else:
             name = self._reader.consume(TokenType.NAME)
 
@@ -193,7 +195,7 @@ class HarbourParser(Parser):
         return StaticVariableDeclaration(*self._var_decln_stmt("static"))
 
     def _if_stmt(self) -> IfStatement:
-        ifcond = self._expression_parser.parse()
+        ifcond = self._expression_parser.parse(reset=True)
         elifs = []
 
         ifbody = []
@@ -207,7 +209,7 @@ class HarbourParser(Parser):
                 break
             elif self._reader.match(TokenType.ELSEIF):
                 self._reader.consume(TokenType.ELSEIF)
-                elifcond = self._expression_parser.parse()
+                elifcond = self._expression_parser.parse(reset=True)
                 elifbody = []
                 while (
                     not self._reader.match(TokenType.ENDIF)
@@ -229,7 +231,7 @@ class HarbourParser(Parser):
         )
 
     def _while_loop(self) -> WhileLoopStatement:
-        cond = self._expression_parser.parse()
+        cond = self._expression_parser.parse(reset=True)
         body = []
 
         while not self._reader.match(TokenType.END) and not self._reader.match(
@@ -254,19 +256,18 @@ class HarbourParser(Parser):
         token = self._reader.look_ahead(0)
         if token.type == TokenType.LEFT_PAREN:
             self._reader.put_back(name)
-            call_expr = self._expression_parser.parse()
+            call_expr = self._expression_parser.parse(reset=True)
         else:
             return None
 
         return CallStatement(call_expr=call_expr)
 
-    def _assign_stmt(self, name: Token) -> AssignmentStatement | None:
-        if name.type != TokenType.NAME:
-            return None
+    def _assign_stmt(self, token: Token) -> AssignmentStatement | None:
+        self._reader.put_back(token)
+        left = self._expression_parser.parse(reset=True)
 
-        token = self._reader.look_ahead(0)
-        if token.type == TokenType.ASSIGN:
-            self._reader.put_back(name)
-            return AssignmentStatement(assign_expr=self._expression_parser.parse())
+        if isinstance(left, AssignExpression):
+            return AssignmentStatement(assign_expr=left)
         else:
+            self._expression_parser.unparse()
             return None

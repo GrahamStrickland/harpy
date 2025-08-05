@@ -11,6 +11,7 @@ class LiteralExpression(Expression):
     _literal: Expression
 
     def __init__(self, literal: Token):
+        self._left_expr = False
         self._literal = literal
 
     @override

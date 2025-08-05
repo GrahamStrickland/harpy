@@ -9,6 +9,7 @@ class Precedence(Enum):
     Ordered in increasing precedence.
     """
 
+    NONE = 0
     ASSIGNMENT = 1
     SUMEQ = 2
     MULTEQ = 3
@@ -22,4 +23,6 @@ class Precedence(Enum):
     EXPONENT = 11
     PREFIX = 12
     POSTFIX = 13
-    CALL = 14
+    INDEX = 14
+    CALL = 15
+    ACCESS = 16

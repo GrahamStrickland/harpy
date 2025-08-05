@@ -9,6 +9,7 @@ class ArrayDeclarationExpression(Expression):
     _elems: list[Expression]
 
     def __init__(self, elems: list[Expression]):
+        self._left_expr = False
         self._elems = elems
 
     @override

@@ -8,19 +8,25 @@ from .token_type import TokenType
 class SourceReader:
     _tokens: Iterable[Token]
     _read: deque[Token]
+    _reset_buffer: deque[Token]
 
     def __init__(self, tokens: Iterable[Token]):
         self._tokens = tokens
         self._read = deque()
+        self._reset_buffer = deque()
 
     def __iter__(self):
         return self
 
     def __next__(self):
         if len(self._read) > 0:
-            return self._read.popleft()
+            token = self._read.popleft()
         else:
-            return next(self._tokens)
+            token = next(self._tokens)
+
+        self._reset_buffer.append(token)
+
+        return token
 
     def match(self, expected: TokenType) -> bool:
         if len(self._read) == 0:
@@ -42,7 +48,10 @@ class SourceReader:
                 f"Expected token type '{expected.name}' and found '{token.type.name}' with text '{token.text}' at line {token.line}, column {token.start}."
             )
 
-        return self._read.popleft()
+        token = self._read.popleft()
+        self._reset_buffer.append(token)
+
+        return token
 
     def look_ahead(self, distance: int) -> Token:
         # Read in as many as needed.
@@ -54,3 +63,10 @@ class SourceReader:
 
     def put_back(self, token: Token):
         self._read.appendleft(token)
+
+    def set_reset_point(self):
+        self._reset_buffer.clear()
+
+    def reset(self):
+        for token in self._reset_buffer:
+            self._read.appendleft(token)

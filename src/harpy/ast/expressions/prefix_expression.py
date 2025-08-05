@@ -12,6 +12,7 @@ class PrefixExpression(Expression):
     _right: Expression
 
     def __init__(self, operator: TokenType, right: Expression):
+        self._left_expr = False
         self._operator = operator
         self._right = right
 

@@ -10,6 +10,7 @@ class IndexExpression(Expression):
     _right: Expression
 
     def __init__(self, left: Expression, right: list[Expression]):
+        self._left_expr = True
         self._left = left
         self._right = right
 

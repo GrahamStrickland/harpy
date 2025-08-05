@@ -12,6 +12,7 @@ class PostfixExpression(Expression):
     _operator: TokenType
 
     def __init__(self, left: Expression, operator: TokenType):
+        self._left_expr = False
         self._left = left
         self._operator = operator
 

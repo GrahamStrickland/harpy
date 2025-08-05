@@ -1,6 +1,6 @@
 from typing import override
 
-from harpy.ast.expressions import AssignExpression, Expression, NameExpression
+from harpy.ast.expressions import AssignExpression, Expression
 from harpy.lexer import Token
 
 from ..parser import Parser
@@ -10,19 +10,17 @@ from .infix_parselet import InfixParselet
 
 class AssignParselet(InfixParselet):
     """Parses assignment expressions like `a := b`. The left side of an assignment
-    expression must be a simple name like 'a', and expressions are
-    right-associative. (In other words, `a := b := c` is parsed as `a := (b := c)`).
+    expression must be a an expression where `left.left_expr() == True` and expressions
+    are right-associative. (In other words, `a := b := c` is parsed as `a := (b := c)`).
     """
 
     @override
     def parse(self, parser: Parser, left: Expression, token: Token):
+        del token
+
         right = parser.parse(Precedence.ASSIGNMENT.value - 1)
 
-        if not isinstance(left, NameExpression):
-            raise SyntaxError("The left-hand side of an assignment must be a name.")
-
-        name = left.print()
-        return AssignExpression(name=name, right=right)
+        return AssignExpression(left=left, right=right)
 
     @override
     def get_precedence(self) -> int:
