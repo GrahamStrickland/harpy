@@ -313,6 +313,8 @@ class Lexer:
 
             self._advance()
 
+        # TODO: This won't work unless we handle include files/preprocessor parsing first,
+        # e.g., `IF !(aHWFlag[F_HWCardReader] .OR. aHWFlag[F_HWDallasKey]) .OR. oPOSStatus:oFree:lFlag3`
         if endquote == "]" and literal[1:] in self._names:
             self._reset()
             return Token(
