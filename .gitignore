@@ -1,6 +1,9 @@
 # VSCode files
 *.code-workspace
-.vscode
+.vscode/
 
 # Python files
-__pycache__
+__pycache__/
+
+# Pytest files
+.coverage

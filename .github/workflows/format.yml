@@ -1,4 +1,4 @@
-name: Test Harpy
+name: Format Harpy
 
 on:
   push:
@@ -6,11 +6,19 @@ on:
       - "main"
 
 jobs:
-  test:
+  format:
     runs-on: macos-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Format with ruff
+        uses: chartboost/ruff-action@v1
+        with:
+          args: "format"
+      - name: Fix with ruff
+        uses: chartboost/ruff-action@v1
+        with:
+          args: "check --fix"
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v4
         with:
@@ -18,5 +26,5 @@ jobs:
           enable-cache: true
       - name: Install dependencies with uv
         run: make install
-      - name: Test with coverage with pytest
-        run: make test-cov
+      - name: Sort imports with isort
+        run: uv run isort .
