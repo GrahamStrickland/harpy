@@ -7,3 +7,7 @@ __pycache__/
 
 # Pytest files
 .coverage
+
+# Visual Studio files
+bin/
+obj/
