@@ -1,7 +1,7 @@
 ﻿namespace Harpy.Lexer
 {
     internal class SyntaxElement(SyntaxType type, string text, int line, int position)
-    { 
+    {
         private readonly SyntaxType _type = type;
         private readonly string _text = text;
         private readonly int _start = position - text.Length >= 1 ? position - text.Length : 1;

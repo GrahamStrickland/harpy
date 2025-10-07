@@ -12,10 +12,10 @@
         private List<Trivia> _leadingTrivia = [];
         private List<Trivia> _trailingTrivia = [];
 
-        public List<Trivia> LeadingTrivia 
-        { 
-            get { return _leadingTrivia; } 
-            set { _leadingTrivia = value; } 
+        public List<Trivia> LeadingTrivia
+        {
+            get { return _leadingTrivia; }
+            set { _leadingTrivia = value; }
         }
         public List<Trivia> TrailingTrivia
         {

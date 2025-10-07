@@ -368,7 +368,7 @@ namespace Harpy.Lexer
         {
             string literal = c.ToString();
 
-            while ((c = Advance()) != '.' && c != '\0') 
+            while ((c = Advance()) != '.' && c != '\0')
             {
                 literal += c;
             }
