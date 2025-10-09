@@ -1,6 +1,6 @@
 ﻿namespace Harpy.Lexer
 {
-    public enum SyntaxType
+    public enum HarbourSyntaxKind
     {
         // Punctuation and grouping
         LEFT_PAREN,
@@ -98,6 +98,11 @@
         LINE_COMMENT,
 
         // Spacing
+        SPACE,
+        TAB,
+        CARRIAGE_RETURN,
+        NEWLINE,
+        LINE_CONTINUATION,
         EOF
     }
 }

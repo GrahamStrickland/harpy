@@ -8,84 +8,84 @@ namespace Harpy.Lexer
     /// </summary>
     internal class Lexer(string text)
     {
-        private static readonly Dictionary<string, SyntaxType> _directives = new()
+        private static readonly Dictionary<string, HarbourSyntaxKind> _directives = new()
         {
-             { "include", SyntaxType.INCLUDE_DIRECTIVE },
-             { "define", SyntaxType.DEFINE_DIRECTIVE },
-             { "ifdef", SyntaxType.IFDEF_DIRECTIVE },
-             { "ifndef", SyntaxType.IFNDEF_DIRECTIVE },
-             { "elif", SyntaxType.ELIF_DIRECTIVE },
-             { "else", SyntaxType.ELSE_DIRECTIVE },
-             { "endif", SyntaxType.ENDIF_DIRECTIVE },
-             { "undef", SyntaxType.UNDEF_DIRECTIVE },
-             { "pragma", SyntaxType.PRAGMA_DIRECTIVE },
-             { "command", SyntaxType.COMMAND_DIRECTIVE },
-             { "xcommand", SyntaxType.XCOMMAND_DIRECTIVE },
-             { "translate", SyntaxType.TRANSLATE_DIRECTIVE },
-             { "xtranslate", SyntaxType.XTRANSLATE_DIRECTIVE },
-             { "error", SyntaxType.ERROR_DIRECTIVE },
-             { "stdout", SyntaxType.STDOUT_DIRECTIVE }
+             { "include", HarbourSyntaxKind.INCLUDE_DIRECTIVE },
+             { "define", HarbourSyntaxKind.DEFINE_DIRECTIVE },
+             { "ifdef", HarbourSyntaxKind.IFDEF_DIRECTIVE },
+             { "ifndef", HarbourSyntaxKind.IFNDEF_DIRECTIVE },
+             { "elif", HarbourSyntaxKind.ELIF_DIRECTIVE },
+             { "else", HarbourSyntaxKind.ELSE_DIRECTIVE },
+             { "endif", HarbourSyntaxKind.ENDIF_DIRECTIVE },
+             { "undef", HarbourSyntaxKind.UNDEF_DIRECTIVE },
+             { "pragma", HarbourSyntaxKind.PRAGMA_DIRECTIVE },
+             { "command", HarbourSyntaxKind.COMMAND_DIRECTIVE },
+             { "xcommand", HarbourSyntaxKind.XCOMMAND_DIRECTIVE },
+             { "translate", HarbourSyntaxKind.TRANSLATE_DIRECTIVE },
+             { "xtranslate", HarbourSyntaxKind.XTRANSLATE_DIRECTIVE },
+             { "error", HarbourSyntaxKind.ERROR_DIRECTIVE },
+             { "stdout", HarbourSyntaxKind.STDOUT_DIRECTIVE }
         };
-        private static readonly Dictionary<string, SyntaxType> _keywords = new()
+        private static readonly Dictionary<string, HarbourSyntaxKind> _keywords = new()
         {
-             { "function", SyntaxType.FUNCTION },
-             { "procedure", SyntaxType.PROCEDURE },
-             { "return", SyntaxType.RETURN },
-             { "nil", SyntaxType.NIL },
-             { "local", SyntaxType.LOCAL },
-             { "static", SyntaxType.STATIC },
-             { "iif", SyntaxType.IIF },
-             { "if", SyntaxType.IF },
-             { "else", SyntaxType.ELSE },
-             { "elseif", SyntaxType.ELSEIF },
-             { "end", SyntaxType.END },
-             { "endif", SyntaxType.ENDIF },
-             { "enderr", SyntaxType.ENDERR },
-             { "while", SyntaxType.WHILE },
-             { "endwhile", SyntaxType.ENDWHILE }
+             { "function", HarbourSyntaxKind.FUNCTION },
+             { "procedure", HarbourSyntaxKind.PROCEDURE },
+             { "return", HarbourSyntaxKind.RETURN },
+             { "nil", HarbourSyntaxKind.NIL },
+             { "local", HarbourSyntaxKind.LOCAL },
+             { "static", HarbourSyntaxKind.STATIC },
+             { "iif", HarbourSyntaxKind.IIF },
+             { "if", HarbourSyntaxKind.IF },
+             { "else", HarbourSyntaxKind.ELSE },
+             { "elseif", HarbourSyntaxKind.ELSEIF },
+             { "end", HarbourSyntaxKind.END },
+             { "endif", HarbourSyntaxKind.ENDIF },
+             { "enderr", HarbourSyntaxKind.ENDERR },
+             { "while", HarbourSyntaxKind.WHILE },
+             { "endwhile", HarbourSyntaxKind.ENDWHILE }
         };
-        private static readonly Dictionary<string, SyntaxType> _compoundOperators = new()
+        private static readonly Dictionary<string, HarbourSyntaxKind> _compoundOperators = new()
         {
-             { ":=", SyntaxType.ASSIGN },
-             { "+=", SyntaxType.PLUSEQ },
-             { "-=", SyntaxType.MINUSEQ },
-             { "*=", SyntaxType.MULTEQ },
-             { "/=", SyntaxType.DIVEQ },
-             { "%=", SyntaxType.MODEQ },
-             { "^=", SyntaxType.EXPEQ },
-             { ".and.", SyntaxType.AND },
-             { ".or.", SyntaxType.OR },
-             { "==", SyntaxType.EQ1 },
-             { "!=", SyntaxType.NE2 },
-             { "<=", SyntaxType.LE },
-             { ">=", SyntaxType.GE },
-             { "=>", SyntaxType.HASHOP }
+             { ":=", HarbourSyntaxKind.ASSIGN },
+             { "+=", HarbourSyntaxKind.PLUSEQ },
+             { "-=", HarbourSyntaxKind.MINUSEQ },
+             { "*=", HarbourSyntaxKind.MULTEQ },
+             { "/=", HarbourSyntaxKind.DIVEQ },
+             { "%=", HarbourSyntaxKind.MODEQ },
+             { "^=", HarbourSyntaxKind.EXPEQ },
+             { ".and.", HarbourSyntaxKind.AND },
+             { ".or.", HarbourSyntaxKind.OR },
+             { "==", HarbourSyntaxKind.EQ1 },
+             { "!=", HarbourSyntaxKind.NE2 },
+             { "<=", HarbourSyntaxKind.LE },
+             { ">=", HarbourSyntaxKind.GE },
+             { "=>", HarbourSyntaxKind.HASHOP }
         };
-        private static readonly Dictionary<string, SyntaxType> _simpleOperators = new()
+        private static readonly Dictionary<string, HarbourSyntaxKind> _simpleOperators = new()
         {
-             { "(", SyntaxType.LEFT_PAREN },
-             { ")", SyntaxType.RIGHT_PAREN },
-             { "[", SyntaxType.LEFT_BRACKET },
-             { "]", SyntaxType.RIGHT_BRACKET },
-             { "{", SyntaxType.LEFT_BRACE },
-             { "}", SyntaxType.RIGHT_BRACE },
-             { "|", SyntaxType.PIPE },
-             { ",", SyntaxType.COMMA },
-             { "=", SyntaxType.EQ2 },
-             { "#", SyntaxType.NE1 },
-             { "<", SyntaxType.LT },
-             { ">", SyntaxType.GT },
-             { "$", SyntaxType.DOLLAR },
-             { "+", SyntaxType.PLUS },
-             { "-", SyntaxType.MINUS },
-             { "*", SyntaxType.ASTERISK },
-             { "/", SyntaxType.SLASH },
-             { "%", SyntaxType.PERCENT },
-             { "^", SyntaxType.CARET },
-             { "!", SyntaxType.NOT },
-             { "?", SyntaxType.QUESTION },
-             { ":", SyntaxType.COLON },
-             { "@", SyntaxType.AT }
+             { "(", HarbourSyntaxKind.LEFT_PAREN },
+             { ")", HarbourSyntaxKind.RIGHT_PAREN },
+             { "[", HarbourSyntaxKind.LEFT_BRACKET },
+             { "]", HarbourSyntaxKind.RIGHT_BRACKET },
+             { "{", HarbourSyntaxKind.LEFT_BRACE },
+             { "}", HarbourSyntaxKind.RIGHT_BRACE },
+             { "|", HarbourSyntaxKind.PIPE },
+             { ",", HarbourSyntaxKind.COMMA },
+             { "=", HarbourSyntaxKind.EQ2 },
+             { "#", HarbourSyntaxKind.NE1 },
+             { "<", HarbourSyntaxKind.LT },
+             { ">", HarbourSyntaxKind.GT },
+             { "$", HarbourSyntaxKind.DOLLAR },
+             { "+", HarbourSyntaxKind.PLUS },
+             { "-", HarbourSyntaxKind.MINUS },
+             { "*", HarbourSyntaxKind.ASTERISK },
+             { "/", HarbourSyntaxKind.SLASH },
+             { "%", HarbourSyntaxKind.PERCENT },
+             { "^", HarbourSyntaxKind.CARET },
+             { "!", HarbourSyntaxKind.NOT },
+             { "?", HarbourSyntaxKind.QUESTION },
+             { ":", HarbourSyntaxKind.COLON },
+             { "@", HarbourSyntaxKind.AT }
         };
         private List<string> _names = [];
 
@@ -96,17 +96,30 @@ namespace Harpy.Lexer
 
         private readonly string _text = text;
 
-        public IEnumerable<Token> GetTokens()
+        public IEnumerable<HarbourSyntaxToken> GetTokens()
         {
+            List<HarbourSyntaxTrivia> leadingTrivia = [];
+            List<HarbourSyntaxTrivia> trailingTrivia = [];
+            HarbourSyntaxToken? oldToken = null;
+
             while (_index < _text.Length)
             {
+                HarbourSyntaxToken? newToken = null;
                 char c = Advance();
 
                 switch (c)
                 {
                     case '#':
                         {
-                            yield return ReadPreprocessorDirective();
+                            if (newToken == null)
+                            {
+                                leadingTrivia.Add((HarbourSyntaxTrivia)ReadPreprocessorDirectiveOrNeOp());
+                            }
+                            else
+                            {
+                                trailingTrivia.Add((HarbourSyntaxTrivia)ReadPreprocessorDirectiveOrNeOp());
+                            }
+
                             break;
                         }
                     case '/':
@@ -115,17 +128,31 @@ namespace Harpy.Lexer
                             {
                                 case '/':
                                     {
-                                        yield return ReadLineComment();
+                                        if (newToken == null)
+                                        {
+                                            leadingTrivia.Add(ReadLineComment());
+                                        }
+                                        else
+                                        {
+                                            trailingTrivia.Add(ReadLineComment());
+                                        }
                                         break;
                                     }
                                 case '*':
                                     {
-                                        yield return ReadBlockComment();
+                                        if (newToken == null)
+                                        {
+                                            leadingTrivia.Add(ReadBlockComment());
+                                        }
+                                        else
+                                        {
+                                            trailingTrivia.Add(ReadBlockComment());
+                                        }
                                         break;
                                     }
                                 default:
                                     {
-                                        yield return new Token(
+                                        newToken = new HarbourSyntaxToken(
                                             _simpleOperators[c.ToString()],
                                             c.ToString(),
                                             _line,
@@ -140,11 +167,11 @@ namespace Harpy.Lexer
                         {
                             if (Char.IsLetterOrDigit(Peek()))
                             {
-                                yield return ReadStringLiteralOrBrackets(c);
+                                newToken = ReadStringLiteralOrBrackets(c);
                             }
                             else
                             {
-                                yield return new Token(SyntaxType.LEFT_BRACKET, c.ToString(), _line, _pos);
+                                newToken = new HarbourSyntaxToken(HarbourSyntaxKind.LEFT_BRACKET, c.ToString(), _line, _pos);
                             }
 
                             break;
@@ -152,19 +179,19 @@ namespace Harpy.Lexer
                     case '"':
                     case '\'':
                         {
-                            yield return ReadStringLiteralOrBrackets(c);
+                            newToken = ReadStringLiteralOrBrackets(c);
                             break;
                         }
                     case '.':
                         {
                             if (Char.IsLetter(Peek()))
                             {
-                                yield return ReadBooleanLiteralOrLogical(c);
+                                newToken = ReadBooleanLiteralOrLogical(c);
                                 break;
                             }
                             else
                             {
-                                yield return ReadNumericLiteral(c);
+                                newToken = ReadNumericLiteral(c);
                             }
                             break;
                         }
@@ -179,22 +206,22 @@ namespace Harpy.Lexer
                     case '8':
                     case '9':
                         {
-                            yield return ReadNumericLiteral(c);
+                            newToken = ReadNumericLiteral(c);
                             break;
                         }
                     default:
                         {
-                            Token? keyword = ReadKeyword(c);
+                            HarbourSyntaxToken? keyword = ReadKeyword(c);
                             string op = c.ToString() + Peek();
 
                             if (keyword != null)
                             {
-                                yield return keyword;
+                                newToken = keyword;
                             }
                             else if (_compoundOperators.ContainsKey(op))
                             {
                                 Advance();
-                                yield return new Token(
+                                newToken = new HarbourSyntaxToken(
                                     _compoundOperators[op],
                                     op,
                                     _line,
@@ -203,7 +230,7 @@ namespace Harpy.Lexer
                             }
                             else if (_simpleOperators.ContainsKey(c.ToString()))
                             {
-                                yield return new Token(
+                                newToken = new HarbourSyntaxToken(
                                     _simpleOperators[c.ToString()],
                                     c.ToString(),
                                     _line,
@@ -212,27 +239,104 @@ namespace Harpy.Lexer
                             }
                             else if (Char.IsLetterOrDigit(c))
                             {
-                                yield return ReadName();
+                                newToken = ReadName();
                             }
-                            else if (c == '\n')
+                            else if (Char.IsWhiteSpace(c) || c == ';')
                             {
-                                _line += 1;
-                                _pos = 0;
+                                HarbourSyntaxKind type;
+                                switch (c)
+                                {
+                                    case '\n':
+                                        {
+                                            type = HarbourSyntaxKind.NEWLINE;
+                                            _line += 1;
+                                            _pos = 0;
+                                            break;
+                                        }
+                                    case '\r':
+                                        {
+                                            type = HarbourSyntaxKind.CARRIAGE_RETURN;
+                                            _line += 1;
+                                            _pos = 0;
+                                            break;
+                                        }
+                                    case '\t':
+                                        {
+                                            type = HarbourSyntaxKind.TAB;
+                                            break;
+                                        }
+                                    case ' ':
+                                        {
+                                            type = HarbourSyntaxKind.SPACE;
+                                            break;
+                                        }
+                                    case ';':
+                                        {
+                                            type = HarbourSyntaxKind.LINE_CONTINUATION;
+                                            break;
+                                        }
+                                    default:
+                                        throw new SyntaxErrorException($"Unknown character '{c}' encountered in source.");
+                                }
+                                if (newToken == null)
+                                {
+                                    leadingTrivia.Add(
+                                        new HarbourSyntaxTrivia(
+                                            type,
+                                            c.ToString(),
+                                            _line,
+                                            _pos
+                                        )
+                                    );
+                                }
+                                else
+                                {
+                                    trailingTrivia.Add(
+                                        new HarbourSyntaxTrivia(
+                                            type,
+                                            c.ToString(),
+                                            _line,
+                                            _pos
+                                        )
+                                    );
+                                }
                             }
 
-                            // Ignore all other characters (whitespace, etc.)
                             break;
                         }
                 }
+
+                if (newToken != null)
+                {
+                    if (oldToken != null)
+                    {
+                        oldToken.TrailingTrivia = trailingTrivia;
+                        leadingTrivia.Clear();
+                        trailingTrivia.Clear();
+                        yield return oldToken;
+                    }
+
+                    oldToken = newToken;
+                    oldToken.LeadingTrivia = leadingTrivia;
+                }
             }
 
+            if (oldToken != null)
+            {
+                HarbourSyntaxToken currentToken = oldToken;
+                oldToken = null;
+                currentToken.TrailingTrivia = trailingTrivia;
+                leadingTrivia.Clear();
+                trailingTrivia.Clear();
+                yield return currentToken;
+            }
             // Once we've reached the end of the string, just return EOF tokens. We'll
             // just keep returning them as many times as we're asked so that the
             // parser's lookahead doesn't have to worry about running out of tokens.
-            yield return new Token(SyntaxType.EOF, "\0", _line, _pos);
+            yield return new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _line, _pos, leadingTrivia, trailingTrivia);
         }
 
-        private Token ReadPreprocessorDirective()
+        private HarbourSyntaxElement ReadPreprocessorDirectiveOrNeOp()
         {
             int startIndex = _index - 1;
             SetResetIndex(startIndex);
@@ -254,7 +358,7 @@ namespace Harpy.Lexer
                         case '\r':
                         case '\0':
                             {
-                                return new Token(
+                                return new HarbourSyntaxTrivia(
                                     _directives[directive.ToLower()],
                                     _text[startIndex.._index],
                                     _line,
@@ -272,10 +376,10 @@ namespace Harpy.Lexer
 
             Reset(1);
 
-            return new Token(SyntaxType.NE1, "#", _line, _pos);
+            return new HarbourSyntaxToken(HarbourSyntaxKind.NE1, "#", _line, _pos);
         }
 
-        private Token ReadLineComment()
+        private HarbourSyntaxTrivia ReadLineComment()
         {
             int startIndex = _index - 1;
 
@@ -289,8 +393,8 @@ namespace Harpy.Lexer
                     case '\r':
                     case '\0':
                         {
-                            return new Token(
-                                SyntaxType.LINE_COMMENT,
+                            return new HarbourSyntaxTrivia(
+                                HarbourSyntaxKind.LINE_COMMENT,
                                 _text[startIndex.._index],
                                 _line,
                                 _pos
@@ -305,7 +409,7 @@ namespace Harpy.Lexer
             }
         }
 
-        private Token ReadBlockComment()
+        private HarbourSyntaxTrivia ReadBlockComment()
         {
             int startIndex = _index - 1;
             int startLine = _line;
@@ -324,8 +428,8 @@ namespace Harpy.Lexer
                             {
                                 case '/':
                                     {
-                                        return new Token(
-                                            SyntaxType.BLOCK_COMMENT,
+                                        return new HarbourSyntaxTrivia(
+                                            HarbourSyntaxKind.BLOCK_COMMENT,
                                             _text[startIndex.._index],
                                             startLine,
                                             _pos
@@ -364,7 +468,7 @@ namespace Harpy.Lexer
             }
         }
 
-        private Token ReadBooleanLiteralOrLogical(char c)
+        private HarbourSyntaxToken ReadBooleanLiteralOrLogical(char c)
         {
             string literal = c.ToString();
 
@@ -380,8 +484,8 @@ namespace Harpy.Lexer
                 case ".t.":
                 case ".f.":
                     {
-                        return new Token(
-                            SyntaxType.BOOL_LITERAL,
+                        return new HarbourSyntaxToken(
+                            HarbourSyntaxKind.BOOL_LITERAL,
                             literal,
                             _line,
                             _pos
@@ -389,8 +493,8 @@ namespace Harpy.Lexer
                     }
                 case ".or.":
                     {
-                        return new Token(
-                            SyntaxType.OR,
+                        return new HarbourSyntaxToken(
+                            HarbourSyntaxKind.OR,
                             literal,
                             _line,
                             _pos
@@ -398,8 +502,8 @@ namespace Harpy.Lexer
                     }
                 case ".and.":
                     {
-                        return new Token(
-                            SyntaxType.AND,
+                        return new HarbourSyntaxToken(
+                            HarbourSyntaxKind.AND,
                             literal,
                             _line,
                             _pos
@@ -412,7 +516,7 @@ namespace Harpy.Lexer
             }
         }
 
-        private Token ReadNumericLiteral(char c)
+        private HarbourSyntaxToken ReadNumericLiteral(char c)
         {
             string literal = c.ToString();
             bool dotFound = false;
@@ -480,8 +584,8 @@ namespace Harpy.Lexer
                         }
                     case '\0':
                         {
-                            return new Token(
-                                SyntaxType.NUM_LITERAL,
+                            return new HarbourSyntaxToken(
+                                HarbourSyntaxKind.NUM_LITERAL,
                                 literal,
                                 _line,
                                 _pos
@@ -489,8 +593,8 @@ namespace Harpy.Lexer
                         }
                     default:
                         {
-                            return new Token(
-                                SyntaxType.NUM_LITERAL,
+                            return new HarbourSyntaxToken(
+                                HarbourSyntaxKind.NUM_LITERAL,
                                 literal,
                                 _line,
                                 _pos
@@ -500,15 +604,15 @@ namespace Harpy.Lexer
                 c = Peek();
             }
 
-            return new Token(
-                SyntaxType.NUM_LITERAL,
+            return new HarbourSyntaxToken(
+                HarbourSyntaxKind.NUM_LITERAL,
                 literal,
                 _line,
                 _pos
             );
         }
 
-        private Token ReadStringLiteralOrBrackets(char c)
+        private HarbourSyntaxToken ReadStringLiteralOrBrackets(char c)
         {
             int startIndex = _index;
             SetResetIndex(startIndex);
@@ -541,18 +645,18 @@ namespace Harpy.Lexer
             if (endquote == ']' && _names.Contains(literal[1..]))
             {
                 Reset();
-                return new Token(SyntaxType.LEFT_BRACKET, "[", _line, _pos);
+                return new HarbourSyntaxToken(HarbourSyntaxKind.LEFT_BRACKET, "[", _line, _pos);
             }
 
-            return new Token(
-                SyntaxType.STR_LITERAL,
+            return new HarbourSyntaxToken(
+                HarbourSyntaxKind.STR_LITERAL,
                 literal + Advance().ToString(),
                 _line,
                 _pos
             );
         }
 
-        private Token? ReadKeyword(char c)
+        private HarbourSyntaxToken? ReadKeyword(char c)
         {
             string keyword = c.ToString();
             SetResetIndex(_index);
@@ -567,7 +671,7 @@ namespace Harpy.Lexer
 
             if (_keywords.ContainsKey(keyword.ToLower()))
             {
-                return new Token(
+                return new HarbourSyntaxToken(
                     _keywords[keyword.ToLower()],
                     keyword,
                     _line,
@@ -579,7 +683,7 @@ namespace Harpy.Lexer
             return null;
         }
 
-        private Token ReadName()
+        private HarbourSyntaxToken ReadName()
         {
             string name;
             int startIndex = _index - 1;
@@ -599,8 +703,8 @@ namespace Harpy.Lexer
 
             _names.Add(name);
 
-            return new Token(
-                SyntaxType.NAME,
+            return new HarbourSyntaxToken(
+                HarbourSyntaxKind.NAME,
                 name,
                 _line,
                 _pos
@@ -641,7 +745,7 @@ namespace Harpy.Lexer
             _pos -= _index - _resetIndex + offset;
             if (_pos < 0)
             {
-                // Be careful not to reset further than the same line, since the line number will now be incorrect
+                // Be careful not to reset further than the same line, since the line number will now be incorrect.
                 _pos = 0;
             }
 

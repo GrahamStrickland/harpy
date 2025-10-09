@@ -13,108 +13,144 @@ namespace HarpyTests
         public void TestGetTokens()
         {
             var obs = GetObservedTokens("from + offset(time)");
-            var expected = new List<Token> {
-                new(SyntaxType.NAME, "from", 1, 4),
-                new(SyntaxType.PLUS, "+", 1, 6),
-                new(SyntaxType.NAME, "offset", 1, 13),
-                new(SyntaxType.LEFT_PAREN, "(", 1, 14),
-                new(SyntaxType.NAME, "time", 1, 18),
-                new(SyntaxType.RIGHT_PAREN, ")", 1, 19)
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.NAME, "from", 1, 4),
+                new(HarbourSyntaxKind.PLUS, "+", 1, 6),
+                new(HarbourSyntaxKind.NAME, "offset", 1, 13),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 14),
+                new(HarbourSyntaxKind.NAME, "time", 1, 18),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 19),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 19),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestPreprocessorDirective()
         {
             var obs = GetObservedTokens("#define slBool .f.");
-            var expected = new List<Token> {
-                new(
-                    SyntaxType.DEFINE_DIRECTIVE,
-                    "#define slBool .f.",
-                    1,
-                    18
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.EOF, "\0", 1, 18,
+                    [
+                        new(
+                            HarbourSyntaxKind.DEFINE_DIRECTIVE,
+                            "#define slBool .f.",
+                            1,
+                            18
+                        )
+                    ],
+                    []
                 )
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected, true);
 
             obs = GetObservedTokens("#ifdef SOMETHING");
             expected = [
-                    new(
-                    SyntaxType.IFDEF_DIRECTIVE,
-                    "#ifdef SOMETHING",
-                    1,
-                    16
-                )
+                    new(HarbourSyntaxKind.EOF, "\0", 1, 16,
+                        [
+                            new(
+                                HarbourSyntaxKind.IFDEF_DIRECTIVE,
+                                "#ifdef SOMETHING",
+                                1,
+                                16
+                            ),
+                        ],
+                        []
+                    ),
                 ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected, true);
 
             obs = GetObservedTokens("#pragma -ko+");
             expected = [
-                    new(
-                    SyntaxType.PRAGMA_DIRECTIVE,
-                    "#pragma -ko+",
-                    1,
-                    12
-                )
+                    new(HarbourSyntaxKind.EOF, "\0", 1, 12,
+                        [
+                            new(
+                                HarbourSyntaxKind.PRAGMA_DIRECTIVE,
+                                "#pragma -ko+",
+                                1,
+                                12
+                            ),
+                        ],
+                        []
+                    ),
                 ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected, true);
         }
 
         [TestMethod]
         public void TestBooleanLiteral()
         {
             var obs = GetObservedTokens(".t.");
-            var expected = new List<Token> { new(SyntaxType.BOOL_LITERAL, ".t.", 1, 3) };
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.BOOL_LITERAL, ".t.", 1, 3),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 3),
+            };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens(".F.");
-            expected = [new(SyntaxType.BOOL_LITERAL, ".F.", 1, 3)];
+            expected = [
+                new(HarbourSyntaxKind.BOOL_LITERAL, ".F.", 1, 3),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 3),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestNumericLiteral()
         {
             var obs = GetObservedTokens("0");
-            var expected = new List<Token> { new(SyntaxType.NUM_LITERAL, "0", 1, 1) };
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.NUM_LITERAL, "0", 1, 1),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 1),
+            };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("123");
-            expected = [new(SyntaxType.NUM_LITERAL, "123", 1, 3)];
+            expected = [
+                new(HarbourSyntaxKind.NUM_LITERAL, "123", 1, 3),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 3),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("50000");
-            expected = [new(SyntaxType.NUM_LITERAL, "50000", 1, 5)];
+            expected = [
+                new(HarbourSyntaxKind.NUM_LITERAL, "50000", 1, 5),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 5),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("12000.123");
             expected = [
-                    new(SyntaxType.NUM_LITERAL, "12000.123", 1, 9)
-                ];
+                new(HarbourSyntaxKind.NUM_LITERAL, "12000.123", 1, 9),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 9),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("0xABAB");
             expected = [
-                    new(SyntaxType.NUM_LITERAL, "0xABAB", 1, 6)
-                ];
+                new(HarbourSyntaxKind.NUM_LITERAL, "0xABAB", 1, 6),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 6),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens(".12");
-            expected = [new(SyntaxType.NUM_LITERAL, ".12", 1, 3)];
+            expected = [
+                new(HarbourSyntaxKind.NUM_LITERAL, ".12", 1, 3),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 3),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("1x001"));
 
@@ -127,76 +163,87 @@ namespace HarpyTests
         public void TestStringLiteral()
         {
             var obs = GetObservedTokens("'This is a string'");
-            var expected = new List<Token> {
+            var expected = new List<HarbourSyntaxToken> {
                 new(
-                    SyntaxType.STR_LITERAL,
+                    HarbourSyntaxKind.STR_LITERAL,
                     "'This is a string'",
                     1,
                     18
-                )
+                ),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 18),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("\"This is also a string\"");
             expected = [
-                    new(SyntaxType.STR_LITERAL, "\"This is also a string\"", 1, 23)
-                ];
+                new(HarbourSyntaxKind.STR_LITERAL, "\"This is also a string\"", 1, 23),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 23),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("[Also a string]");
             expected = [
-                    new(
-                    SyntaxType.STR_LITERAL, "[Also a string]", 1, 15
-                )
-                ];
+                new(
+                    HarbourSyntaxKind.STR_LITERAL, "[Also a string]", 1, 15
+                ),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 15),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("['Actually a hash key']");
             expected = [
-                    new(SyntaxType.LEFT_BRACKET, "[", 1, 1),
+                new(HarbourSyntaxKind.LEFT_BRACKET, "[", 1, 1),
                 new(
-                    SyntaxType.STR_LITERAL,
+                    HarbourSyntaxKind.STR_LITERAL,
                     "'Actually a hash key'",
                     1,
                     22
                 ),
-                new(SyntaxType.RIGHT_BRACKET, "]", 1, 23),
+                new(HarbourSyntaxKind.RIGHT_BRACKET, "]", 1, 23),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 23),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("function a(b)\n    local i := 1\nreturn b[i]");
             expected = [
-                    new(SyntaxType.FUNCTION, "function", 1, 8),
-                new(SyntaxType.NAME, "a", 1, 10),
-                new(SyntaxType.LEFT_PAREN, "(", 1, 11),
-                new(SyntaxType.NAME, "b", 1, 12),
-                new(SyntaxType.RIGHT_PAREN, ")", 1, 13),
-                new(SyntaxType.LOCAL, "local", 2, 9),
-                new(SyntaxType.NAME, "i", 2, 11),
-                new(SyntaxType.ASSIGN, ":=", 2, 14),
-                new(SyntaxType.NUM_LITERAL, "1", 2, 16),
-                new(SyntaxType.RETURN, "return", 3, 6),
-                new(SyntaxType.NAME, "b", 3, 8),
-                new(SyntaxType.LEFT_BRACKET, "[", 3, 9),
-                new(SyntaxType.NAME, "i", 3, 10),
-                new(SyntaxType.RIGHT_BRACKET, "]", 3, 11),
+                new(HarbourSyntaxKind.FUNCTION, "function", 1, 8),
+                new(HarbourSyntaxKind.NAME, "a", 1, 10),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 11),
+                new(HarbourSyntaxKind.NAME, "b", 1, 12),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 13),
+                new(HarbourSyntaxKind.LOCAL, "local", 2, 9),
+                new(HarbourSyntaxKind.NAME, "i", 2, 11),
+                new(HarbourSyntaxKind.ASSIGN, ":=", 2, 14),
+                new(HarbourSyntaxKind.NUM_LITERAL, "1", 2, 16),
+                new(HarbourSyntaxKind.RETURN, "return", 3, 6),
+                new(HarbourSyntaxKind.NAME, "b", 3, 8),
+                new(HarbourSyntaxKind.LEFT_BRACKET, "[", 3, 9),
+                new(HarbourSyntaxKind.NAME, "i", 3, 10),
+                new(HarbourSyntaxKind.RIGHT_BRACKET, "]", 3, 11),
+                new(HarbourSyntaxKind.EOF, "\0", 3, 11),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("\"\"");
-            expected = [new(SyntaxType.STR_LITERAL, "\"\"", 1, 2)];
+            expected = [
+                new(HarbourSyntaxKind.STR_LITERAL, "\"\"", 1, 2),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 2),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("''");
-            expected = [new(SyntaxType.STR_LITERAL, "''", 1, 2)];
+            expected = [
+                new(HarbourSyntaxKind.STR_LITERAL, "''", 1, 2),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 2),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("'This string does not finish"));
 
@@ -207,136 +254,159 @@ namespace HarpyTests
         public void TestAssignVsComma()
         {
             var obs = GetObservedTokens("a := b");
-            var expected = new List<Token> {
-                new(SyntaxType.NAME, "a", 1, 1),
-                new(SyntaxType.ASSIGN, ":=", 1, 4),
-                new(SyntaxType.NAME, "b", 1, 6),
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.NAME, "a", 1, 1),
+                new(HarbourSyntaxKind.ASSIGN, ":=", 1, 4),
+                new(HarbourSyntaxKind.NAME, "b", 1, 6),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 6),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("a:b");
             expected = [
-                    new(SyntaxType.NAME, "a", 1, 1),
-                new(SyntaxType.COLON, ":", 1, 2),
-                new(SyntaxType.NAME, "b", 1, 3),
+                new(HarbourSyntaxKind.NAME, "a", 1, 1),
+                new(HarbourSyntaxKind.COLON, ":", 1, 2),
+                new(HarbourSyntaxKind.NAME, "b", 1, 3),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 3),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestLogicalOperators()
         {
             var obs = GetObservedTokens("a .and. b");
-            var expected = new List<Token> {
-                new(SyntaxType.NAME, "a", 1, 1),
-                new(SyntaxType.AND, ".and.", 1, 7),
-                new(SyntaxType.NAME, "b", 1, 9),
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.NAME, "a", 1, 1),
+                new(HarbourSyntaxKind.AND, ".and.", 1, 7),
+                new(HarbourSyntaxKind.NAME, "b", 1, 9),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 9),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("a .and. !b");
             expected = [
-                    new(SyntaxType.NAME, "a", 1, 1),
-                new(SyntaxType.AND, ".and.", 1, 7),
-                new(SyntaxType.NOT, "!", 1, 9),
-                new(SyntaxType.NAME, "b", 1, 10),
+                new(HarbourSyntaxKind.NAME, "a", 1, 1),
+                new(HarbourSyntaxKind.AND, ".and.", 1, 7),
+                new(HarbourSyntaxKind.NOT, "!", 1, 9),
+                new(HarbourSyntaxKind.NAME, "b", 1, 10),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 10),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("!a .and. !b");
             expected = [
-                    new(SyntaxType.NOT, "!", 1, 1),
-                new(SyntaxType.NAME, "a", 1, 2),
-                new(SyntaxType.AND, ".and.", 1, 8),
-                new(SyntaxType.NOT, "!", 1, 10),
-                new(SyntaxType.NAME, "b", 1, 11),
+                new(HarbourSyntaxKind.NOT, "!", 1, 1),
+                new(HarbourSyntaxKind.NAME, "a", 1, 2),
+                new(HarbourSyntaxKind.AND, ".and.", 1, 8),
+                new(HarbourSyntaxKind.NOT, "!", 1, 10),
+                new(HarbourSyntaxKind.NAME, "b", 1, 11),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 11),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("!a .and. !b .or. !c");
             expected = [
-                    new(SyntaxType.NOT, "!", 1, 1),
-                new(SyntaxType.NAME, "a", 1, 2),
-                new(SyntaxType.AND, ".and.", 1, 8),
-                new(SyntaxType.NOT, "!", 1, 10),
-                new(SyntaxType.NAME, "b", 1, 11),
-                new(SyntaxType.OR, ".or.", 1, 16),
-                new(SyntaxType.NOT, "!", 1, 18),
-                new(SyntaxType.NAME, "c", 1, 19),
+                new(HarbourSyntaxKind.NOT, "!", 1, 1),
+                new(HarbourSyntaxKind.NAME, "a", 1, 2),
+                new(HarbourSyntaxKind.AND, ".and.", 1, 8),
+                new(HarbourSyntaxKind.NOT, "!", 1, 10),
+                new(HarbourSyntaxKind.NAME, "b", 1, 11),
+                new(HarbourSyntaxKind.OR, ".or.", 1, 16),
+                new(HarbourSyntaxKind.NOT, "!", 1, 18),
+                new(HarbourSyntaxKind.NAME, "c", 1, 19),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 19),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestRelations()
         {
             var obs = GetObservedTokens("a == b");
-            var expected = new List<Token> {
-                new(SyntaxType.NAME, "a", 1, 1),
-                new(SyntaxType.EQ1, "==", 1, 4),
-                new(SyntaxType.NAME, "b", 1, 6),
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.NAME, "a", 1, 1),
+                new(HarbourSyntaxKind.EQ1, "==", 1, 4),
+                new(HarbourSyntaxKind.NAME, "b", 1, 6),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 6),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("a <= b");
             expected = [
-                    new(SyntaxType.NAME, "a", 1, 1),
-                new(SyntaxType.LE, "<=", 1, 4),
-                new(SyntaxType.NAME, "b", 1, 6),
+                new(HarbourSyntaxKind.NAME, "a", 1, 1),
+                new(HarbourSyntaxKind.LE, "<=", 1, 4),
+                new(HarbourSyntaxKind.NAME, "b", 1, 6),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 6),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestLineComment()
         {
             var obs = GetObservedTokens("// This is a line comment.");
-            var expected = new List<Token> {
-                new(
-                    SyntaxType.LINE_COMMENT,
-                    "// This is a line comment.",
-                    1,
-                    26
-                )
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.EOF, "\0", 1, 26,
+                    [
+                        new(
+                            HarbourSyntaxKind.LINE_COMMENT,
+                            "// This is a line comment.",
+                            1,
+                            26
+                        )
+                    ],
+                    []
+                ),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestBlockComment()
         {
             var obs = GetObservedTokens("/* This is a block comment.*/");
-            var expected = new List<Token> {
-                new(
-                    SyntaxType.BLOCK_COMMENT,
-                    "/* This is a block comment.*/",
-                    1,
-                    29
-                )
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.EOF, "\0", 1, 29,
+                    [
+                        new(
+                            HarbourSyntaxKind.BLOCK_COMMENT,
+                            "/* This is a block comment.*/",
+                            1,
+                            29
+                        )
+                    ],
+                    []
+                ),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("\n/* This is also a\n * block\n * comment.\n */");
             expected = [
-                    new(
-                    SyntaxType.BLOCK_COMMENT,
-                    "/* This is also a\n * block\n * comment.\n */",
-                    2,
-                    3
-                )
-                ];
+                new(HarbourSyntaxKind.EOF, "\0", 5, 3,
+                    [
+                        new(
+                            HarbourSyntaxKind.BLOCK_COMMENT,
+                            "/* This is also a\n * block\n * comment.\n */",
+                            2,
+                            3
+                        )
+                    ],
+                    []
+                ),
+            ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("/* This is an unfinished block comment.*"));
 
@@ -347,64 +417,68 @@ namespace HarpyTests
         public void TestFunctionDef()
         {
             var obs = GetObservedTokens("FUNCTION a()\nRETURN b");
-            var expected = new List<Token> {
-                new(SyntaxType.FUNCTION, "FUNCTION", 1, 8),
-                new(SyntaxType.NAME, "a", 1, 10),
-                new(SyntaxType.LEFT_PAREN, "(", 1, 11),
-                new(SyntaxType.RIGHT_PAREN, ")", 1, 12),
-                new(SyntaxType.RETURN, "RETURN", 2, 6),
-                new(SyntaxType.NAME, "b", 2, 8),
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.FUNCTION, "FUNCTION", 1, 8),
+                new(HarbourSyntaxKind.NAME, "a", 1, 10),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 11),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 12),
+                new(HarbourSyntaxKind.RETURN, "RETURN", 2, 6),
+                new(HarbourSyntaxKind.NAME, "b", 2, 8),
+                new(HarbourSyntaxKind.EOF, "\0", 2, 8),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("function a(b, c, d)\n\nreturn e");
             expected = [
-                    new(SyntaxType.FUNCTION, "function", 1, 8),
-                new(SyntaxType.NAME, "a", 1, 10),
-                new(SyntaxType.LEFT_PAREN, "(", 1, 11),
-                new(SyntaxType.NAME, "b", 1, 12),
-                new(SyntaxType.COMMA, ",", 1, 13),
-                new(SyntaxType.NAME, "c", 1, 15),
-                new(SyntaxType.COMMA, ",", 1, 16),
-                new(SyntaxType.NAME, "d", 1, 18),
-                new(SyntaxType.RIGHT_PAREN, ")", 1, 19),
-                new(SyntaxType.RETURN, "return", 3, 6),
-                new(SyntaxType.NAME, "e", 3, 8),
+                new(HarbourSyntaxKind.FUNCTION, "function", 1, 8),
+                new(HarbourSyntaxKind.NAME, "a", 1, 10),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 11),
+                new(HarbourSyntaxKind.NAME, "b", 1, 12),
+                new(HarbourSyntaxKind.COMMA, ",", 1, 13),
+                new(HarbourSyntaxKind.NAME, "c", 1, 15),
+                new(HarbourSyntaxKind.COMMA, ",", 1, 16),
+                new(HarbourSyntaxKind.NAME, "d", 1, 18),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 19),
+                new(HarbourSyntaxKind.RETURN, "return", 3, 6),
+                new(HarbourSyntaxKind.NAME, "e", 3, 8),
+                new(HarbourSyntaxKind.EOF, "\0", 3, 8),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestProcedureDef()
         {
             var obs = GetObservedTokens("procedure a()\nRETURN");
-            var expected = new List<Token> {
-                new(SyntaxType.PROCEDURE, "procedure", 1, 9),
-                new(SyntaxType.NAME, "a", 1, 11),
-                new(SyntaxType.LEFT_PAREN, "(", 1, 12),
-                new(SyntaxType.RIGHT_PAREN, ")", 1, 13),
-                new(SyntaxType.RETURN, "RETURN", 2, 6),
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.PROCEDURE, "procedure", 1, 9),
+                new(HarbourSyntaxKind.NAME, "a", 1, 11),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 12),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 13),
+                new(HarbourSyntaxKind.RETURN, "RETURN", 2, 6),
+                new(HarbourSyntaxKind.EOF, "\0", 2, 6),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("procedure a(b, c, d)\n\nreturn");
             expected = [
-                    new(SyntaxType.PROCEDURE, "procedure", 1, 9),
-                new(SyntaxType.NAME, "a", 1, 11),
-                new(SyntaxType.LEFT_PAREN, "(", 1, 12),
-                new(SyntaxType.NAME, "b", 1, 13),
-                new(SyntaxType.COMMA, ",", 1, 14),
-                new(SyntaxType.NAME, "c", 1, 16),
-                new(SyntaxType.COMMA, ",", 1, 17),
-                new(SyntaxType.NAME, "d", 1, 19),
-                new(SyntaxType.RIGHT_PAREN, ")", 1, 20),
-                new(SyntaxType.RETURN, "return", 3, 6),
+                new(HarbourSyntaxKind.PROCEDURE, "procedure", 1, 9),
+                new(HarbourSyntaxKind.NAME, "a", 1, 11),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 12),
+                new(HarbourSyntaxKind.NAME, "b", 1, 13),
+                new(HarbourSyntaxKind.COMMA, ",", 1, 14),
+                new(HarbourSyntaxKind.NAME, "c", 1, 16),
+                new(HarbourSyntaxKind.COMMA, ",", 1, 17),
+                new(HarbourSyntaxKind.NAME, "d", 1, 19),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 20),
+                new(HarbourSyntaxKind.RETURN, "return", 3, 6),
+                new(HarbourSyntaxKind.EOF, "\0", 3, 6),
             ];
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -413,58 +487,63 @@ namespace HarpyTests
             var obs = GetObservedTokens(
                 "if a <= b\n    b()\nelseif c\n    d()\nelse\n    e()\nendif"
             );
-            var expected = new List<Token> {
-                new(SyntaxType.IF, "if", 1, 2),
-                new(SyntaxType.NAME, "a", 1, 4),
-                new(SyntaxType.LE, "<=", 1, 7),
-                new(SyntaxType.NAME, "b", 1, 9),
-                new(SyntaxType.NAME, "b", 2, 5),
-                new(SyntaxType.LEFT_PAREN, "(", 2, 6),
-                new(SyntaxType.RIGHT_PAREN, ")", 2, 7),
-                new(SyntaxType.ELSEIF, "elseif", 3, 6),
-                new(SyntaxType.NAME, "c", 3, 8),
-                new(SyntaxType.NAME, "d", 4, 5),
-                new(SyntaxType.LEFT_PAREN, "(", 4, 6),
-                new(SyntaxType.RIGHT_PAREN, ")", 4, 7),
-                new(SyntaxType.ELSE, "else", 5, 4),
-                new(SyntaxType.NAME, "e", 6, 5),
-                new(SyntaxType.LEFT_PAREN, "(", 6, 6),
-                new(SyntaxType.RIGHT_PAREN, ")", 6, 7),
-                new(SyntaxType.ENDIF, "endif", 7, 5),
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.IF, "if", 1, 2),
+                new(HarbourSyntaxKind.NAME, "a", 1, 4),
+                new(HarbourSyntaxKind.LE, "<=", 1, 7),
+                new(HarbourSyntaxKind.NAME, "b", 1, 9),
+                new(HarbourSyntaxKind.NAME, "b", 2, 5),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 2, 6),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 2, 7),
+                new(HarbourSyntaxKind.ELSEIF, "elseif", 3, 6),
+                new(HarbourSyntaxKind.NAME, "c", 3, 8),
+                new(HarbourSyntaxKind.NAME, "d", 4, 5),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 4, 6),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 4, 7),
+                new(HarbourSyntaxKind.ELSE, "else", 5, 4),
+                new(HarbourSyntaxKind.NAME, "e", 6, 5),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 6, 6),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 6, 7),
+                new(HarbourSyntaxKind.ENDIF, "endif", 7, 5),
+                new(HarbourSyntaxKind.EOF, "\0", 7, 5),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
         public void TestConditional()
         {
             var obs = GetObservedTokens("iif(a, b, c)");
-            var expected = new List<Token> {
-                new(SyntaxType.IIF, "iif", 1, 3),
-                new(SyntaxType.LEFT_PAREN, "(", 1, 4),
-                new(SyntaxType.NAME, "a", 1, 5),
-                new(SyntaxType.COMMA, ",", 1, 6),
-                new(SyntaxType.NAME, "b", 1, 8),
-                new(SyntaxType.COMMA, ",", 1, 9),
-                new(SyntaxType.NAME, "c", 1, 11),
-                new(SyntaxType.RIGHT_PAREN, ")", 1, 12),
+            var expected = new List<HarbourSyntaxToken> {
+                new(HarbourSyntaxKind.IIF, "iif", 1, 3),
+                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 4),
+                new(HarbourSyntaxKind.NAME, "a", 1, 5),
+                new(HarbourSyntaxKind.COMMA, ",", 1, 6),
+                new(HarbourSyntaxKind.NAME, "b", 1, 8),
+                new(HarbourSyntaxKind.COMMA, ",", 1, 9),
+                new(HarbourSyntaxKind.NAME, "c", 1, 11),
+                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 12),
+                new(HarbourSyntaxKind.EOF, "\0", 1, 12),
             };
 
-            AssertEqual(obs, expected);
+            AssertTokenListsEqual(obs, expected);
         }
 
 
-        private static List<Token> GetObservedTokens(string source)
+        private static List<HarbourSyntaxToken> GetObservedTokens(string source)
         {
             lexer = new Lexer(source);
 
-            var obs = new List<Token>();
+            var obs = new List<HarbourSyntaxToken>();
 
             foreach (var token in lexer.GetTokens())
             {
-                if (token.Type == SyntaxType.EOF)
+                if (token.Kind == HarbourSyntaxKind.EOF)
+                {
+                    obs.Add(token);
                     break;
+                }
 
                 obs.Add(token);
             }
@@ -472,7 +551,7 @@ namespace HarpyTests
             return obs;
         }
 
-        private static bool AssertEqual(List<Token> obs, List<Token> expected)
+        private static bool AssertTokenListsEqual(List<HarbourSyntaxToken> obs, List<HarbourSyntaxToken> expected, bool checkTrivia = false)
         {
             if (obs.Count != expected.Count)
             {
@@ -481,20 +560,68 @@ namespace HarpyTests
             }
             for (int i = 0; i < obs.Count; i++)
             {
-                if (obs[i].Type != expected[i].Type ||
-                    obs[i].Text != expected[i].Text ||
-                    obs[i].Line != expected[i].Line ||
-                    obs[i].Start != expected[i].Start ||
-                    obs[i].End != expected[i].End)
+                if (!SyntaxElementsEqual(obs[i], expected[i]))
                 {
                     Assert.Fail(
                         $"Token lines mismatch at index {i}. "
-                        + $"Expected Token({expected[i].Type}, '{expected[i].Text}', {expected[i].Line}, {expected[i].Start}, {expected[i].End}), "
-                        + $"but got Token({obs[i].Type}, '{obs[i].Text}', {obs[i].Line}, {obs[i].Start}, {obs[i].End})."
+                        + $"Expected Token({expected[i].Kind}, '{expected[i].Text}', {expected[i].Line}, {expected[i].Start}, {expected[i].End}), "
+                        + $"but got Token({obs[i].Kind}, '{obs[i].Text}', {obs[i].Line}, {obs[i].Start}, {obs[i].End})."
                     );
                     return false;
                 }
+
+                if (checkTrivia)
+                {
+                    if (obs[i].LeadingTrivia.Count != expected[i].LeadingTrivia.Count)
+                    {
+                        Assert.Fail($"Leading trivia count mismatch. Expected {expected[i].LeadingTrivia.Count}, but got {obs[i].LeadingTrivia.Count}.");
+                        return false;
+                    }
+                    else if (obs[i].TrailingTrivia.Count != expected[i].TrailingTrivia.Count)
+                    {
+                        Assert.Fail($"Trailing trivia count mismatch. Expected {expected[i].TrailingTrivia.Count}, but got {obs[i].TrailingTrivia.Count}.");
+                        return false;
+                    }
+
+                    if (!AssertTriviaListsEqual(obs[i].LeadingTrivia, expected[i].LeadingTrivia))
+                    {
+                        return false;
+                    }
+                    else if (!AssertTriviaListsEqual(obs[i].TrailingTrivia, expected[i].TrailingTrivia))
+                    {
+                        return false;
+                    }
+                }
             }
+            return true;
+        }
+
+        private static bool SyntaxElementsEqual(HarbourSyntaxElement obs, HarbourSyntaxElement expected)
+        {
+            return obs.Kind == expected.Kind &&
+                   obs.Text == expected.Text &&
+                   obs.Line == expected.Line &&
+                   obs.Start == expected.Start &&
+                   obs.End == expected.End;
+        }
+
+        private static bool AssertTriviaListsEqual(List<HarbourSyntaxTrivia> obsTriviaList, List<HarbourSyntaxTrivia> expectedTriviaList)
+        {
+            for (int j = 0; j < expectedTriviaList.Count; j++)
+            {
+                HarbourSyntaxTrivia obsTrivia = obsTriviaList[j];
+                HarbourSyntaxTrivia expectedTrivia = expectedTriviaList[j];
+
+                if (!SyntaxElementsEqual(obsTrivia, expectedTrivia))
+                {
+                    Assert.Fail(
+                        $"Trivia lines mismatch at index {j}. "
+                        + $"Expected Trivia({expectedTrivia.Kind}, '{expectedTrivia.Text}', {expectedTrivia.Line}, {expectedTrivia.Start}, {expectedTrivia.End}), "
+                        + $"but got Trivia({obsTrivia.Kind}, '{obsTrivia.Text}', {obsTrivia.Line}, {obsTrivia.Start}, {obsTrivia.End}).");
+                    return false;
+                }
+            }
+
             return true;
         }
     }

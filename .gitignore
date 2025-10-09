@@ -11,3 +11,4 @@ __pycache__/
 # Visual Studio files
 bin/
 obj/
+.vs/
