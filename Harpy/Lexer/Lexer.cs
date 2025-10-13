@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections;
+using System.Data;
 
 namespace Harpy.Lexer
 {
@@ -6,7 +7,7 @@ namespace Harpy.Lexer
     /// Takes a string and splits it into a series of <c>Token</c>s. 
     /// Operators and punctuation are mapped to unique keywords.    
     /// </summary>
-    internal class Lexer(string text)
+    internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator<HarbourSyntaxToken>
     {
         private static readonly Dictionary<string, HarbourSyntaxKind> _directives = new()
         {
@@ -95,8 +96,9 @@ namespace Harpy.Lexer
         private int _resetIndex = 0;
 
         private readonly string _text = text;
+        private HarbourSyntaxToken? _current = null;
 
-        public IEnumerable<HarbourSyntaxToken> GetTokens()
+        public IEnumerator<HarbourSyntaxToken> GetEnumerator()
         {
             List<HarbourSyntaxTrivia> leadingTrivia = [];
             List<HarbourSyntaxTrivia> trailingTrivia = [];
@@ -313,6 +315,7 @@ namespace Harpy.Lexer
                         oldToken.TrailingTrivia = trailingTrivia;
                         leadingTrivia.Clear();
                         trailingTrivia.Clear();
+                        _current = oldToken;
                         yield return oldToken;
                     }
 
@@ -328,6 +331,7 @@ namespace Harpy.Lexer
                 currentToken.TrailingTrivia = trailingTrivia;
                 leadingTrivia.Clear();
                 trailingTrivia.Clear();
+                _current = currentToken;
                 yield return currentToken;
             }
             // Once we've reached the end of the string, just return EOF tokens. We'll
@@ -335,6 +339,36 @@ namespace Harpy.Lexer
             // parser's lookahead doesn't have to worry about running out of tokens.
             yield return new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _line, _pos, leadingTrivia, trailingTrivia);
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        object IEnumerator.Current => _current!;
+        HarbourSyntaxToken IEnumerator<HarbourSyntaxToken>.Current => _current!;
+
+        bool IEnumerator.MoveNext()
+        {
+            if (_index == _text.Length || (_current != null && _current.Kind == HarbourSyntaxKind.EOF))
+            {
+                _current = GetEnumerator().Current;
+                return true;
+            }
+
+            return false;
+        }
+
+        void IEnumerator.Reset()
+        {
+            _index = 0;
+            _line = 1;
+            _pos = 0;
+            _resetIndex = 0;
+            _current = null;
+        }
+
+        void IDisposable.Dispose() { }
 
         private HarbourSyntaxElement ReadPreprocessorDirectiveOrNeOp()
         {
@@ -374,7 +408,7 @@ namespace Harpy.Lexer
                 }
             }
 
-            Reset(1);
+            ResetIndex(1);
 
             return new HarbourSyntaxToken(HarbourSyntaxKind.NE1, "#", _line, _pos);
         }
@@ -644,7 +678,7 @@ namespace Harpy.Lexer
             // e.g., `IF !(aHWFlag[F_HWCardReader] .OR. aHWFlag[F_HWDallasKey]) .OR. oPOSStatus:oFree:lFlag3`
             if (endquote == ']' && _names.Contains(literal[1..]))
             {
-                Reset();
+                ResetIndex();
                 return new HarbourSyntaxToken(HarbourSyntaxKind.LEFT_BRACKET, "[", _line, _pos);
             }
 
@@ -679,7 +713,7 @@ namespace Harpy.Lexer
                 );
             }
 
-            Reset();
+            ResetIndex();
             return null;
         }
 
@@ -740,7 +774,7 @@ namespace Harpy.Lexer
             _resetIndex = index;
         }
 
-        private void Reset(int offset = 0)
+        private void ResetIndex(int offset = 0)
         {
             _pos -= _index - _resetIndex + offset;
             if (_pos < 0)

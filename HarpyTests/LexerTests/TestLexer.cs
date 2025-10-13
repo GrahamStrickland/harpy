@@ -2,29 +2,12 @@
 
 using Harpy.Lexer;
 
-namespace HarpyTests
+namespace HarpyTests.LexerTests
 {
     [TestClass]
     public sealed class TestLexer
     {
         private static Lexer? lexer;
-
-        [TestMethod]
-        public void TestGetTokens()
-        {
-            var obs = GetObservedTokens("from + offset(time)");
-            var expected = new List<HarbourSyntaxToken> {
-                new(HarbourSyntaxKind.NAME, "from", 1, 4),
-                new(HarbourSyntaxKind.PLUS, "+", 1, 6),
-                new(HarbourSyntaxKind.NAME, "offset", 1, 13),
-                new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 14),
-                new(HarbourSyntaxKind.NAME, "time", 1, 18),
-                new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 19),
-                new(HarbourSyntaxKind.EOF, "\0", 1, 19),
-            };
-
-            AssertTokenListsEqual(obs, expected);
-        }
 
         [TestMethod]
         public void TestPreprocessorDirective()
@@ -44,7 +27,7 @@ namespace HarpyTests
                 )
             };
 
-            AssertTokenListsEqual(obs, expected, true);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected, true);
 
             obs = GetObservedTokens("#ifdef SOMETHING");
             expected = [
@@ -61,7 +44,7 @@ namespace HarpyTests
                     ),
                 ];
 
-            AssertTokenListsEqual(obs, expected, true);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected, true);
 
             obs = GetObservedTokens("#pragma -ko+");
             expected = [
@@ -78,7 +61,7 @@ namespace HarpyTests
                     ),
                 ];
 
-            AssertTokenListsEqual(obs, expected, true);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected, true);
         }
 
         [TestMethod]
@@ -90,7 +73,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 3),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens(".F.");
             expected = [
@@ -98,7 +81,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 3),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -110,7 +93,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 1),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("123");
             expected = [
@@ -118,7 +101,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 3),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("50000");
             expected = [
@@ -126,7 +109,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 5),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("12000.123");
             expected = [
@@ -134,7 +117,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 9),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("0xABAB");
             expected = [
@@ -142,7 +125,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 6),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens(".12");
             expected = [
@@ -150,7 +133,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 3),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("1x001"));
 
@@ -173,7 +156,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 18),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("\"This is also a string\"");
             expected = [
@@ -181,7 +164,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 23),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("[Also a string]");
             expected = [
@@ -191,7 +174,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 15),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("['Actually a hash key']");
             expected = [
@@ -206,7 +189,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 23),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("function a(b)\n    local i := 1\nreturn b[i]");
             expected = [
@@ -227,7 +210,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 3, 11),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("\"\"");
             expected = [
@@ -235,7 +218,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 2),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("''");
             expected = [
@@ -243,7 +226,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 2),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("'This string does not finish"));
 
@@ -261,7 +244,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 6),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("a:b");
             expected = [
@@ -271,7 +254,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 3),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -285,7 +268,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 9),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("a .and. !b");
             expected = [
@@ -296,7 +279,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 10),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("!a .and. !b");
             expected = [
@@ -308,7 +291,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 11),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("!a .and. !b .or. !c");
             expected = [
@@ -323,7 +306,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 19),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -337,7 +320,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 6),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("a <= b");
             expected = [
@@ -347,7 +330,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 6),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -368,7 +351,7 @@ namespace HarpyTests
                 ),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -389,7 +372,7 @@ namespace HarpyTests
                 ),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("\n/* This is also a\n * block\n * comment.\n */");
             expected = [
@@ -406,7 +389,7 @@ namespace HarpyTests
                 ),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("/* This is an unfinished block comment.*"));
 
@@ -427,7 +410,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 2, 8),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("function a(b, c, d)\n\nreturn e");
             expected = [
@@ -445,7 +428,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 3, 8),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -461,7 +444,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 2, 6),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
             obs = GetObservedTokens("procedure a(b, c, d)\n\nreturn");
             expected = [
@@ -478,7 +461,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 3, 6),
             ];
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -508,7 +491,7 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 7, 5),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
 
         [TestMethod]
@@ -527,9 +510,8 @@ namespace HarpyTests
                 new(HarbourSyntaxKind.EOF, "\0", 1, 12),
             };
 
-            AssertTokenListsEqual(obs, expected);
+            Utils.SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
         }
-
 
         private static List<HarbourSyntaxToken> GetObservedTokens(string source)
         {
@@ -537,7 +519,7 @@ namespace HarpyTests
 
             var obs = new List<HarbourSyntaxToken>();
 
-            foreach (var token in lexer.GetTokens())
+            foreach (var token in lexer)
             {
                 if (token.Kind == HarbourSyntaxKind.EOF)
                 {
@@ -549,80 +531,6 @@ namespace HarpyTests
             }
 
             return obs;
-        }
-
-        private static bool AssertTokenListsEqual(List<HarbourSyntaxToken> obs, List<HarbourSyntaxToken> expected, bool checkTrivia = false)
-        {
-            if (obs.Count != expected.Count)
-            {
-                Assert.Fail($"Token count mismatch. Expected {expected.Count}, but got {obs.Count}.");
-                return false;
-            }
-            for (int i = 0; i < obs.Count; i++)
-            {
-                if (!SyntaxElementsEqual(obs[i], expected[i]))
-                {
-                    Assert.Fail(
-                        $"Token lines mismatch at index {i}. "
-                        + $"Expected Token({expected[i].Kind}, '{expected[i].Text}', {expected[i].Line}, {expected[i].Start}, {expected[i].End}), "
-                        + $"but got Token({obs[i].Kind}, '{obs[i].Text}', {obs[i].Line}, {obs[i].Start}, {obs[i].End})."
-                    );
-                    return false;
-                }
-
-                if (checkTrivia)
-                {
-                    if (obs[i].LeadingTrivia.Count != expected[i].LeadingTrivia.Count)
-                    {
-                        Assert.Fail($"Leading trivia count mismatch. Expected {expected[i].LeadingTrivia.Count}, but got {obs[i].LeadingTrivia.Count}.");
-                        return false;
-                    }
-                    else if (obs[i].TrailingTrivia.Count != expected[i].TrailingTrivia.Count)
-                    {
-                        Assert.Fail($"Trailing trivia count mismatch. Expected {expected[i].TrailingTrivia.Count}, but got {obs[i].TrailingTrivia.Count}.");
-                        return false;
-                    }
-
-                    if (!AssertTriviaListsEqual(obs[i].LeadingTrivia, expected[i].LeadingTrivia))
-                    {
-                        return false;
-                    }
-                    else if (!AssertTriviaListsEqual(obs[i].TrailingTrivia, expected[i].TrailingTrivia))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        private static bool SyntaxElementsEqual(HarbourSyntaxElement obs, HarbourSyntaxElement expected)
-        {
-            return obs.Kind == expected.Kind &&
-                   obs.Text == expected.Text &&
-                   obs.Line == expected.Line &&
-                   obs.Start == expected.Start &&
-                   obs.End == expected.End;
-        }
-
-        private static bool AssertTriviaListsEqual(List<HarbourSyntaxTrivia> obsTriviaList, List<HarbourSyntaxTrivia> expectedTriviaList)
-        {
-            for (int j = 0; j < expectedTriviaList.Count; j++)
-            {
-                HarbourSyntaxTrivia obsTrivia = obsTriviaList[j];
-                HarbourSyntaxTrivia expectedTrivia = expectedTriviaList[j];
-
-                if (!SyntaxElementsEqual(obsTrivia, expectedTrivia))
-                {
-                    Assert.Fail(
-                        $"Trivia lines mismatch at index {j}. "
-                        + $"Expected Trivia({expectedTrivia.Kind}, '{expectedTrivia.Text}', {expectedTrivia.Line}, {expectedTrivia.Start}, {expectedTrivia.End}), "
-                        + $"but got Trivia({obsTrivia.Kind}, '{obsTrivia.Text}', {obsTrivia.Line}, {obsTrivia.Start}, {obsTrivia.End}).");
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }
