@@ -3,7 +3,7 @@ using System.Collections;
 namespace Harpy.Lexer;
 
 /// <summary>
-///     An intermediary between the <c>Parser</c> and <c>Lexer</c>. Handles the <c>IEnumerable<HarbourSyntaxToken></c>
+///     An intermediary between the <c>Parser</c> and <c>Lexer</c>. Handles the <c>IEnumerable</c>
 ///     for the <c>Parser</c>, with options for checking if a token matches, consuming a token, putting back a token,
 ///     and look-ahead with optional distance.
 /// </summary>
@@ -16,25 +16,21 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
 
     public IEnumerator<HarbourSyntaxToken> GetEnumerator()
     {
-        HarbourSyntaxToken? token = null;
-
-        while (_lexer.Any() || _read.Count > 0)
+        while (true)
         {
-            if (_read.Count > 0)
-            {
-                token = _read.First();
-                _read.RemoveFirst();
-            }
-            else
-            {
-                using var enumerator = _lexer.GetEnumerator();
-                if (enumerator.MoveNext()) token = enumerator.Current;
-            }
+            if (_read.Count == 0)
+                // TODO: Check this for efficiency, there may be a better way to implement it.
+                foreach (var t in _lexer)
+                    _read.AddLast(t);
 
-            if (token == null) continue;
+            var token = _read.First();
+            _read.RemoveFirst();
             _resetBuffer.Enqueue(token);
             _current = token;
             yield return token;
+
+            if (token.Kind == HarbourSyntaxKind.EOF)
+                break;
         }
     }
 

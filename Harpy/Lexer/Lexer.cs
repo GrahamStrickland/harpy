@@ -285,30 +285,27 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                 }
             }
 
-            if (newToken != null)
+            if (newToken == null) continue;
+            if (oldToken != null)
             {
-                if (oldToken != null)
-                {
-                    oldToken.TrailingTrivia = trailingTrivia;
-                    leadingTrivia.Clear();
-                    trailingTrivia.Clear();
-                    _current = oldToken;
-                    yield return oldToken;
-                }
-
-                oldToken = newToken;
-                oldToken.LeadingTrivia = leadingTrivia;
+                oldToken.TrailingTrivia = trailingTrivia;
+                leadingTrivia.Clear();
+                trailingTrivia.Clear();
+                _current = oldToken;
+                yield return oldToken;
             }
+
+            oldToken = newToken;
+            oldToken.LeadingTrivia = leadingTrivia;
         }
 
         if (oldToken != null)
         {
-            var currentToken = oldToken;
-            currentToken.TrailingTrivia = trailingTrivia;
+            oldToken.TrailingTrivia = trailingTrivia;
             leadingTrivia.Clear();
             trailingTrivia.Clear();
-            _current = currentToken;
-            yield return currentToken;
+            _current = oldToken;
+            yield return oldToken;
         }
 
         // Once we've reached the end of the string, just return EOF tokens. We'll
@@ -619,15 +616,15 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
         var startIndex = _index;
         SetResetIndex(startIndex);
         var literal = c.ToString();
-        var endquote = c == '[' ? ']' : c;
+        var endQuote = c == '[' ? ']' : c;
 
-        while ((c = Peek()) != endquote)
+        while ((c = Peek()) != endQuote)
         {
             switch (c)
             {
                 case '\0':
                 {
-                    if (literal.Length > 1 && literal.EndsWith(endquote)) break;
+                    if (literal.Length > 1 && literal.EndsWith(endQuote)) break;
                     throw new SyntaxErrorException($"Unterminated string literal '{literal}'.");
                 }
                 default:
@@ -642,7 +639,7 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
 
         // TODO: This won't work unless we handle include files/preprocessor parsing first,
         // e.g., `IF !(aHWFlag[F_HWCardReader] .OR. aHWFlag[F_HWDallasKey]) .OR. oPOSStatus:oFree:lFlag3`
-        if (endquote != ']' || !_names.Contains(literal[1..]))
+        if (endQuote != ']' || !_names.Contains(literal[1..]))
             return new HarbourSyntaxToken(
                 HarbourSyntaxKind.STR_LITERAL,
                 literal + Advance(),
@@ -704,21 +701,17 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
 
     private char Peek()
     {
-        if (_text.Length > _index) return _text[_index];
-
-        return '\0';
+        return _text.Length > _index ? _text[_index] : '\0';
     }
 
     private char Advance()
     {
         var c = '\0';
 
-        if (_text.Length > _index)
-        {
-            c = _text[_index];
-            _index += 1;
-            _pos += 1;
-        }
+        if (_text.Length <= _index) return c;
+        c = _text[_index];
+        _index += 1;
+        _pos += 1;
 
         return c;
     }
