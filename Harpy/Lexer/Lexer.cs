@@ -470,41 +470,13 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
 
         literal += '.';
 
-        switch (literal.ToLower())
+        return literal.ToLower() switch
         {
-            case ".t.":
-            case ".f.":
-            {
-                return new HarbourSyntaxToken(
-                    HarbourSyntaxKind.BOOL_LITERAL,
-                    literal,
-                    _line,
-                    _pos
-                );
-            }
-            case ".or.":
-            {
-                return new HarbourSyntaxToken(
-                    HarbourSyntaxKind.OR,
-                    literal,
-                    _line,
-                    _pos
-                );
-            }
-            case ".and.":
-            {
-                return new HarbourSyntaxToken(
-                    HarbourSyntaxKind.AND,
-                    literal,
-                    _line,
-                    _pos
-                );
-            }
-            default:
-            {
-                throw new SyntaxErrorException($"Unable to read token '{literal}'.");
-            }
-        }
+            ".t." or ".f." => new HarbourSyntaxToken(HarbourSyntaxKind.BOOL_LITERAL, literal, _line, _pos),
+            ".or." => new HarbourSyntaxToken(HarbourSyntaxKind.OR, literal, _line, _pos),
+            ".and." => new HarbourSyntaxToken(HarbourSyntaxKind.AND, literal, _line, _pos),
+            _ => throw new SyntaxErrorException($"Unable to read token '{literal}'.")
+        };
     }
 
     private HarbourSyntaxToken ReadNumericLiteral(char c)
@@ -530,20 +502,16 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                 case '9':
                 {
                     literal += c;
-                    Advance();
                     break;
                 }
                 case 'x':
                 {
-                    if (literal == "0")
-                    {
-                        literal += c;
-                        hexNum = true;
-                        Advance();
-                        break;
-                    }
+                    if (literal != "0")
+                        throw new SyntaxErrorException($"Unterminated hexadecimal literal '{literal + c}'.");
+                    literal += c;
+                    hexNum = true;
+                    break;
 
-                    throw new SyntaxErrorException($"Unterminated hexadecimal literal '{literal + c}'.");
                 }
                 case 'a':
                 case 'b':
@@ -552,35 +520,19 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                 case 'e':
                 case 'f':
                 {
-                    if (hexNum)
-                    {
-                        literal += c;
-                        Advance();
-                        break;
-                    }
+                    if (!hexNum) throw new SyntaxErrorException($"Invalid numeric literal '{literal + c}'.");
+                    literal += c;
+                    break;
 
-                    throw new SyntaxErrorException($"Invalid numeric literal '{literal + c}'.");
                 }
                 case '.':
                 {
-                    if (!dotFound)
-                    {
-                        literal += c;
-                        dotFound = true;
-                        Advance();
-                        break;
-                    }
+                    if (dotFound)
+                        throw new SyntaxErrorException($"Second decimal point found in literal '{literal + c}'.");
+                    literal += c;
+                    dotFound = true;
+                    break;
 
-                    throw new SyntaxErrorException($"Second decimal point found in literal '{literal + c}'.");
-                }
-                case '\0':
-                {
-                    return new HarbourSyntaxToken(
-                        HarbourSyntaxKind.NUM_LITERAL,
-                        literal,
-                        _line,
-                        _pos
-                    );
                 }
                 default:
                 {
@@ -592,6 +544,8 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                     );
                 }
             }
+
+            Advance();
 
             c = Peek();
         }

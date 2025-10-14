@@ -37,6 +37,13 @@ public sealed class TestSourceReader
 
         Assert.IsFalse(_reader.MoveNext());
     }
+    
+    [TestMethod]
+    public void TestMatch()
+    {
+        var lexer = new Lexer("a + b");
+        _reader = new SourceReader(lexer);
+    }
 
     private static List<HarbourSyntaxToken> GetObservedTokens(string source)
     {
