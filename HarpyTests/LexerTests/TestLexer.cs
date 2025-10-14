@@ -1,13 +1,138 @@
 ﻿using System.Data;
 using Harpy.Lexer;
-using HarpyTests.Utils;
+using HarpyTests.LexerTests.Utils;
 
 namespace HarpyTests.LexerTests;
 
 [TestClass]
 public sealed class TestLexer
 {
-    private static Lexer? lexer;
+    private static Lexer? _lexer;
+
+    [TestMethod]
+    public void TestWhitespace()
+    {
+        var obs = GetObservedTokens("a + b");
+        var expected = new List<HarbourSyntaxToken>
+        {
+            new(HarbourSyntaxKind.NAME, "a", 1, 1,
+                [],
+                [
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.SPACE,
+                        " ",
+                        1,
+                        2
+                    )
+                ]
+            ),
+            new(HarbourSyntaxKind.PLUS, "+", 1, 3,
+                [],
+                [
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.SPACE,
+                        " ",
+                        1,
+                        4
+                    )
+                ]
+            ),
+            new(HarbourSyntaxKind.NAME, "b", 1, 5),
+            new(HarbourSyntaxKind.EOF, "\0", 1, 5)
+        };
+
+        SyntaxTokenUtils.AssertTokenListsEqual(obs, expected, true);
+
+        obs = GetObservedTokens("a\t+\tb");
+        expected =
+        [
+            new HarbourSyntaxToken(HarbourSyntaxKind.NAME, "a", 1, 1,
+                [],
+                [
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.TAB,
+                        "\t",
+                        1,
+                        2
+                    )
+                ]
+            ),
+            new HarbourSyntaxToken(HarbourSyntaxKind.PLUS, "+", 1, 3,
+                [],
+                [
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.TAB,
+                        "\t",
+                        1,
+                        4
+                    )
+                ]
+            ),
+            new HarbourSyntaxToken(HarbourSyntaxKind.NAME, "b", 1, 5),
+            new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", 1, 5)
+        ];
+
+        SyntaxTokenUtils.AssertTokenListsEqual(obs, expected, true);
+
+        obs = GetObservedTokens("a\t+ ;\n\t\tb");
+        expected =
+        [
+            new HarbourSyntaxToken(HarbourSyntaxKind.NAME, "a", 1, 1,
+                [],
+                [
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.TAB,
+                        "\t",
+                        1,
+                        2
+                    )
+                ]
+            ),
+            new HarbourSyntaxToken(HarbourSyntaxKind.PLUS, "+", 1, 3,
+                [],
+                [
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.SPACE,
+                        " ",
+                        1,
+                        4
+                    ),
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.LINE_CONTINUATION,
+                        ";",
+                        1,
+                        5
+                    ),
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.NEWLINE,
+                        "\n",
+                        1,
+                        6
+                    )
+                ]
+            ),
+            new HarbourSyntaxToken(HarbourSyntaxKind.NAME, "b", 2, 3,
+                [
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.TAB,
+                        "\t",
+                        2,
+                        1
+                    ),
+                    new HarbourSyntaxTrivia(
+                        HarbourSyntaxKind.TAB,
+                        "\t",
+                        2,
+                        2
+                    )
+                ],
+                []
+            ),
+            new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", 2, 3)
+        ];
+
+        SyntaxTokenUtils.AssertTokenListsEqual(obs, expected, true);
+    }
 
     [TestMethod]
     public void TestPreprocessorDirective()
@@ -551,11 +676,11 @@ public sealed class TestLexer
 
     private static List<HarbourSyntaxToken> GetObservedTokens(string source)
     {
-        lexer = new Lexer(source);
+        _lexer = new Lexer(source);
 
         var obs = new List<HarbourSyntaxToken>();
 
-        foreach (var token in lexer)
+        foreach (var token in _lexer)
         {
             if (token.Kind == HarbourSyntaxKind.EOF)
             {

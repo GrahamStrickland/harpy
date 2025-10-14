@@ -11,9 +11,9 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
 {
     private readonly Lexer _lexer = lexer;
     private HarbourSyntaxToken? _current;
+    private bool _endOfFile;
     private LinkedList<HarbourSyntaxToken> _read = [];
     private Queue<HarbourSyntaxToken> _resetBuffer = [];
-    private bool _endOfFile = false;
 
     public IEnumerator<HarbourSyntaxToken> GetEnumerator()
     {
@@ -36,7 +36,7 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
     {
         if (_endOfFile)
             return false;
-        
+
         if (_read.Count == 0)
             // TODO: Check this for efficiency, there may be a better way to implement it.
             foreach (var t in _lexer)
@@ -46,9 +46,9 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
         _read.RemoveFirst();
         _resetBuffer.Enqueue(token);
         _current = token;
-        
+
         if (token.Kind != HarbourSyntaxKind.EOF) return _current != null;
-        
+
         _endOfFile = true;
         return true;
     }

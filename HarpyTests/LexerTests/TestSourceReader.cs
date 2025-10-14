@@ -34,7 +34,7 @@ public sealed class TestSourceReader
 
         for (var i = 0; i < 4; i++) // Include EOF token at end for leading trivia.
             Assert.IsTrue(_reader.MoveNext());
-        
+
         Assert.IsFalse(_reader.MoveNext());
     }
 

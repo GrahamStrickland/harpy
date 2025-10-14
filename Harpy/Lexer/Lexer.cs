@@ -107,17 +107,18 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
         List<HarbourSyntaxTrivia> leadingTrivia = [];
         List<HarbourSyntaxTrivia> trailingTrivia = [];
         HarbourSyntaxToken? oldToken = null;
+        HarbourSyntaxToken? newToken = null;
+        var newLineEncountered = false;
 
         while (_index < _text.Length)
         {
-            HarbourSyntaxToken? newToken = null;
             var c = Advance();
 
             switch (c)
             {
                 case '#':
                 {
-                    if (newToken == null)
+                    if (newLineEncountered)
                         leadingTrivia.Add((HarbourSyntaxTrivia)ReadPreprocessorDirectiveOrNeOp());
                     else
                         trailingTrivia.Add((HarbourSyntaxTrivia)ReadPreprocessorDirectiveOrNeOp());
@@ -130,7 +131,7 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                     {
                         case '/':
                         {
-                            if (newToken == null)
+                            if (newLineEncountered)
                                 leadingTrivia.Add(ReadLineComment());
                             else
                                 trailingTrivia.Add(ReadLineComment());
@@ -138,7 +139,7 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                         }
                         case '*':
                         {
-                            if (newToken == null)
+                            if (newLineEncountered)
                                 leadingTrivia.Add(ReadBlockComment());
                             else
                                 trailingTrivia.Add(ReadBlockComment());
@@ -226,42 +227,25 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                     else if (char.IsWhiteSpace(c) || c == ';')
                     {
                         HarbourSyntaxKind type;
-                        switch (c)
+                        if (op == "\r\n")
                         {
-                            case '\n':
+                            Advance();
+                            type = HarbourSyntaxKind.NEWLINE;
+                        }
+                        else
+                        {
+                            type = c switch
                             {
-                                type = HarbourSyntaxKind.NEWLINE;
-                                _line += 1;
-                                _pos = 0;
-                                break;
-                            }
-                            case '\r':
-                            {
-                                type = HarbourSyntaxKind.CARRIAGE_RETURN;
-                                _line += 1;
-                                _pos = 0;
-                                break;
-                            }
-                            case '\t':
-                            {
-                                type = HarbourSyntaxKind.TAB;
-                                break;
-                            }
-                            case ' ':
-                            {
-                                type = HarbourSyntaxKind.SPACE;
-                                break;
-                            }
-                            case ';':
-                            {
-                                type = HarbourSyntaxKind.LINE_CONTINUATION;
-                                break;
-                            }
-                            default:
-                                throw new SyntaxErrorException($"Unknown character '{c}' encountered in source.");
+                                '\n' => HarbourSyntaxKind.NEWLINE,
+                                '\r' => HarbourSyntaxKind.CARRIAGE_RETURN,
+                                '\t' => HarbourSyntaxKind.TAB,
+                                ' ' => HarbourSyntaxKind.SPACE,
+                                ';' => HarbourSyntaxKind.LINE_CONTINUATION,
+                                _ => throw new SyntaxErrorException($"Unknown character '{c}' encountered in source.")
+                            };
                         }
 
-                        if (newToken == null)
+                        if (newLineEncountered)
                             leadingTrivia.Add(
                                 new HarbourSyntaxTrivia(
                                     type,
@@ -279,31 +263,39 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                                     _pos
                                 )
                             );
+
+                        if (type is HarbourSyntaxKind.NEWLINE or HarbourSyntaxKind.CARRIAGE_RETURN)
+                        {
+                            _line += 1;
+                            _pos = 0;
+                            newLineEncountered = true;
+                        }
                     }
 
                     break;
                 }
             }
 
-            if (newToken == null) continue;
+            if (newToken == null) continue; // Search for more trivia.
+            newLineEncountered = false;
+            newToken.LeadingTrivia = leadingTrivia;
+            leadingTrivia = [];
+
             if (oldToken != null)
             {
                 oldToken.TrailingTrivia = trailingTrivia;
-                leadingTrivia.Clear();
-                trailingTrivia.Clear();
+                trailingTrivia = [];
                 _current = oldToken;
                 yield return oldToken;
             }
 
             oldToken = newToken;
-            oldToken.LeadingTrivia = leadingTrivia;
+            newToken = null;
         }
 
         if (oldToken != null)
         {
             oldToken.TrailingTrivia = trailingTrivia;
-            leadingTrivia.Clear();
-            trailingTrivia.Clear();
             _current = oldToken;
             yield return oldToken;
         }
@@ -311,7 +303,8 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
         // Once we've reached the end of the string, just return EOF tokens. We'll
         // just keep returning them as many times as we're asked so that the
         // parser's lookahead doesn't have to worry about running out of tokens.
-        yield return new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _line, _pos, leadingTrivia, trailingTrivia);
+        leadingTrivia.AddRange(trailingTrivia);
+        yield return new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _line, _pos, leadingTrivia, []);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
