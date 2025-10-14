@@ -1,5 +1,5 @@
 ﻿using Harpy.Lexer;
-using HarpyTests.Utils;
+using HarpyTests.LexerTests.Utils;
 
 namespace HarpyTests.LexerTests;
 
@@ -11,19 +11,31 @@ public sealed class TestSourceReader
     [TestMethod]
     public void TestGetEnumerator()
     {
-        var obs = GetObservedTokens("from + offset(time)");
+        var obs = GetObservedTokens("a + b(c)");
         var expected = new List<HarbourSyntaxToken>
         {
-            new(HarbourSyntaxKind.NAME, "from", 1, 4),
-            new(HarbourSyntaxKind.PLUS, "+", 1, 6),
-            new(HarbourSyntaxKind.NAME, "offset", 1, 13),
-            new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 14),
-            new(HarbourSyntaxKind.NAME, "time", 1, 18),
-            new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 19),
-            new(HarbourSyntaxKind.EOF, "\0", 1, 19)
+            new(HarbourSyntaxKind.NAME, "a", 1, 1),
+            new(HarbourSyntaxKind.PLUS, "+", 1, 3),
+            new(HarbourSyntaxKind.NAME, "b", 1, 5),
+            new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 6),
+            new(HarbourSyntaxKind.NAME, "c", 1, 7),
+            new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 8),
+            new(HarbourSyntaxKind.EOF, "\0", 1, 8)
         };
 
         SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
+    }
+
+    [TestMethod]
+    public void TestMoveNext()
+    {
+        var lexer = new Lexer("a + b");
+        _reader = new SourceReader(lexer);
+
+        for (var i = 0; i < 4; i++) // Include EOF token at end for leading trivia.
+            Assert.IsTrue(_reader.MoveNext());
+        
+        Assert.IsFalse(_reader.MoveNext());
     }
 
     private static List<HarbourSyntaxToken> GetObservedTokens(string source)

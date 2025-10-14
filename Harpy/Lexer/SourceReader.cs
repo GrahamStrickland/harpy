@@ -13,23 +13,16 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
     private HarbourSyntaxToken? _current;
     private LinkedList<HarbourSyntaxToken> _read = [];
     private Queue<HarbourSyntaxToken> _resetBuffer = [];
+    private bool _endOfFile = false;
 
     public IEnumerator<HarbourSyntaxToken> GetEnumerator()
     {
         while (true)
         {
-            if (_read.Count == 0)
-                // TODO: Check this for efficiency, there may be a better way to implement it.
-                foreach (var t in _lexer)
-                    _read.AddLast(t);
+            if (!MoveNext() || _current == null) continue;
+            yield return _current;
 
-            var token = _read.First();
-            _read.RemoveFirst();
-            _resetBuffer.Enqueue(token);
-            _current = token;
-            yield return token;
-
-            if (token.Kind == HarbourSyntaxKind.EOF)
+            if (_current.Kind == HarbourSyntaxKind.EOF)
                 break;
         }
     }
@@ -41,15 +34,22 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
 
     public bool MoveNext()
     {
-        if (_read.Count > 0)
-        {
-            _current = _read.First();
-            return true;
-        }
+        if (_endOfFile)
+            return false;
+        
+        if (_read.Count == 0)
+            // TODO: Check this for efficiency, there may be a better way to implement it.
+            foreach (var t in _lexer)
+                _read.AddLast(t);
 
-        if (!_lexer.Any()) return false;
-        using var enumerator = GetEnumerator();
-        _current = enumerator.Current;
+        var token = _read.First();
+        _read.RemoveFirst();
+        _resetBuffer.Enqueue(token);
+        _current = token;
+        
+        if (token.Kind != HarbourSyntaxKind.EOF) return _current != null;
+        
+        _endOfFile = true;
         return true;
     }
 

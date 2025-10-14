@@ -1,8 +1,8 @@
 ﻿using Harpy.Lexer;
 
-namespace HarpyTests.Utils;
+namespace HarpyTests.LexerTests.Utils;
 
-internal class SyntaxTokenUtils
+internal static class SyntaxTokenUtils
 {
     public static bool AssertTokenListsEqual(List<HarbourSyntaxToken> obs, List<HarbourSyntaxToken> expected,
         bool checkTrivia = false)
@@ -25,26 +25,24 @@ internal class SyntaxTokenUtils
                 return false;
             }
 
-            if (checkTrivia)
+            if (!checkTrivia) continue;
+            if (obs[i].LeadingTrivia.Count != expected[i].LeadingTrivia.Count)
             {
-                if (obs[i].LeadingTrivia.Count != expected[i].LeadingTrivia.Count)
-                {
-                    Assert.Fail(
-                        $"Leading trivia count mismatch. Expected {expected[i].LeadingTrivia.Count}, but got {obs[i].LeadingTrivia.Count}.");
-                    return false;
-                }
-
-                if (obs[i].TrailingTrivia.Count != expected[i].TrailingTrivia.Count)
-                {
-                    Assert.Fail(
-                        $"Trailing trivia count mismatch. Expected {expected[i].TrailingTrivia.Count}, but got {obs[i].TrailingTrivia.Count}.");
-                    return false;
-                }
-
-                if (!AssertTriviaListsEqual(obs[i].LeadingTrivia, expected[i].LeadingTrivia)) return false;
-
-                if (!AssertTriviaListsEqual(obs[i].TrailingTrivia, expected[i].TrailingTrivia)) return false;
+                Assert.Fail(
+                    $"Leading trivia count mismatch. Expected {expected[i].LeadingTrivia.Count}, but got {obs[i].LeadingTrivia.Count}.");
+                return false;
             }
+
+            if (obs[i].TrailingTrivia.Count != expected[i].TrailingTrivia.Count)
+            {
+                Assert.Fail(
+                    $"Trailing trivia count mismatch. Expected {expected[i].TrailingTrivia.Count}, but got {obs[i].TrailingTrivia.Count}.");
+                return false;
+            }
+
+            if (!AssertTriviaListsEqual(obs[i].LeadingTrivia, expected[i].LeadingTrivia)) return false;
+
+            if (!AssertTriviaListsEqual(obs[i].TrailingTrivia, expected[i].TrailingTrivia)) return false;
         }
 
         return true;
@@ -67,14 +65,12 @@ internal class SyntaxTokenUtils
             var obsTrivia = obsTriviaList[j];
             var expectedTrivia = expectedTriviaList[j];
 
-            if (!SyntaxElementsEqual(obsTrivia, expectedTrivia))
-            {
-                Assert.Fail(
-                    $"Trivia lines mismatch at index {j}. "
-                    + $"Expected Trivia({expectedTrivia.Kind}, '{expectedTrivia.Text}', {expectedTrivia.Line}, {expectedTrivia.Start}, {expectedTrivia.End}), "
-                    + $"but got Trivia({obsTrivia.Kind}, '{obsTrivia.Text}', {obsTrivia.Line}, {obsTrivia.Start}, {obsTrivia.End}).");
-                return false;
-            }
+            if (SyntaxElementsEqual(obsTrivia, expectedTrivia)) continue;
+            Assert.Fail(
+                $"Trivia lines mismatch at index {j}. "
+                + $"Expected Trivia({expectedTrivia.Kind}, '{expectedTrivia.Text}', {expectedTrivia.Line}, {expectedTrivia.Start}, {expectedTrivia.End}), "
+                + $"but got Trivia({obsTrivia.Kind}, '{obsTrivia.Text}', {obsTrivia.Line}, {obsTrivia.Start}, {obsTrivia.End}).");
+            return false;
         }
 
         return true;
