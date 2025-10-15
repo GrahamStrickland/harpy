@@ -511,7 +511,6 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                     literal += c;
                     hexNum = true;
                     break;
-
                 }
                 case 'a':
                 case 'b':
@@ -523,7 +522,6 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                     if (!hexNum) throw new SyntaxErrorException($"Invalid numeric literal '{literal + c}'.");
                     literal += c;
                     break;
-
                 }
                 case '.':
                 {
@@ -532,7 +530,6 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                     literal += c;
                     dotFound = true;
                     break;
-
                 }
                 default:
                 {

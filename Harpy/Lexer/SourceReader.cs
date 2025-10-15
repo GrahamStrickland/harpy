@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Data;
 
 namespace Harpy.Lexer;
 
@@ -7,13 +8,25 @@ namespace Harpy.Lexer;
 ///     for the <c>Parser</c>, with options for checking if a token matches, consuming a token, putting back a token,
 ///     and look-ahead with optional distance.
 /// </summary>
-internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnumerator<HarbourSyntaxToken>
+internal class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<HarbourSyntaxToken>
 {
-    private readonly Lexer _lexer = lexer;
+    private readonly Lexer _lexer;
     private HarbourSyntaxToken? _current;
     private bool _endOfFile;
-    private LinkedList<HarbourSyntaxToken> _read = [];
-    private Queue<HarbourSyntaxToken> _resetBuffer = [];
+    private LinkedList<HarbourSyntaxToken> _tokens = [];
+    private Stack<HarbourSyntaxToken> _undoBuffer = [];
+
+    /// <summary>
+    ///     An intermediary between the <c>Parser</c> and <c>Lexer</c>. Handles the <c>IEnumerable</c>
+    ///     for the <c>Parser</c>, with options for checking if a token matches, consuming a token, putting back a token,
+    ///     and look-ahead with optional distance.
+    /// </summary>
+    public SourceReader(Lexer lexer)
+    {
+        _lexer = lexer;
+        foreach (var t in _lexer)
+            _tokens.AddLast(t);
+    }
 
     public IEnumerator<HarbourSyntaxToken> GetEnumerator()
     {
@@ -37,14 +50,9 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
         if (_endOfFile)
             return false;
 
-        if (_read.Count == 0)
-            // TODO: Check this for efficiency, there may be a better way to implement it.
-            foreach (var t in _lexer)
-                _read.AddLast(t);
-
-        var token = _read.First();
-        _read.RemoveFirst();
-        _resetBuffer.Enqueue(token);
+        var token = _tokens.First();
+        _tokens.RemoveFirst();
+        _undoBuffer.Push(token);
         _current = token;
 
         if (token.Kind != HarbourSyntaxKind.EOF) return _current != null;
@@ -55,8 +63,8 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
 
     public void Reset()
     {
-        _read = [];
-        _resetBuffer = [];
+        _tokens = [];
+        _undoBuffer = [];
         _current = null;
         using var enumerator = _lexer.GetEnumerator();
         enumerator.Reset();
@@ -71,21 +79,42 @@ internal class SourceReader(Lexer lexer) : IEnumerable<HarbourSyntaxToken>, IEnu
 
     public bool Match(HarbourSyntaxKind expected)
     {
-        var token = _read.Count == 0 ? LookAhead(0) : _read.First();
+        return _tokens.First().Kind == expected;
+    }
 
-        return token.Kind == expected;
+    public HarbourSyntaxToken Consume(HarbourSyntaxKind? expected = null)
+    {
+        var token = _tokens.First();
+
+        if (token.Kind != expected)
+            throw new SyntaxErrorException(
+                $"Expected token kind '{expected}' and found '{token.Kind}' with text '{token.Text}' at line {token.Line}, column {token.Start}.");
+
+        _tokens.RemoveFirst();
+        _undoBuffer.Push(token);
+
+        return token;
     }
 
     public HarbourSyntaxToken LookAhead(int distance)
     {
-        if (_read.Count > distance) return _read.ElementAt(distance);
-        // Read in as many as needed.
-        foreach (var token in this)
-        {
-            if (_read.Count > distance) break;
-            _read.AddLast(token);
-        }
+        return _tokens.ElementAt(distance);
+    }
 
-        return _read.ElementAt(distance);
+    public void PutBack(HarbourSyntaxToken token)
+    {
+        _tokens.AddFirst(token);
+    }
+
+    public void SetUndoPoint()
+    {
+        _undoBuffer.Clear();
+    }
+
+    public void Undo()
+    {
+        while (_undoBuffer.Count > 0) _tokens.AddFirst(_undoBuffer.Pop());
+
+        _undoBuffer.Clear();
     }
 }
