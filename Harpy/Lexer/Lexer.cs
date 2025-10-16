@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Data;
+﻿using System.Data;
 
 namespace Harpy.Lexer;
 
@@ -7,7 +6,7 @@ namespace Harpy.Lexer;
 ///     Takes a string and splits it into a series of <c>Token</c>s.
 ///     Operators and punctuation are mapped to unique keywords.
 /// </summary>
-internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator<HarbourSyntaxToken>
+internal class Lexer(string text)
 {
     private static readonly Dictionary<string, HarbourSyntaxKind> Directives = new()
     {
@@ -94,9 +93,6 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
 
     private readonly List<string> _names = [];
 
-    private readonly string _text = text;
-    private HarbourSyntaxToken? _current;
-
     private int _index;
     private int _line = 1;
     private int _pos;
@@ -110,7 +106,7 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
         HarbourSyntaxToken? newToken = null;
         var newLineEncountered = false;
 
-        while (_index < _text.Length)
+        while (_index < text.Length)
         {
             var c = Advance();
 
@@ -285,7 +281,6 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
             {
                 oldToken.TrailingTrivia = trailingTrivia;
                 trailingTrivia = [];
-                _current = oldToken;
                 yield return oldToken;
             }
 
@@ -296,7 +291,6 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
         if (oldToken != null)
         {
             oldToken.TrailingTrivia = trailingTrivia;
-            _current = oldToken;
             yield return oldToken;
         }
 
@@ -307,34 +301,6 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
         yield return new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _line, _pos, leadingTrivia, []);
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
-    object IEnumerator.Current => _current!;
-    HarbourSyntaxToken IEnumerator<HarbourSyntaxToken>.Current => _current!;
-
-    bool IEnumerator.MoveNext()
-    {
-        if (_index != _text.Length && _current is not { Kind: HarbourSyntaxKind.EOF }) return false;
-        using var enumerator = GetEnumerator();
-        _current = enumerator.Current;
-        return true;
-    }
-
-    void IEnumerator.Reset()
-    {
-        _index = 0;
-        _line = 1;
-        _pos = 0;
-        _resetIndex = 0;
-        _current = null;
-    }
-
-    void IDisposable.Dispose()
-    {
-    }
 
     private HarbourSyntaxElement ReadPreprocessorDirectiveOrNeOp()
     {
@@ -355,7 +321,7 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                     {
                         return new HarbourSyntaxTrivia(
                             Directives[directive.ToLower()],
-                            _text[startIndex.._index],
+                            text[startIndex.._index],
                             _line,
                             _pos
                         );
@@ -387,7 +353,7 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                 {
                     return new HarbourSyntaxTrivia(
                         HarbourSyntaxKind.LINE_COMMENT,
-                        _text[startIndex.._index],
+                        text[startIndex.._index],
                         _line,
                         _pos
                     );
@@ -421,7 +387,7 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
                         {
                             return new HarbourSyntaxTrivia(
                                 HarbourSyntaxKind.BLOCK_COMMENT,
-                                _text[startIndex.._index],
+                                text[startIndex.._index],
                                 startLine,
                                 _pos
                             );
@@ -626,12 +592,12 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
 
         while (Peek() != '\0')
         {
-            if (!char.IsLetterOrDigit(_text[_index]) && _text[_index] != '_') break;
+            if (!char.IsLetterOrDigit(text[_index]) && text[_index] != '_') break;
 
             Advance();
         }
 
-        var name = _text[startIndex.._index];
+        var name = text[startIndex.._index];
 
         _names.Add(name);
 
@@ -645,15 +611,15 @@ internal class Lexer(string text) : IEnumerable<HarbourSyntaxToken>, IEnumerator
 
     private char Peek()
     {
-        return _text.Length > _index ? _text[_index] : '\0';
+        return text.Length > _index ? text[_index] : '\0';
     }
 
     private char Advance()
     {
         var c = '\0';
 
-        if (_text.Length <= _index) return c;
-        c = _text[_index];
+        if (text.Length <= _index) return c;
+        c = text[_index];
         _index += 1;
         _pos += 1;
 
