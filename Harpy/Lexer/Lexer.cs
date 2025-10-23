@@ -1,96 +1,11 @@
-﻿using System.Data;
-
-namespace Harpy.Lexer;
+﻿namespace Harpy.Lexer;
 
 /// <summary>
-///     Takes a string and splits it into a series of <c>Token</c>s.
+///     Takes a string and splits it into a series of <see cref="HarbourSyntaxToken" />s.
 ///     Operators and punctuation are mapped to unique keywords.
 /// </summary>
-internal class Lexer(string text)
+public class Lexer(string text)
 {
-    private static readonly Dictionary<string, HarbourSyntaxKind> Directives = new()
-    {
-        { "include", HarbourSyntaxKind.INCLUDE_DIRECTIVE },
-        { "define", HarbourSyntaxKind.DEFINE_DIRECTIVE },
-        { "ifdef", HarbourSyntaxKind.IFDEF_DIRECTIVE },
-        { "ifndef", HarbourSyntaxKind.IFNDEF_DIRECTIVE },
-        { "elif", HarbourSyntaxKind.ELIF_DIRECTIVE },
-        { "else", HarbourSyntaxKind.ELSE_DIRECTIVE },
-        { "endif", HarbourSyntaxKind.ENDIF_DIRECTIVE },
-        { "undef", HarbourSyntaxKind.UNDEF_DIRECTIVE },
-        { "pragma", HarbourSyntaxKind.PRAGMA_DIRECTIVE },
-        { "command", HarbourSyntaxKind.COMMAND_DIRECTIVE },
-        { "xcommand", HarbourSyntaxKind.XCOMMAND_DIRECTIVE },
-        { "translate", HarbourSyntaxKind.TRANSLATE_DIRECTIVE },
-        { "xtranslate", HarbourSyntaxKind.XTRANSLATE_DIRECTIVE },
-        { "error", HarbourSyntaxKind.ERROR_DIRECTIVE },
-        { "stdout", HarbourSyntaxKind.STDOUT_DIRECTIVE }
-    };
-
-    private static readonly Dictionary<string, HarbourSyntaxKind> Keywords = new()
-    {
-        { "function", HarbourSyntaxKind.FUNCTION },
-        { "procedure", HarbourSyntaxKind.PROCEDURE },
-        { "return", HarbourSyntaxKind.RETURN },
-        { "nil", HarbourSyntaxKind.NIL },
-        { "local", HarbourSyntaxKind.LOCAL },
-        { "static", HarbourSyntaxKind.STATIC },
-        { "iif", HarbourSyntaxKind.IIF },
-        { "if", HarbourSyntaxKind.IF },
-        { "else", HarbourSyntaxKind.ELSE },
-        { "elseif", HarbourSyntaxKind.ELSEIF },
-        { "end", HarbourSyntaxKind.END },
-        { "endif", HarbourSyntaxKind.ENDIF },
-        { "enderr", HarbourSyntaxKind.ENDERR },
-        { "while", HarbourSyntaxKind.WHILE },
-        { "endwhile", HarbourSyntaxKind.ENDWHILE }
-    };
-
-    private static readonly Dictionary<string, HarbourSyntaxKind> CompoundOperators = new()
-    {
-        { ":=", HarbourSyntaxKind.ASSIGN },
-        { "+=", HarbourSyntaxKind.PLUSEQ },
-        { "-=", HarbourSyntaxKind.MINUSEQ },
-        { "*=", HarbourSyntaxKind.MULTEQ },
-        { "/=", HarbourSyntaxKind.DIVEQ },
-        { "%=", HarbourSyntaxKind.MODEQ },
-        { "^=", HarbourSyntaxKind.EXPEQ },
-        { ".and.", HarbourSyntaxKind.AND },
-        { ".or.", HarbourSyntaxKind.OR },
-        { "==", HarbourSyntaxKind.EQ1 },
-        { "!=", HarbourSyntaxKind.NE2 },
-        { "<=", HarbourSyntaxKind.LE },
-        { ">=", HarbourSyntaxKind.GE },
-        { "=>", HarbourSyntaxKind.HASHOP }
-    };
-
-    private static readonly Dictionary<string, HarbourSyntaxKind> SimpleOperators = new()
-    {
-        { "(", HarbourSyntaxKind.LEFT_PAREN },
-        { ")", HarbourSyntaxKind.RIGHT_PAREN },
-        { "[", HarbourSyntaxKind.LEFT_BRACKET },
-        { "]", HarbourSyntaxKind.RIGHT_BRACKET },
-        { "{", HarbourSyntaxKind.LEFT_BRACE },
-        { "}", HarbourSyntaxKind.RIGHT_BRACE },
-        { "|", HarbourSyntaxKind.PIPE },
-        { ",", HarbourSyntaxKind.COMMA },
-        { "=", HarbourSyntaxKind.EQ2 },
-        { "#", HarbourSyntaxKind.NE1 },
-        { "<", HarbourSyntaxKind.LT },
-        { ">", HarbourSyntaxKind.GT },
-        { "$", HarbourSyntaxKind.DOLLAR },
-        { "+", HarbourSyntaxKind.PLUS },
-        { "-", HarbourSyntaxKind.MINUS },
-        { "*", HarbourSyntaxKind.ASTERISK },
-        { "/", HarbourSyntaxKind.SLASH },
-        { "%", HarbourSyntaxKind.PERCENT },
-        { "^", HarbourSyntaxKind.CARET },
-        { "!", HarbourSyntaxKind.NOT },
-        { "?", HarbourSyntaxKind.QUESTION },
-        { ":", HarbourSyntaxKind.COLON },
-        { "@", HarbourSyntaxKind.AT }
-    };
-
     private readonly List<string> _names = [];
 
     private int _index;
@@ -144,7 +59,7 @@ internal class Lexer(string text)
                         default:
                         {
                             newToken = new HarbourSyntaxToken(
-                                SimpleOperators[c.ToString()],
+                                HarbourSyntaxToken.SimpleOperatorFromText(c.ToString()),
                                 c.ToString(),
                                 _line,
                                 _pos
@@ -197,20 +112,20 @@ internal class Lexer(string text)
                     {
                         newToken = keyword;
                     }
-                    else if (CompoundOperators.TryGetValue(op, out var @operator))
+                    else if (HarbourSyntaxToken.CompoundOperators.ContainsValue(op))
                     {
                         Advance();
                         newToken = new HarbourSyntaxToken(
-                            @operator,
+                            HarbourSyntaxToken.CompoundOperatorFromText(op),
                             op,
                             _line,
                             _pos
                         );
                     }
-                    else if (SimpleOperators.ContainsKey(c.ToString()))
+                    else if (HarbourSyntaxToken.SimpleOperators.ContainsValue(c.ToString()))
                     {
                         newToken = new HarbourSyntaxToken(
-                            SimpleOperators[c.ToString()],
+                            HarbourSyntaxToken.SimpleOperatorFromText(c.ToString()),
                             c.ToString(),
                             _line,
                             _pos
@@ -237,7 +152,7 @@ internal class Lexer(string text)
                                 '\t' => HarbourSyntaxKind.TAB,
                                 ' ' => HarbourSyntaxKind.SPACE,
                                 ';' => HarbourSyntaxKind.LINE_CONTINUATION,
-                                _ => throw new SyntaxErrorException($"Unknown character '{c}' encountered in source.")
+                                _ => throw new InvalidSyntaxException($"Unknown character '{c}' encountered in source.")
                             };
                         }
 
@@ -311,7 +226,7 @@ internal class Lexer(string text)
 
         while (char.IsLetterOrDigit(c = Advance())) directive += c;
 
-        if (Directives.ContainsKey(directive.ToLower()))
+        if (HarbourSyntaxTrivia.Directives.ContainsValue(directive.ToLower()))
             while (true)
                 switch (Peek())
                 {
@@ -320,7 +235,7 @@ internal class Lexer(string text)
                     case '\0':
                     {
                         return new HarbourSyntaxTrivia(
-                            Directives[directive.ToLower()],
+                            HarbourSyntaxTrivia.DirectiveFromText(directive.ToLower()),
                             text[startIndex.._index],
                             _line,
                             _pos
@@ -394,7 +309,8 @@ internal class Lexer(string text)
                         }
                         case '\0':
                         {
-                            throw new SyntaxErrorException($"Unterminated block comment starting at line {startLine}.");
+                            throw new InvalidSyntaxException(
+                                $"Unterminated block comment starting at line {startLine}.");
                         }
                         default:
                         {
@@ -412,7 +328,7 @@ internal class Lexer(string text)
                 }
                 case '\0':
                 {
-                    throw new SyntaxErrorException($"Unterminated block comment starting at line {startLine}.");
+                    throw new InvalidSyntaxException($"Unterminated block comment starting at line {startLine}.");
                 }
                 default:
                 {
@@ -441,7 +357,7 @@ internal class Lexer(string text)
             ".t." or ".f." => new HarbourSyntaxToken(HarbourSyntaxKind.BOOL_LITERAL, literal, _line, _pos),
             ".or." => new HarbourSyntaxToken(HarbourSyntaxKind.OR, literal, _line, _pos),
             ".and." => new HarbourSyntaxToken(HarbourSyntaxKind.AND, literal, _line, _pos),
-            _ => throw new SyntaxErrorException($"Unable to read token '{literal}'.")
+            _ => throw new InvalidSyntaxException($"Unable to read token '{literal}'.")
         };
     }
 
@@ -473,7 +389,7 @@ internal class Lexer(string text)
                 case 'x':
                 {
                     if (literal != "0")
-                        throw new SyntaxErrorException($"Unterminated hexadecimal literal '{literal + c}'.");
+                        throw new InvalidSyntaxException($"Unterminated hexadecimal literal '{literal + c}'.");
                     literal += c;
                     hexNum = true;
                     break;
@@ -485,14 +401,14 @@ internal class Lexer(string text)
                 case 'e':
                 case 'f':
                 {
-                    if (!hexNum) throw new SyntaxErrorException($"Invalid numeric literal '{literal + c}'.");
+                    if (!hexNum) throw new InvalidSyntaxException($"Invalid numeric literal '{literal + c}'.");
                     literal += c;
                     break;
                 }
                 case '.':
                 {
                     if (dotFound)
-                        throw new SyntaxErrorException($"Second decimal point found in literal '{literal + c}'.");
+                        throw new InvalidSyntaxException($"Second decimal point found in literal '{literal + c}'.");
                     literal += c;
                     dotFound = true;
                     break;
@@ -524,9 +440,10 @@ internal class Lexer(string text)
     private HarbourSyntaxToken ReadStringLiteralOrBrackets(char c)
     {
         var startIndex = _index;
-        SetResetIndex(startIndex);
         var literal = c.ToString();
         var endQuote = c == '[' ? ']' : c;
+
+        SetResetIndex(startIndex);
 
         while ((c = Peek()) != endQuote)
         {
@@ -535,7 +452,7 @@ internal class Lexer(string text)
                 case '\0':
                 {
                     if (literal.Length > 1 && literal.EndsWith(endQuote)) break;
-                    throw new SyntaxErrorException($"Unterminated string literal '{literal}'.");
+                    throw new InvalidSyntaxException($"Unterminated string literal '{literal}'.");
                 }
                 default:
                 {
@@ -573,9 +490,9 @@ internal class Lexer(string text)
             c = Peek();
         }
 
-        if (Keywords.ContainsKey(keyword.ToLower()))
+        if (HarbourSyntaxToken.Keywords.ContainsValue(keyword.ToLower()))
             return new HarbourSyntaxToken(
-                Keywords[keyword.ToLower()],
+                HarbourSyntaxToken.KeywordFromText(keyword.ToLower()),
                 keyword,
                 _line,
                 _pos

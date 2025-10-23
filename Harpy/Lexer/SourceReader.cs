@@ -1,14 +1,14 @@
 using System.Collections;
-using System.Data;
 
 namespace Harpy.Lexer;
 
 /// <summary>
-///     An intermediary between the <c>Parser</c> and <c>Lexer</c>. Handles the <c>IEnumerable</c>
-///     for the <c>Parser</c>, with options for checking if a token matches, consuming a token, putting back a token,
+///     An intermediary between the <see cref="Parser" /> and <see cref="Lexer" />. Handles the <see cref="IEnumerable" />
+///     for the <see cref="Parser" />, with options for checking if a token matches, consuming a token, putting back a
+///     token,
 ///     and look-ahead with optional distance.
 /// </summary>
-internal class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<HarbourSyntaxToken>
+public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<HarbourSyntaxToken>
 {
     private readonly Lexer _lexer;
     private HarbourSyntaxToken? _current;
@@ -17,8 +17,9 @@ internal class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbo
     private Stack<HarbourSyntaxToken> _undoBuffer = [];
 
     /// <summary>
-    ///     An intermediary between the <c>Parser</c> and <c>Lexer</c>. Handles the <c>IEnumerable</c>
-    ///     for the <c>Parser</c>, with options for checking if a token matches, consuming a token, putting back a token,
+    ///     An intermediary between the <see cref="Parser" /> and <see cref="Lexer" />. Handles the <see cref="IEnumerable" />
+    ///     for the <see cref="Parser" />, with options for checking if a token matches, consuming a token, putting back a
+    ///     token,
     ///     and look-ahead with optional distance.
     /// </summary>
     public SourceReader(Lexer lexer)
@@ -86,8 +87,8 @@ internal class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbo
     {
         var token = _tokens.First();
 
-        if (token.Kind != expected)
-            throw new SyntaxErrorException(
+        if (expected != null && token.Kind != expected)
+            throw new InvalidSyntaxException(
                 $"Expected token kind '{expected}' and found '{token.Kind}' with text '{token.Text}' at line {token.Line}, column {token.Start}.");
 
         _tokens.RemoveFirst();
@@ -96,7 +97,7 @@ internal class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbo
         return token;
     }
 
-    public HarbourSyntaxToken LookAhead(int distance)
+    public HarbourSyntaxToken LookAhead(int distance = 0)
     {
         return _tokens.ElementAt(distance);
     }

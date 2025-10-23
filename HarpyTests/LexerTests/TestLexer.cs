@@ -1,4 +1,4 @@
-﻿using System.Data;
+﻿using Harpy;
 using Harpy.Lexer;
 using HarpyTests.LexerTests.Utils;
 
@@ -271,11 +271,11 @@ public sealed class TestLexer
 
         SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
-        Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("1x001"));
+        Assert.ThrowsException<InvalidSyntaxException>(() => GetObservedTokens("1x001"));
 
-        Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("123a"));
+        Assert.ThrowsException<InvalidSyntaxException>(() => GetObservedTokens("123a"));
 
-        Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("1.1.1"));
+        Assert.ThrowsException<InvalidSyntaxException>(() => GetObservedTokens("1.1.1"));
     }
 
     [TestMethod]
@@ -371,9 +371,29 @@ public sealed class TestLexer
 
         SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
-        Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("'This string does not finish"));
+        Assert.ThrowsException<InvalidSyntaxException>(() => GetObservedTokens("'This string does not finish"));
 
-        Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("'"));
+        Assert.ThrowsException<InvalidSyntaxException>(() => GetObservedTokens("'"));
+    }
+
+    [TestMethod]
+    public void TestStringLiteralVsArrayAccess()
+    {
+        var obs = GetObservedTokens("a:b()[1]");
+        var expected = new List<HarbourSyntaxToken>
+        {
+            new(HarbourSyntaxKind.NAME, "a", 1, 1),
+            new(HarbourSyntaxKind.COLON, ":", 1, 2),
+            new(HarbourSyntaxKind.NAME, "b", 1, 3),
+            new(HarbourSyntaxKind.LEFT_PAREN, "(", 1, 4),
+            new(HarbourSyntaxKind.RIGHT_PAREN, ")", 1, 5),
+            new(HarbourSyntaxKind.LEFT_BRACKET, "[", 1, 6),
+            new(HarbourSyntaxKind.NUM_LITERAL, "1", 1, 7),
+            new(HarbourSyntaxKind.RIGHT_BRACKET, "]", 1, 8),
+            new(HarbourSyntaxKind.EOF, "\0", 1, 8)
+        };
+
+        SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
     }
 
     [TestMethod]
@@ -545,10 +565,10 @@ public sealed class TestLexer
 
         SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
-        Assert.ThrowsException<SyntaxErrorException>(() =>
+        Assert.ThrowsException<InvalidSyntaxException>(() =>
             GetObservedTokens("/* This is an unfinished block comment.*"));
 
-        Assert.ThrowsException<SyntaxErrorException>(() => GetObservedTokens("/* This one is even worse./*"));
+        Assert.ThrowsException<InvalidSyntaxException>(() => GetObservedTokens("/* This one is even worse./*"));
     }
 
     [TestMethod]

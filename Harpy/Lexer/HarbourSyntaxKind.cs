@@ -43,6 +43,8 @@ public enum HarbourSyntaxKind
     SLASH,
     PERCENT,
     CARET,
+    PLUSPLUS,
+    MINUSMINUS,
 
     // Miscellaneous operators
     DOLLAR,

@@ -81,7 +81,7 @@ public sealed class TestSourceReader
         var lexer = new Lexer("a + b");
         _reader = new SourceReader(lexer);
 
-        var token = _reader.LookAhead(0);
+        var token = _reader.LookAhead();
         Assert.AreEqual(HarbourSyntaxKind.NAME, token.Kind);
 
         token = _reader.LookAhead(1);
