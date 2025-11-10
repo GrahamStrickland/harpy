@@ -29,10 +29,19 @@ public class Lexer(string text)
             {
                 case '#':
                 {
-                    if (newLineEncountered)
-                        leadingTrivia.Add((HarbourSyntaxTrivia)ReadPreprocessorDirectiveOrNeOp());
+                    var element = ReadPreprocessorDirectiveOrNeOp();
+                    
+                    if (element is HarbourSyntaxToken token)
+                    {
+                        newToken = token;
+                    }
                     else
-                        trailingTrivia.Add((HarbourSyntaxTrivia)ReadPreprocessorDirectiveOrNeOp());
+                    {
+                        if (newLineEncountered)
+                            leadingTrivia.Add((HarbourSyntaxTrivia)element);
+                        else
+                            trailingTrivia.Add((HarbourSyntaxTrivia)element);
+                    }
 
                     break;
                 }
@@ -72,9 +81,9 @@ public class Lexer(string text)
                 }
                 case '[':
                 {
-                    newToken = char.IsLetterOrDigit(Peek())
+                    newToken = /*char.IsLetterOrDigit(Peek())
                         ? ReadStringLiteralOrBrackets(c)
-                        : new HarbourSyntaxToken(HarbourSyntaxKind.LEFT_BRACKET, c.ToString(), _line, _pos);
+                        : */new HarbourSyntaxToken(HarbourSyntaxKind.LEFT_BRACKET, c.ToString(), _line, _pos);
 
                     break;
                 }

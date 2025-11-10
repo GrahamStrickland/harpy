@@ -71,12 +71,7 @@ public class ExpressionParser
         InfixRight(HarbourSyntaxKind.CARET, Precedence.EXPONENT);
     }
 
-    public Expression? Parse()
-    {
-        return Parse(Precedence.NONE);
-    }
-
-    public Expression? Parse(Precedence precedence, bool optional = false, bool undo = false)
+    public Expression? Parse(Precedence precedence = Precedence.NONE, bool optional = false, bool undo = false)
     {
         if (undo)
             _reader.SetUndoPoint();

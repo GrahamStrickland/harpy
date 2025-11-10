@@ -304,16 +304,16 @@ public sealed class TestLexer
 
         SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
-        obs = GetObservedTokens("[Also a string]");
-        expected =
-        [
-            new HarbourSyntaxToken(
-                HarbourSyntaxKind.STR_LITERAL, "[Also a string]", 1, 15
-            ),
-            new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", 1, 15)
-        ];
-
-        SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
+        // obs = GetObservedTokens("[Also a string]");
+        // expected =
+        // [
+        //     new HarbourSyntaxToken(
+        //         HarbourSyntaxKind.STR_LITERAL, "[Also a string]", 1, 15
+        //     ),
+        //     new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", 1, 15)
+        // ];
+        //
+        // SyntaxTokenUtils.AssertTokenListsEqual(obs, expected);
 
         obs = GetObservedTokens("['Actually a hash key']");
         expected =

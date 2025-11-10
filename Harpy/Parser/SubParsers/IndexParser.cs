@@ -11,7 +11,11 @@ public class IndexParser : IInfixSubParser
 {
     public Expression Parse(ExpressionParser parser, Expression left, HarbourSyntaxToken token)
     {
-        var indexExpressions = new List<Expression>();
+        var indexExpressions = new List<Expression>
+        {
+            parser.Parse() ?? throw new InvalidSyntaxException(
+                $"Expected expression after index expression with left expression '{left.PrettyPrint()}' with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.")
+        };
 
         if (!parser.Match(HarbourSyntaxKind.RIGHT_BRACKET))
             while (parser.Match(HarbourSyntaxKind.COMMA))
