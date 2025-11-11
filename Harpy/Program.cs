@@ -19,13 +19,13 @@ internal static class Program
         else
         {
             Console.Write("""
-
-                          usage: harpy --src <source_file>
-
                           Harbour to Python transpiler
+                          
+                          Usage: 
+                            Harpy --src <source_file>
 
-                          options:
-                            --src       source file to transpile, ending in either '.prg' or '.ch
+                          Arguments:
+                            --src       Source file to transpile, ending in either '.prg' or '.ch
 
                           """);
             return;
