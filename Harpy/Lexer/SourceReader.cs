@@ -10,13 +10,13 @@ namespace Harpy.Lexer;
 /// </summary>
 public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<HarbourSyntaxToken>
 {
+    private readonly int _lastLine;
+    private readonly int _lastPosition;
     private readonly Lexer _lexer;
     private HarbourSyntaxToken? _current;
     private bool _endOfFile;
     private LinkedList<HarbourSyntaxToken> _tokens = [];
     private Stack<HarbourSyntaxToken> _undoBuffer = [];
-    private int _lastLine;
-    private int _lastPosition;
 
     /// <summary>
     ///     An intermediary between the <see cref="Parser" /> and <see cref="Lexer" />. Handles the <see cref="IEnumerable" />
@@ -32,7 +32,7 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
             _tokens.AddLast(t);
 
         _lastLine = _tokens.Last().Line;
-        _lastLine = _tokens.Last().End + 1;
+        _lastPosition = _tokens.Last().End + 1;
     }
 
     public IEnumerator<HarbourSyntaxToken> GetEnumerator()
