@@ -30,7 +30,7 @@ public class Lexer(string text)
                 case '#':
                 {
                     var element = ReadPreprocessorDirectiveOrNeOp();
-                    
+
                     if (element is HarbourSyntaxToken token)
                     {
                         newToken = token;

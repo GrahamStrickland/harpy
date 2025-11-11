@@ -15,6 +15,8 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
     private bool _endOfFile;
     private LinkedList<HarbourSyntaxToken> _tokens = [];
     private Stack<HarbourSyntaxToken> _undoBuffer = [];
+    private int _lastLine;
+    private int _lastPosition;
 
     /// <summary>
     ///     An intermediary between the <see cref="Parser" /> and <see cref="Lexer" />. Handles the <see cref="IEnumerable" />
@@ -25,8 +27,12 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
     public SourceReader(Lexer lexer)
     {
         _lexer = lexer;
+
         foreach (var t in _lexer)
             _tokens.AddLast(t);
+
+        _lastLine = _tokens.Last().Line;
+        _lastLine = _tokens.Last().End + 1;
     }
 
     public IEnumerator<HarbourSyntaxToken> GetEnumerator()
@@ -51,8 +57,17 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
         if (_endOfFile)
             return false;
 
-        var token = _tokens.First();
-        _tokens.RemoveFirst();
+        HarbourSyntaxToken token;
+        if (_tokens.Count > 0)
+        {
+            token = _tokens.First();
+            _tokens.RemoveFirst();
+        }
+        else
+        {
+            token = new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _lastLine, _lastPosition);
+        }
+
         _undoBuffer.Push(token);
         _current = token;
 
@@ -99,7 +114,9 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
 
     public HarbourSyntaxToken LookAhead(int distance = 0)
     {
-        return _tokens.ElementAt(distance);
+        return _tokens.Count == 0
+            ? new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _lastLine, _lastPosition)
+            : _tokens.ElementAt(distance);
     }
 
     public void PutBack(HarbourSyntaxToken token)

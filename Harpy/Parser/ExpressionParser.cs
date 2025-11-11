@@ -105,13 +105,11 @@ public class ExpressionParser
             }
 
             if (prefix is null)
-            {
                 return !optional
                     ? throw new InvalidSyntaxException(
                         $"Could not parse token '{token.Text}' of type '{token.Kind}' on line {token.Line}, column {token.Start}."
                     )
                     : null;
-            }
 
             left = prefix.Parse(this, token);
         }
