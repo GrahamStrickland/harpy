@@ -10,7 +10,7 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        var sourceFile = "";
+        string sourceFile;
 
         if (args is ["--src", _, ..])
         {
