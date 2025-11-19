@@ -21,7 +21,12 @@ public class HarbourSyntaxToken : HarbourSyntaxElement
         { HarbourSyntaxKind.ENDIF, "endif" },
         { HarbourSyntaxKind.ENDERR, "enderr" },
         { HarbourSyntaxKind.WHILE, "while" },
-        { HarbourSyntaxKind.ENDWHILE, "endwhile" }
+        { HarbourSyntaxKind.ENDWHILE, "endwhile" },
+        { HarbourSyntaxKind.FOR, "for" },
+        { HarbourSyntaxKind.TO, "to" },
+        { HarbourSyntaxKind.STEP, "step" },
+        { HarbourSyntaxKind.LOOP, "loop" },
+        { HarbourSyntaxKind.NEXT, "next" }
     };
 
     public static readonly Dictionary<HarbourSyntaxKind, string> CompoundOperators = new()

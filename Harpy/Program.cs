@@ -20,7 +20,7 @@ internal static class Program
         {
             Console.Write("""
                           Harbour to Python transpiler
-                          
+
                           Usage: 
                             Harpy --src <source_file>
 

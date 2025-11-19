@@ -133,6 +133,23 @@ public class TestParser
     }
 
     [TestMethod]
+    public void TestForLoop()
+    {
+        AssertParsedEqualsExpected(
+            "for i := 1 to 10\n\n    a(i)\n\nnext",
+            "for (i := 1) to 10\na(i)\nnext"
+        );
+        AssertParsedEqualsExpected(
+            "for i := 10 to 1 step -1\n\n    a(i)\n\nnext",
+            "for (i := 10) to 1 step (-1)\na(i)\nnext"
+        );
+        AssertParsedEqualsExpected(
+            "for i := 10 to 1 step -1\n\n    if c(i)\n\n\n\n        d(i)\n\n    else\n\n        loop\n\n    endif\n\nnext",
+            "for (i := 10) to 1 step (-1)\nif c(i)\nd(i)\nelse\nloop\nendif\nnext"
+        );
+    }
+
+    [TestMethod]
     public void TestAssignmentStatement()
     {
         AssertParsedEqualsExpected(

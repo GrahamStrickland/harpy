@@ -60,8 +60,10 @@ public class Parser
                 HarbourSyntaxKind.LOCAL => LocalDeclarationStatement(token),
                 HarbourSyntaxKind.IF => IfStatement(token),
                 HarbourSyntaxKind.WHILE => WhileLoop(token),
+                HarbourSyntaxKind.FOR => ForLoop(token),
+                HarbourSyntaxKind.LOOP => Loop(token),
                 _ => throw new InvalidSyntaxException(
-                    $"Expected statement, found '{token.Text}' on line {token.Line}, column {token.Start}, found null.")
+                    $"Expected statement, found '{token.Text}' on line {token.Line}, column {token.Start}.")
             };
         }
         else
@@ -77,7 +79,7 @@ public class Parser
     {
         if (!_inFunctionOrProcedureDefinition)
             throw new InvalidSyntaxException(
-                $"Encountered `return` statement outside of function/procedure definition after token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+                $"Encountered `return` statement outside of function/procedure definition after token '{token.Text}' on line {token.Line}, column {token.Start}.");
 
         var returnValue = _expressionParser.Parse(Precedence.NONE, true);
 
@@ -193,7 +195,7 @@ public class Parser
         var next = _reader.LookAhead();
         if (next.Kind is not HarbourSyntaxKind.NAME)
             throw new InvalidSyntaxException(
-                $"Expected name in variable declaration beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+                $"Expected name in variable declaration beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
 
         name = next;
         next = _reader.LookAhead(1);
@@ -218,7 +220,7 @@ public class Parser
                 while (!_reader.Match(HarbourSyntaxKind.ENDIF))
                     elseBody.Add(ParseStatement(_reader.Consume()) ??
                                  throw new InvalidSyntaxException(
-                                     $"Expected statement after else condition beginning with token '{elseToken.Text}' on line {elseToken.Line}, column {elseToken.Start}, found null."));
+                                     $"Expected statement after else condition beginning with token '{elseToken.Text}' on line {elseToken.Line}, column {elseToken.Start}."));
 
                 break;
             }
@@ -237,7 +239,7 @@ public class Parser
                        !_reader.Match(HarbourSyntaxKind.ELSEIF))
                     elseIfBody.Add(ParseStatement(_reader.Consume()) ??
                                    throw new InvalidSyntaxException(
-                                       $"Expected statement after else if condition beginning with token '{elseIfToken.Text}' on line {elseIfToken.Line}, column {elseIfToken.Start}, found null."));
+                                       $"Expected statement after else if condition beginning with token '{elseIfToken.Text}' on line {elseIfToken.Line}, column {elseIfToken.Start}."));
 
                 elseIfConditions.Add(new Tuple<Expression, List<Statement>>(elseIfCondition, elseIfBody));
             }
@@ -245,7 +247,7 @@ public class Parser
             {
                 ifBody.Add(ParseStatement(_reader.Consume()) ??
                            throw new InvalidSyntaxException(
-                               $"Expected statement after if condition beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null."));
+                               $"Expected statement after if condition beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
             }
         }
 
@@ -253,7 +255,7 @@ public class Parser
 
         return new IfStatement(ifCondition ??
                                throw new InvalidSyntaxException(
-                                   $"Expected conditional expression after if statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null."),
+                                   $"Expected conditional expression after if statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."),
             elseIfConditions, ifBody, elseBody);
     }
 
@@ -265,7 +267,7 @@ public class Parser
         while (!_reader.Match(HarbourSyntaxKind.END) && !_reader.Match(HarbourSyntaxKind.ENDWHILE))
             body.Add(ParseStatement(_reader.Consume()) ??
                      throw new InvalidSyntaxException(
-                         $"Expected statement after while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null."));
+                         $"Expected statement after while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
 
         if (_reader.Match(HarbourSyntaxKind.END))
         {
@@ -279,8 +281,56 @@ public class Parser
 
         return new WhileLoopStatement(
             condition ?? throw new InvalidSyntaxException(
-                $"Expected conditional expression in while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null."),
+                $"Expected conditional expression in while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."),
             body);
+    }
+
+    private ForLoopStatement ForLoop(HarbourSyntaxToken token)
+    {
+        var initializer = _expressionParser.Parse(Precedence.NONE, false, true);
+        if (initializer is not AssignmentExpression)
+            throw new InvalidSyntaxException(
+                $"Expected initializer expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+
+        if (!_reader.Match(HarbourSyntaxKind.TO))
+            throw new InvalidSyntaxException(
+                $"Expected `step` after initialization in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+
+        _reader.Consume(HarbourSyntaxKind.TO);
+
+        var bound = _expressionParser.Parse(Precedence.NONE, false, true);
+        if (bound == null)
+            throw new InvalidSyntaxException(
+                $"Expected bound expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+
+        Expression? step = null;
+
+        if (_reader.Match(HarbourSyntaxKind.STEP))
+        {
+            _reader.Consume(HarbourSyntaxKind.STEP);
+            step = _expressionParser.Parse(Precedence.NONE, false, true);
+            if (step == null)
+                throw new InvalidSyntaxException(
+                    $"Expected step expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+        }
+
+        List<Statement> body = [];
+        while (!_reader.Match(HarbourSyntaxKind.NEXT))
+            body.Add(ParseStatement(_reader.Consume()) ??
+                     throw new InvalidSyntaxException(
+                         $"Expected statement after for loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+
+        _reader.Consume(HarbourSyntaxKind.NEXT);
+
+        return new ForLoopStatement(initializer, bound, step, body);
+    }
+
+    private static LoopStatement Loop(HarbourSyntaxToken token)
+    {
+        return token.Kind != HarbourSyntaxKind.LOOP
+            ? throw new InvalidSyntaxException(
+                $"Expected loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.")
+            : new LoopStatement();
     }
 
     private CallStatement? CallStatement(HarbourSyntaxToken name)

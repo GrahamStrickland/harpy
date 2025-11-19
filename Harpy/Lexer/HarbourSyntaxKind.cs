@@ -69,6 +69,11 @@ public enum HarbourSyntaxKind
     ENDERR,
     WHILE,
     ENDWHILE,
+    FOR,
+    TO,
+    STEP,
+    LOOP,
+    NEXT,
 
     // Literals
     STR_LITERAL,
