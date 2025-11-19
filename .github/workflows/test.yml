@@ -1,4 +1,4 @@
-name: Build & Test Harpy .NET Core Application
+name: Build and Test Harpy .NET Core Application
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  Build&Test:
+  test:
     strategy:
       matrix:
         configuration: [Debug, Release]
