@@ -170,6 +170,27 @@ public class TestParser
         );
     }
 
+    [TestMethod]
+    public void BeginSequenceStatement()
+    {
+        AssertParsedEqualsExpected(
+            "begin sequence\n\n    a()\n\nrecover\n\n    c()\n\nend sequence",
+            "begin sequence\na()\nrecover\nc()\nend sequence"
+        );
+        AssertParsedEqualsExpected(
+            "begin sequence\n\n    a()\n\nrecover using b\n\n    c(b)\n\nend sequence",
+            "begin sequence\na()\nrecover using b\nc(b)\nend sequence"
+        );
+        AssertParsedEqualsExpected(
+            "begin sequence with { |e| a(e) }\n\n    b()\n\nrecover using c\n\n    d(c)\n\nendsequence",
+            "begin sequence with { |e| a(e) }\nb()\nrecover using c\nd(c)\nend sequence"
+        );
+        AssertParsedEqualsExpected(
+            "begin sequence with { |e| a(e) }\n\n    b()\n\nrecover using c\n\n    d(c)\n\nalways\n    e()\n\nend",
+            "begin sequence with { |e| a(e) }\nb()\nrecover using c\nd(c)\nalways\ne()\nend sequence"
+        );
+    }
+
     /// <summary>
     ///     Parses the given chunk of code and verifies that it matches the expected
     ///     pretty-printed result.

@@ -63,6 +63,7 @@ public class Parser
                 HarbourSyntaxKind.WHILE => WhileLoop(token),
                 HarbourSyntaxKind.FOR => ForLoop(token),
                 HarbourSyntaxKind.LOOP => Loop(token),
+                HarbourSyntaxKind.BEGIN => BeginSequence(token),
                 _ => throw new InvalidSyntaxException(
                     $"Expected statement, found '{token.Text}' on line {token.Line}, column {token.Start}.")
             };
@@ -346,7 +347,7 @@ public class Parser
 
         if (!_reader.Match(HarbourSyntaxKind.IN))
             throw new InvalidSyntaxException(
-                $"Expected `step` after initialization in for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+                $"Expected `step` keyword after initialization in for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
         _reader.Consume(HarbourSyntaxKind.IN);
 
         var collection = _expressionParser.Parse(Precedence.NONE, false, true);
@@ -377,6 +378,82 @@ public class Parser
             ? throw new InvalidSyntaxException(
                 $"Expected loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.")
             : new LoopStatement();
+    }
+
+    private BeginSequenceStatement BeginSequence(HarbourSyntaxToken token)
+    {
+        if (!_reader.Match(HarbourSyntaxKind.SEQUENCE))
+            throw new InvalidSyntaxException(
+                $"Expected `sequence` keyword after `begin` in begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        _reader.Consume(HarbourSyntaxKind.SEQUENCE);
+
+        CodeblockExpression? errorHandler = null;
+        if (_reader.Match(HarbourSyntaxKind.WITH))
+        {
+            _reader.Consume(HarbourSyntaxKind.WITH);
+
+            errorHandler = (CodeblockExpression?)_expressionParser.Parse();
+            if (errorHandler is null)
+                throw new InvalidSyntaxException(
+                    $"Expected codeblock after begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
+
+        List<Statement> beginSequenceBody = [];
+        while (!_reader.Match(HarbourSyntaxKind.RECOVER) && !_reader.Match(HarbourSyntaxKind.ALWAYS)
+                                                         && !_reader.Match(HarbourSyntaxKind.END) &&
+                                                         !_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
+            beginSequenceBody.Add(ParseStatement(_reader.Consume()) ??
+                                  throw new InvalidSyntaxException(
+                                      $"Expected statement after begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+
+        HarbourSyntaxToken? exception = null;
+        List<Statement> recoverBody = [];
+        if (_reader.Match(HarbourSyntaxKind.RECOVER))
+        {
+            _reader.Consume(HarbourSyntaxKind.RECOVER);
+
+            if (_reader.Match(HarbourSyntaxKind.USING))
+            {
+                _reader.Consume(HarbourSyntaxKind.USING);
+                exception = _reader.Consume(HarbourSyntaxKind.NAME);
+            }
+
+            while (!_reader.Match(HarbourSyntaxKind.ALWAYS)
+                   && !_reader.Match(HarbourSyntaxKind.END) &&
+                   !_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
+                recoverBody.Add(ParseStatement(_reader.Consume()) ??
+                                throw new InvalidSyntaxException(
+                                    $"Expected statement after `recover` keyword in begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+        }
+
+        List<Statement> alwaysBody = [];
+        if (_reader.Match(HarbourSyntaxKind.ALWAYS))
+        {
+            _reader.Consume(HarbourSyntaxKind.ALWAYS);
+
+            while (!_reader.Match(HarbourSyntaxKind.END) &&
+                   !_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
+                alwaysBody.Add(ParseStatement(_reader.Consume()) ??
+                               throw new InvalidSyntaxException(
+                                   $"Expected statement after begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+        }
+
+        if (_reader.Match(HarbourSyntaxKind.END))
+        {
+            _reader.Consume(HarbourSyntaxKind.END);
+            if (_reader.Match(HarbourSyntaxKind.SEQUENCE)) _reader.Consume(HarbourSyntaxKind.SEQUENCE);
+        }
+        else if (_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
+        {
+            _reader.Consume(HarbourSyntaxKind.ENDSEQUENCE);
+        }
+        else
+        {
+            throw new InvalidSyntaxException(
+                $"Expected end of begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
+
+        return new BeginSequenceStatement(errorHandler, exception, beginSequenceBody, recoverBody, alwaysBody);
     }
 
     private CallStatement? CallStatement(HarbourSyntaxToken name)

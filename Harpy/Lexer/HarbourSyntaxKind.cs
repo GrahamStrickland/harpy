@@ -76,6 +76,13 @@ public enum HarbourSyntaxKind
     NEXT,
     EACH,
     IN,
+    BEGIN,
+    SEQUENCE,
+    WITH,
+    RECOVER,
+    USING,
+    ALWAYS,
+    ENDSEQUENCE,
 
     // Literals
     STR_LITERAL,

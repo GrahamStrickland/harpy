@@ -28,7 +28,14 @@ public class HarbourSyntaxToken : HarbourSyntaxElement
         { HarbourSyntaxKind.LOOP, "loop" },
         { HarbourSyntaxKind.NEXT, "next" },
         { HarbourSyntaxKind.EACH, "each" },
-        { HarbourSyntaxKind.IN, "in" }
+        { HarbourSyntaxKind.IN, "in" },
+        { HarbourSyntaxKind.BEGIN, "begin" },
+        { HarbourSyntaxKind.SEQUENCE, "sequence" },
+        { HarbourSyntaxKind.WITH, "with" },
+        { HarbourSyntaxKind.RECOVER, "recover" },
+        { HarbourSyntaxKind.USING, "using" },
+        { HarbourSyntaxKind.ALWAYS, "always" },
+        { HarbourSyntaxKind.ENDSEQUENCE, "endsequence" }
     };
 
     public static readonly Dictionary<HarbourSyntaxKind, string> CompoundOperators = new()
