@@ -74,6 +74,8 @@ public enum HarbourSyntaxKind
     STEP,
     LOOP,
     NEXT,
+    EACH,
+    IN,
 
     // Literals
     STR_LITERAL,

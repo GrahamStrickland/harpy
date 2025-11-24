@@ -13,6 +13,7 @@ public class Parser
     private readonly ExpressionParser _expressionParser;
     private readonly SourceReader _reader;
     private bool _inFunctionOrProcedureDefinition;
+    private bool _inLoop;
 
     public Parser(Lexer.Lexer lexer)
     {
@@ -261,6 +262,7 @@ public class Parser
 
     private WhileLoopStatement WhileLoop(HarbourSyntaxToken token)
     {
+        _inLoop = true;
         var condition = _expressionParser.Parse(Precedence.NONE, false, true);
         List<Statement> body = [];
 
@@ -279,14 +281,21 @@ public class Parser
             _reader.Consume(HarbourSyntaxKind.ENDWHILE);
         }
 
+        _inLoop = false;
+
         return new WhileLoopStatement(
             condition ?? throw new InvalidSyntaxException(
                 $"Expected conditional expression in while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."),
             body);
     }
 
-    private ForLoopStatement ForLoop(HarbourSyntaxToken token)
+    private Statement ForLoop(HarbourSyntaxToken token)
     {
+        _inLoop = true;
+
+        if (_reader.Match(HarbourSyntaxKind.EACH))
+            return ForEachLoop(token);
+
         var initializer = _expressionParser.Parse(Precedence.NONE, false, true);
         if (initializer is not AssignmentExpression)
             throw new InvalidSyntaxException(
@@ -295,7 +304,6 @@ public class Parser
         if (!_reader.Match(HarbourSyntaxKind.TO))
             throw new InvalidSyntaxException(
                 $"Expected `step` after initialization in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
-
         _reader.Consume(HarbourSyntaxKind.TO);
 
         var bound = _expressionParser.Parse(Precedence.NONE, false, true);
@@ -322,11 +330,49 @@ public class Parser
 
         _reader.Consume(HarbourSyntaxKind.NEXT);
 
+        _inLoop = false;
+
         return new ForLoopStatement(initializer, bound, step, body);
     }
 
-    private static LoopStatement Loop(HarbourSyntaxToken token)
+    private ForEachLoopStatement ForEachLoop(HarbourSyntaxToken token)
     {
+        _reader.Consume(HarbourSyntaxKind.EACH);
+
+        if (!_reader.Match(HarbourSyntaxKind.NAME))
+            throw new InvalidSyntaxException(
+                $"Expected variable name in initialization of for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        var variable = _reader.Consume(HarbourSyntaxKind.NAME);
+
+        if (!_reader.Match(HarbourSyntaxKind.IN))
+            throw new InvalidSyntaxException(
+                $"Expected `step` after initialization in for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        _reader.Consume(HarbourSyntaxKind.IN);
+
+        var collection = _expressionParser.Parse(Precedence.NONE, false, true);
+        if (collection == null)
+            throw new InvalidSyntaxException(
+                $"Expected collection expression in for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+
+        List<Statement> body = [];
+        while (!_reader.Match(HarbourSyntaxKind.NEXT))
+            body.Add(ParseStatement(_reader.Consume()) ??
+                     throw new InvalidSyntaxException(
+                         $"Expected statement after for loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+
+        _reader.Consume(HarbourSyntaxKind.NEXT);
+
+        _inLoop = false;
+
+        return new ForEachLoopStatement(variable, collection, body);
+    }
+
+    private LoopStatement Loop(HarbourSyntaxToken token)
+    {
+        if (!_inLoop)
+            throw new InvalidSyntaxException(
+                $"Encountered loop statement outside of a loop; token '{token.Text}' on line {token.Line}, column {token.Start}.");
+
         return token.Kind != HarbourSyntaxKind.LOOP
             ? throw new InvalidSyntaxException(
                 $"Expected loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.")

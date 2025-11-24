@@ -144,8 +144,16 @@ public class TestParser
             "for (i := 10) to 1 step (-1)\na(i)\nnext"
         );
         AssertParsedEqualsExpected(
+            "for each a in b\n\n    c(a)\n\nnext",
+            "for each a in b\nc(a)\nnext"
+        );
+        AssertParsedEqualsExpected(
             "for i := 10 to 1 step -1\n\n    if c(i)\n\n\n\n        d(i)\n\n    else\n\n        loop\n\n    endif\n\nnext",
             "for (i := 10) to 1 step (-1)\nif c(i)\nd(i)\nelse\nloop\nendif\nnext"
+        );
+        AssertParsedEqualsExpected(
+            "for each a in b\n\n    if c(a)\n\n\n\n        d(a)\n\n    else\n\n        loop\n\n    endif\n\nnext",
+            "for each a in b\nif c(a)\nd(a)\nelse\nloop\nendif\nnext"
         );
     }
 

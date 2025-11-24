@@ -1,23 +1,19 @@
 using Harpy.AST.Expressions;
+using Harpy.Lexer;
 
 namespace Harpy.AST.Statements;
 
 /// <summary>
-///     Represents a <c>for</c> loop.
+///     Represents a <c>for each</c> loop.
 /// </summary>
-public class ForLoopStatement(Expression initializer, Expression bound, Expression? step, List<Statement>? body)
+public class ForEachLoopStatement(HarbourSyntaxToken variable, Expression collection, List<Statement>? body)
     : Statement
 {
     public override IHarbourAstNode? Parent { get; set; }
 
     public override string PrettyPrint()
     {
-        var output = $"for {initializer.PrettyPrint()} to {bound.PrettyPrint()}";
-
-        if (step != null)
-            output += $" step {step.PrettyPrint()}\n";
-        else
-            output += "\n";
+        var output = $"for each {variable.Text} in {collection.PrettyPrint()}\n";
 
         if (body != null)
             output = body.Aggregate(output, (current, statement) => current + statement.PrettyPrint() + "\n");
