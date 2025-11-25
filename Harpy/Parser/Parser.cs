@@ -101,7 +101,7 @@ public class Parser
         if (name == null)
             throw new InvalidSyntaxException(
                 $"Expected name in function definition beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
-        
+
         _inFunctionOrProcedureDefinition = false;
         return new FunctionStatement(name, parameters, body, returnValue, isStatic);
     }
@@ -115,7 +115,7 @@ public class Parser
         if (name == null)
             throw new InvalidSyntaxException(
                 $"Expected name in procedure definition beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
-        
+
         _inFunctionOrProcedureDefinition = false;
         return new ProcedureStatement(name, parameters, body, isStatic);
     }
@@ -134,9 +134,9 @@ public class Parser
             returnValue = null;
             return;
         }
-        
+
         _inFunctionOrProcedureDefinition = true;
-        
+
         if (isStatic)
             _reader.Consume(token.Kind);
 

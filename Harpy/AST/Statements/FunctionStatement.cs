@@ -6,34 +6,64 @@ namespace Harpy.AST.Statements;
 /// <summary>
 ///     """Represents a function declaration, e.g. <c>function a(b, c) ; return c</c>."""
 /// </summary>
-public class FunctionStatement(
-    HarbourSyntaxToken name,
-    List<HarbourSyntaxToken> parameters,
-    List<Statement> body,
-    Expression returnValue,
-    bool isStatic) : Statement
+public class FunctionStatement : Statement
 {
-    public override IHarbourAstNode? Parent { get; set; }
+    private readonly List<Statement> _body;
+    private readonly bool _isStatic;
+    private readonly HarbourSyntaxToken _name;
+    private readonly List<HarbourSyntaxToken> _parameters;
+    private readonly Expression _returnValue;
+
+    /// <summary>
+    ///     """Represents a function declaration, e.g. <c>function a(b, c) ; return c</c>."""
+    /// </summary>
+    public FunctionStatement(HarbourSyntaxToken name,
+        List<HarbourSyntaxToken> parameters,
+        List<Statement> body,
+        Expression returnValue,
+        bool isStatic) : base([])
+    {
+        _name = name;
+        _parameters = parameters;
+        _body = body;
+        _returnValue = returnValue;
+        _isStatic = isStatic;
+
+        var nameNode = new HarbourSyntaxTokenNode(name, [])
+        {
+            Parent = this
+        };
+        Children.Add(nameNode);
+        foreach (var parameterChild in parameters.Select(parameter => new HarbourSyntaxTokenNode(parameter, [])
+                 {
+                     Parent = this
+                 }))
+            Children.Add(parameterChild);
+
+        foreach (var bodyChild in body)
+        {
+            bodyChild.Parent = this;
+            Children.Add(bodyChild);
+        }
+
+        returnValue.Parent = this;
+        Children.Add(returnValue);
+    }
 
     public override string PrettyPrint()
     {
         var parametersString = "";
 
-        for (var i = 0; i < parameters.Count; i++)
-            if (i != parameters.Count - 1)
-                parametersString += parameters[i].Text + ", ";
+        for (var i = 0; i < _parameters.Count; i++)
+            if (i != _parameters.Count - 1)
+                parametersString += _parameters[i].Text + ", ";
             else
-                parametersString += parameters[i].Text;
+                parametersString += _parameters[i].Text;
 
-        var bodyString = body.Aggregate("", (current, statement) => current + statement.PrettyPrint() + "\n");
+        var bodyString = _body.Aggregate("", (current, statement) => current + statement.PrettyPrint() + "\n");
 
-        var output = isStatic ? "static " : "";
+        var output = _isStatic ? "static " : "";
 
-        return output + $"function {name.Text}({parametersString})\n{bodyString}return {returnValue.PrettyPrint()}";
-    }
-
-    public override void Walk()
-    {
-        throw new NotImplementedException();
+        return output + $"function {_name.Text}({parametersString})\n{bodyString}return {_returnValue.PrettyPrint()}";
     }
 }

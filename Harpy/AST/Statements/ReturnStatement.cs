@@ -2,22 +2,26 @@ using Harpy.AST.Expressions;
 
 namespace Harpy.AST.Statements;
 
-public class ReturnStatement(Expression? returnValue) : Statement
+public class ReturnStatement : Statement
 {
-    public override IHarbourAstNode? Parent { get; set; }
+    private readonly Expression? _returnValue;
+
+    public ReturnStatement(Expression? returnValue) : base([])
+    {
+        _returnValue = returnValue;
+
+        if (_returnValue == null) return;
+        _returnValue.Parent = this;
+        Children.Add(_returnValue);
+    }
 
     public override string PrettyPrint()
     {
-        return "return" + (returnValue == null ? "" : $" {returnValue.PrettyPrint()}");
-    }
-
-    public override void Walk()
-    {
-        throw new NotImplementedException();
+        return "return" + (_returnValue == null ? "" : $" {_returnValue.PrettyPrint()}");
     }
 
     public Expression? ReturnValue()
     {
-        return returnValue;
+        return _returnValue;
     }
 }

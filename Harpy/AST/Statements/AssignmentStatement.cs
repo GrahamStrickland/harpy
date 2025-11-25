@@ -5,17 +5,23 @@ namespace Harpy.AST.Statements;
 /// <summary>
 ///     Represents a variable assignment, e.g. <c>b := 1</c>.
 /// </summary>
-public class AssignmentStatement(AssignmentExpression assignmentExpression) : Statement
+public class AssignmentStatement : Statement
 {
-    public override IHarbourAstNode? Parent { get; set; }
+    private readonly AssignmentExpression _assignmentExpression;
+
+    /// <summary>
+    ///     Represents a variable assignment, e.g. <c>b := 1</c>.
+    /// </summary>
+    public AssignmentStatement(AssignmentExpression assignmentExpression) : base([])
+    {
+        _assignmentExpression = assignmentExpression;
+
+        _assignmentExpression.Parent = this;
+        Children.Add(_assignmentExpression);
+    }
 
     public override string PrettyPrint()
     {
-        return assignmentExpression.PrettyPrint();
-    }
-
-    public override void Walk()
-    {
-        throw new NotImplementedException();
+        return _assignmentExpression.PrettyPrint();
     }
 }

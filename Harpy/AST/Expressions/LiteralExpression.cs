@@ -5,17 +5,26 @@ namespace Harpy.AST.Expressions;
 /// <summary>
 ///     A boolean, numeric, string, or nil literal, e.g., <c>.t.</c>, <c>123</c>, <c>'hello'</c>, or <c>NIL</c>.
 /// </summary>
-public class LiteralExpression(HarbourSyntaxToken literal) : Expression(false)
+public class LiteralExpression : Expression
 {
-    public override IHarbourAstNode? Parent { get; set; }
+    private readonly HarbourSyntaxToken _literal;
+
+    /// <summary>
+    ///     A boolean, numeric, string, or nil literal, e.g., <c>.t.</c>, <c>123</c>, <c>'hello'</c>, or <c>NIL</c>.
+    /// </summary>
+    public LiteralExpression(HarbourSyntaxToken literal) : base(false, [])
+    {
+        _literal = literal;
+
+        var literalNode = new HarbourSyntaxTokenNode(literal, []);
+        {
+            Parent = this;
+        }
+        Children.Add(literalNode);
+    }
 
     public override string PrettyPrint()
     {
-        return literal.Text;
-    }
-
-    public override void Walk()
-    {
-        Console.WriteLine(PrettyPrint());
+        return _literal.Text;
     }
 }

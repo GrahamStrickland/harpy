@@ -3,19 +3,33 @@ namespace Harpy.AST.Expressions;
 /// <summary>
 ///     An array declaration like <c>{ }</c> or <c>{ b, c, d }</c>.
 /// </summary>
-public class ArrayDeclarationExpression(List<Expression> elements) : Expression(false)
+public class ArrayDeclarationExpression : Expression
 {
-    public override IHarbourAstNode? Parent { get; set; }
+    private readonly List<Expression> _elements;
+
+    /// <summary>
+    ///     An array declaration like <c>{ }</c> or <c>{ b, c, d }</c>.
+    /// </summary>
+    public ArrayDeclarationExpression(List<Expression> elements) : base(false, [])
+    {
+        _elements = elements;
+
+        foreach (var e in elements)
+        {
+            e.Parent = this;
+            Children.Add(e);
+        }
+    }
 
     public override string PrettyPrint()
     {
         var elements1 = "";
         var i = 0;
 
-        foreach (var e in elements)
+        foreach (var e in _elements)
         {
             elements1 += e.PrettyPrint();
-            if (i < elements.Count - 1)
+            if (i < _elements.Count - 1)
                 elements1 += ", ";
             else
                 elements1 += " ";
@@ -23,10 +37,5 @@ public class ArrayDeclarationExpression(List<Expression> elements) : Expression(
         }
 
         return "{ " + elements1 + "}";
-    }
-
-    public override void Walk()
-    {
-        Console.WriteLine(PrettyPrint());
     }
 }

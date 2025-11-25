@@ -1,9 +1,6 @@
 namespace Harpy.AST.Expressions;
 
-public abstract class Expression(bool leftExpression) : IHarbourAstNode
+public abstract class Expression(bool leftExpression, List<HarbourAstNode> children) : HarbourAstNode(children)
 {
     public bool LeftExpression { get; } = leftExpression;
-    public abstract IHarbourAstNode? Parent { get; set; }
-    public abstract string PrettyPrint();
-    public abstract void Walk();
 }
