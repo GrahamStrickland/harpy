@@ -26,6 +26,7 @@ public class HarbourSyntaxToken : HarbourSyntaxElement
         { HarbourSyntaxKind.TO, "to" },
         { HarbourSyntaxKind.STEP, "step" },
         { HarbourSyntaxKind.LOOP, "loop" },
+        { HarbourSyntaxKind.EXIT, "exit" },
         { HarbourSyntaxKind.NEXT, "next" },
         { HarbourSyntaxKind.EACH, "each" },
         { HarbourSyntaxKind.IN, "in" },

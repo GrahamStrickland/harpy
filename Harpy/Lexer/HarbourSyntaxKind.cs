@@ -73,6 +73,7 @@ public enum HarbourSyntaxKind
     TO,
     STEP,
     LOOP,
+    EXIT,
     NEXT,
     EACH,
     IN,

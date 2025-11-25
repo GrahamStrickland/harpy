@@ -155,23 +155,18 @@ public class TestParser
             "for each a in b\n\n    if c(a)\n\n\n\n        d(a)\n\n    else\n\n        loop\n\n    endif\n\nnext",
             "for each a in b\nif c(a)\nd(a)\nelse\nloop\nendif\nnext"
         );
-    }
-
-    [TestMethod]
-    public void TestAssignmentStatement()
-    {
         AssertParsedEqualsExpected(
-            "if a(b, c, d)\n\n    e := 1\n\nendif",
-            "if a(b, c, d)\n(e := 1)\nendif"
+            "for i := 10 to 1 step -1\n\n    if c(i)\n\n\n\n        d(i)\n\n    else\n\n        exit\n\n    endif\n\nnext",
+            "for (i := 10) to 1 step (-1)\nif c(i)\nd(i)\nelse\nexit\nendif\nnext"
         );
         AssertParsedEqualsExpected(
-            "if a(b, c, d)\n\n    e:f := 1\n\nendif",
-            "if a(b, c, d)\n(e:f := 1)\nendif"
+            "for each a in b\n\n    if c(a)\n\n\n\n        d(a)\n\n    else\n\n        exit\n\n    endif\n\nnext",
+            "for each a in b\nif c(a)\nd(a)\nelse\nexit\nendif\nnext"
         );
     }
 
     [TestMethod]
-    public void BeginSequenceStatement()
+    public void TestBeginSequenceStatement()
     {
         AssertParsedEqualsExpected(
             "begin sequence\n\n    a()\n\nrecover\n\n    c()\n\nend sequence",
@@ -220,7 +215,7 @@ public class TestParser
             "if a(b, c, d)\n(e:f := 1)\nendif"
         );
     }
-    
+
     /// <summary>
     ///     Parses the given chunk of code and verifies that it matches the expected
     ///     pretty-printed result.

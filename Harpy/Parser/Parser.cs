@@ -63,6 +63,7 @@ public class Parser
                 HarbourSyntaxKind.WHILE => WhileLoop(token),
                 HarbourSyntaxKind.FOR => ForLoop(token),
                 HarbourSyntaxKind.LOOP => Loop(token),
+                HarbourSyntaxKind.EXIT => Exit(token),
                 HarbourSyntaxKind.BEGIN => BeginSequence(token),
                 _ => throw new InvalidSyntaxException(
                     $"Expected statement, found '{token.Text}' on line {token.Line}, column {token.Start}.")
@@ -380,6 +381,18 @@ public class Parser
             : new LoopStatement();
     }
 
+    private ExitStatement Exit(HarbourSyntaxToken token)
+    {
+        if (!_inLoop)
+            throw new InvalidSyntaxException(
+                $"Encountered exit statement outside of a loop; token '{token.Text}' on line {token.Line}, column {token.Start}.");
+
+        return token.Kind != HarbourSyntaxKind.EXIT
+            ? throw new InvalidSyntaxException(
+                $"Expected exit statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.")
+            : new ExitStatement();
+    }
+
     private BeginSequenceStatement BeginSequence(HarbourSyntaxToken token)
     {
         if (!_reader.Match(HarbourSyntaxKind.SEQUENCE))
@@ -463,7 +476,7 @@ public class Parser
 
         CallExpression? callExpression;
         var token = _reader.LookAhead();
-        if (token.Kind is HarbourSyntaxKind.LEFT_PAREN)
+        if (token.Kind is HarbourSyntaxKind.LEFT_PAREN or HarbourSyntaxKind.COLON)
         {
             _reader.PutBack(name);
             var expression = _expressionParser.Parse(Precedence.NONE, false, true);
@@ -473,6 +486,7 @@ public class Parser
                 _reader.Consume(HarbourSyntaxKind.NAME);
                 return null;
             }
+
             callExpression = possibleCallExpression;
         }
         else
