@@ -191,6 +191,36 @@ public class TestParser
         );
     }
 
+    [TestMethod]
+    public void TestCallStatement()
+    {
+        AssertParsedEqualsExpected(
+            "a:b(c)",
+            "a:b(c)"
+        );
+        AssertParsedEqualsExpected(
+            "a:b:c(d)",
+            "a:b:c(d)"
+        );
+        AssertParsedEqualsExpected(
+            "a():b:c(d)",
+            "a():b:c(d)"
+        );
+    }
+
+    [TestMethod]
+    public void TestAssignmentStatement()
+    {
+        AssertParsedEqualsExpected(
+            "if a(b, c, d)\n\n    e := 1\n\nendif",
+            "if a(b, c, d)\n(e := 1)\nendif"
+        );
+        AssertParsedEqualsExpected(
+            "if a(b, c, d)\n\n    e:f := 1\n\nendif",
+            "if a(b, c, d)\n(e:f := 1)\nendif"
+        );
+    }
+    
     /// <summary>
     ///     Parses the given chunk of code and verifies that it matches the expected
     ///     pretty-printed result.

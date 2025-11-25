@@ -466,14 +466,21 @@ public class Parser
         if (token.Kind is HarbourSyntaxKind.LEFT_PAREN)
         {
             _reader.PutBack(name);
-            callExpression = (CallExpression?)_expressionParser.Parse(Precedence.NONE, false, true);
+            var expression = _expressionParser.Parse(Precedence.NONE, false, true);
+            if (expression is not CallExpression possibleCallExpression)
+            {
+                _expressionParser.Unparse();
+                _reader.Consume(HarbourSyntaxKind.NAME);
+                return null;
+            }
+            callExpression = possibleCallExpression;
         }
         else
         {
             return null;
         }
 
-        return callExpression != null ? new CallStatement(callExpression) : null;
+        return new CallStatement(callExpression);
     }
 
     private AssignmentStatement? AssignmentStatement(HarbourSyntaxToken token)
@@ -484,6 +491,7 @@ public class Parser
         if (leftExpression is AssignmentExpression expression) return new AssignmentStatement(expression);
 
         _expressionParser.Unparse();
+        _reader.Consume(token.Kind);
         return null;
     }
 }
