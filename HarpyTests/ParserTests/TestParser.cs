@@ -21,6 +21,14 @@ public class TestParser
             "function a(b, c, d)\n\n    local c := b\n\nreturn c",
             "function a(b, c, d)\nlocal (c := b)\nreturn c"
         );
+        AssertParsedEqualsExpected(
+            "function a(b)\n\n    local c := b\n\n    if b > 0\n        return 0\n    endif\n\nreturn c",
+            "function a(b)\nlocal (c := b)\nif (b > 0)\nreturn 0\nendif\nreturn c"
+        );
+        AssertParsedEqualsExpected(
+            "function a(b)\n\n    local c := b\n\n    if b > 0\n        return .t.\n    endif\n\nreturn .f.",
+            "function a(b)\nlocal (c := b)\nif (b > 0)\nreturn .t.\nendif\nreturn .f."
+        );
     }
 
     [TestMethod]
@@ -37,6 +45,14 @@ public class TestParser
         AssertParsedEqualsExpected(
             "procedure a(b, c, d)\n\n    local c := b\n\nreturn",
             "procedure a(b, c, d)\nlocal (c := b)\nreturn"
+        );
+        AssertParsedEqualsExpected(
+            "procedure a(b)\n\n    local c := b\n\n    if b > 0\n        return\n    endif\n\nreturn",
+            "procedure a(b)\nlocal (c := b)\nif (b > 0)\nreturn\nendif\nreturn"
+        );
+        AssertParsedEqualsExpected(
+            "procedure a(b)\n\n    local c := b\n\n    if b > 0\n        \n        d(b)\nreturn\n    endif\n\nreturn",
+            "procedure a(b)\nlocal (c := b)\nif (b > 0)\nd(b)\nreturn\nendif\nreturn"
         );
     }
 
