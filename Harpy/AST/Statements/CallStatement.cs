@@ -20,8 +20,9 @@ public class CallStatement : Statement
         Children.Add(_callExpression);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return _callExpression.PrettyPrint();
+        return NodeLine(indent) + "CallStatement(\n" + BlankLine(indent + 1) + "callExpression\n" +
+               ChildNodeLine(indent + 1) + _callExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 }

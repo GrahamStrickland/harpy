@@ -29,28 +29,22 @@ public class CodeblockExpression : Expression
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var parameters1 = "";
-        var i = 0;
-
-        foreach (var p in _parameters)
+        var result = NodeLine(indent) + "CodeblockExpression(\n";
+        if (_parameters.Count > 0)
         {
-            parameters1 += p.PrettyPrint();
-            if (i < _parameters.Count - 1) parameters1 += ", ";
-            i++;
+            result += BlankLine(indent + 1) + "parameters\n";
+            foreach (var p in _parameters) result += ChildNodeLine(indent + 1) + p.PrettyPrint(indent + 2) + "\n";
         }
 
-        var expressions1 = "";
-        i = 0;
-
-        foreach (var e in _expressions)
+        if (_expressions.Count > 0)
         {
-            expressions1 += e.PrettyPrint();
-            if (i < _expressions.Count - 1) expressions1 += ", ";
-            i++;
+            result += BlankLine(indent + 1) + "expressions\n";
+            foreach (var e in _expressions) result += ChildNodeLine(indent + 1) + e.PrettyPrint(indent + 2) + "\n";
         }
 
-        return $"{{ |{parameters1}| {expressions1} }}";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

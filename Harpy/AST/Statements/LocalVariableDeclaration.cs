@@ -6,5 +6,5 @@ namespace Harpy.AST.Statements;
 /// <summary>
 ///     Represents a local variable declaration, e.g. <c>local a</c> or <c>local b := 1</c>.
 /// </summary>
-public class LocalVariableDeclaration(HarbourSyntaxToken name, Expression? assignment)
-    : VariableDeclaration("local", name, assignment);
+public class LocalVariableDeclaration(HarbourSyntaxToken scope, HarbourSyntaxToken name, Expression? assignment)
+    : VariableDeclaration(scope, name, assignment);

@@ -15,9 +15,18 @@ public class ReturnStatement : Statement
         Children.Add(_returnValue);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return "return" + (_returnValue == null ? "" : $" {_returnValue.PrettyPrint()}");
+        var result = NodeLine(indent) + "ReturnStatement(\n";
+        
+        if (_returnValue != null)
+        {
+            result += BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) + 
+                      _returnValue.PrettyPrint(indent + 2) + "\n";
+        }
+        
+        result += BlankLine(indent) + ")";
+        return result;
     }
 
     public Expression? ReturnValue()

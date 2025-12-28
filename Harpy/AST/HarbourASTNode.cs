@@ -9,9 +9,9 @@ public abstract class HarbourAstNode(List<HarbourAstNode> children)
     ///     Pretty print the Harbour AST node to a string.
     /// </summary>
     /// <returns>A string representing the AST node in pseudocode.</returns>
-    public virtual string PrettyPrint()
+    public virtual string PrettyPrint(int indent = 0)
     {
-        return "";
+        return Children.Aggregate("\n", (current, child) => current + child.PrettyPrint(indent + 1) + "\n");
     }
 
     /// <summary>
@@ -20,5 +20,20 @@ public abstract class HarbourAstNode(List<HarbourAstNode> children)
     public void Walk()
     {
         foreach (var child in Children) child.Walk();
+    }
+
+    protected static string NodeLine(int indent = 0)
+    {
+        return new string(' ', 4 * (indent == 0 ? indent : indent - 1)) + "+---";
+    }
+
+    protected static string BlankLine(int indent = 0)
+    {
+        return new string(' ', 4 * indent);
+    }
+
+    protected static string ChildNodeLine(int indent = 0)
+    {
+        return new string(' ', 4 * indent) + "|\n";
     }
 }

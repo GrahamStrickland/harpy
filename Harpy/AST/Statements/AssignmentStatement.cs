@@ -20,8 +20,10 @@ public class AssignmentStatement : Statement
         Children.Add(_assignmentExpression);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return _assignmentExpression.PrettyPrint();
+        return NodeLine(indent) + "AssignmentStatement(\n" + BlankLine(indent + 1) + "assignmentExpression\n" +
+               ChildNodeLine(indent + 1) +
+               _assignmentExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 }

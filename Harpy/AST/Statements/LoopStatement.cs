@@ -5,8 +5,8 @@ namespace Harpy.AST.Statements;
 /// </summary>
 public class LoopStatement() : Statement([])
 {
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return "loop";
+        return NodeLine(indent) + "LoopStatement";
     }
 }

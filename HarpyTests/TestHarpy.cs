@@ -25,8 +25,8 @@ public class TestHarpy
         var lexer = new Lexer(source);
         var parser = new Parser(lexer);
 
-        var root = parser.Parse();
-        var actual = root.Children.Aggregate("", (current, node) => current + node.PrettyPrint());
+        var root = parser.Parse("test");
+        var actual = root.PrettyPrint();
 
         Assert.AreEqual(expected, actual);
     }

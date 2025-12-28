@@ -21,9 +21,9 @@ public class Parser
         _expressionParser = new ExpressionParser(_reader);
     }
 
-    public SourceRoot Parse()
+    public SourceRoot Parse(string name)
     {
-        var sourceRoot = new SourceRoot([]);
+        var sourceRoot = new SourceRoot(name, []);
 
         foreach (var token in _reader)
         {
@@ -187,13 +187,13 @@ public class Parser
     private StaticVariableDeclaration StaticDeclarationStatement(HarbourSyntaxToken token)
     {
         VariableDeclarationStatement(token, out var name, out var assignment);
-        return new StaticVariableDeclaration(name, assignment);
+        return new StaticVariableDeclaration(token, name, assignment);
     }
 
     private LocalVariableDeclaration LocalDeclarationStatement(HarbourSyntaxToken token)
     {
         VariableDeclarationStatement(token, out var name, out var assignment);
-        return new LocalVariableDeclaration(name, assignment);
+        return new LocalVariableDeclaration(token, name, assignment);
     }
 
     private void VariableDeclarationStatement(HarbourSyntaxToken token, out HarbourSyntaxToken name,

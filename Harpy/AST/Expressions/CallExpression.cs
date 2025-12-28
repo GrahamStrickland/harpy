@@ -26,19 +26,16 @@ public class CallExpression : Expression
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var arguments1 = "";
-        var i = 0;
+        var argumentString = _arguments.Aggregate("",
+            (current, e) => current + ChildNodeLine(indent + 1) + e.PrettyPrint(indent + 2) + "\n");
 
-        foreach (var e in _arguments)
-        {
-            arguments1 += e.PrettyPrint();
-            if (i < _arguments.Count - 1)
-                arguments1 += ", ";
-            i++;
-        }
-
-        return $"{_function.PrettyPrint()}({arguments1})";
+        return NodeLine(indent) + "CallExpression(\n" + BlankLine(indent + 1) + "function\n" +
+               ChildNodeLine(indent + 1) +
+               $"{_function.PrettyPrint(indent + 2)}" +
+               (_arguments.Count > 0
+                   ? "\n" + BlankLine(indent + 1) + "arguments\n" + argumentString
+                   : "\n") + BlankLine(indent) + ")";
     }
 }

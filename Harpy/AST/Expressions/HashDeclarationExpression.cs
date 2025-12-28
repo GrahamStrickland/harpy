@@ -23,23 +23,19 @@ public class HashDeclarationExpression : Expression
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var keyValuePairs = "";
-        var i = 0;
-
-        if (_valuePairs.Count == 0) return "{ => }";
-
-        foreach (var k in _valuePairs.Keys)
+        var result = NodeLine(indent) + "HashDeclarationExpression(\n";
+        foreach (var (key, value) in _valuePairs)
         {
-            keyValuePairs += $"{k.PrettyPrint()} => {_valuePairs[k].PrettyPrint()}";
-            if (i < _valuePairs.Count - 1)
-                keyValuePairs += ", ";
-            else
-                keyValuePairs += " ";
-            i++;
+            result += BlankLine(indent + 1) + "pair\n";
+            result += ChildNodeLine(indent + 1) + BlankLine(indent + 2) + "key\n" + ChildNodeLine(indent + 2) +
+                      key.PrettyPrint(indent + 3) + "\n";
+            result += ChildNodeLine(indent + 1) + BlankLine(indent + 2) + "value\n" + ChildNodeLine(indent + 2) +
+                      value.PrettyPrint(indent + 3) + "\n";
         }
 
-        return "{ " + keyValuePairs + "}";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

@@ -28,12 +28,20 @@ public class WhileLoopStatement : Statement
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var output = $"while {_condition.PrettyPrint()}\n";
+        var result = NodeLine(indent) + "WhileLoopStatement(\n";
+        result += BlankLine(indent + 1) + "condition\n" + ChildNodeLine(indent + 1) + 
+                  _condition.PrettyPrint(indent + 2) + "\n";
+        
+        if (_body.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "body\n";
+            foreach (var stmt in _body)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+        }
 
-        output = _body.Aggregate(output, (current, statement) => current + statement.PrettyPrint() + "\n");
-
-        return output + "end while";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

@@ -43,20 +43,27 @@ public class ProcedureStatement : Statement
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var parametersString = "";
+        var result = NodeLine(indent) + "ProcedureStatement(" + (_isStatic ? "static" : "") + ")\n";
+        result += BlankLine(indent + 1) + "name\n" + ChildNodeLine(indent + 1) + 
+                  Children[0].PrettyPrint(indent + 2) + "\n";
+        
+        if (_parameters.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "parameters\n";
+            for (var i = 0; i < _parameters.Count; i++)
+                result += ChildNodeLine(indent + 1) + Children[i + 1].PrettyPrint(indent + 2) + "\n";
+        }
 
-        for (var i = 0; i < _parameters.Count; i++)
-            if (i != _parameters.Count - 1)
-                parametersString += _parameters[i].Text + ", ";
-            else
-                parametersString += _parameters[i].Text;
+        if (_body.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "body\n";
+            foreach (var stmt in _body)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+        }
 
-        var bodyString = _body.Aggregate("", (current, statement) => current + statement.PrettyPrint() + "\n");
-
-        var output = _isStatic ? "static " : "";
-
-        return output + $"procedure {_name.Text}({parametersString})\n{bodyString}return";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

@@ -10,8 +10,8 @@ public class FunctionStatement : Statement
 {
     private readonly List<Statement> _body;
     private readonly bool _isStatic;
-    private readonly HarbourSyntaxToken _name;
-    private readonly List<HarbourSyntaxToken> _parameters;
+    private readonly HarbourSyntaxTokenNode _nameNode;
+    private readonly List<HarbourSyntaxTokenNode> _parameterNodes;
     private readonly Expression _returnValue;
 
     /// <summary>
@@ -23,22 +23,26 @@ public class FunctionStatement : Statement
         Expression returnValue,
         bool isStatic) : base([])
     {
-        _name = name;
-        _parameters = parameters;
         _body = body;
         _returnValue = returnValue;
         _isStatic = isStatic;
 
-        var nameNode = new HarbourSyntaxTokenNode(name, [])
+        _nameNode = new HarbourSyntaxTokenNode(name, [])
         {
             Parent = this
         };
-        Children.Add(nameNode);
-        foreach (var parameterChild in parameters.Select(parameter => new HarbourSyntaxTokenNode(parameter, [])
-                 {
-                     Parent = this
-                 }))
-            Children.Add(parameterChild);
+        Children.Add(_nameNode);
+
+        _parameterNodes = new List<HarbourSyntaxTokenNode>();
+        foreach (var parameter in parameters)
+        {
+            var parameterNode = new HarbourSyntaxTokenNode(parameter, [])
+            {
+                Parent = this
+            };
+            _parameterNodes.Add(parameterNode);
+            Children.Add(parameterNode);
+        }
 
         foreach (var bodyChild in body)
         {
@@ -50,20 +54,28 @@ public class FunctionStatement : Statement
         Children.Add(returnValue);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var parametersString = "";
+        var result = NodeLine(indent) + "FunctionStatement(" + (_isStatic ? "static" : "") + "\n";
+        result += BlankLine(indent + 1) + "name\n" + ChildNodeLine(indent + 1) + _nameNode.PrettyPrint(indent + 2) +
+                  "\n";
+        if (_parameterNodes.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "parameters\n";
+            foreach (var pNode in _parameterNodes)
+                result += ChildNodeLine(indent + 1) + pNode.PrettyPrint(indent + 2) + "\n";
+        }
 
-        for (var i = 0; i < _parameters.Count; i++)
-            if (i != _parameters.Count - 1)
-                parametersString += _parameters[i].Text + ", ";
-            else
-                parametersString += _parameters[i].Text;
+        if (_body.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "body\n";
+            foreach (var stmt in _body)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+        }
 
-        var bodyString = _body.Aggregate("", (current, statement) => current + statement.PrettyPrint() + "\n");
-
-        var output = _isStatic ? "static " : "";
-
-        return output + $"function {_name.Text}({parametersString})\n{bodyString}return {_returnValue.PrettyPrint()}";
+        result += BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) +
+                  _returnValue.PrettyPrint(indent + 2) + "\n";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

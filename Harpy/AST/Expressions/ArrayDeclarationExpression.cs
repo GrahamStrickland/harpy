@@ -21,21 +21,16 @@ public class ArrayDeclarationExpression : Expression
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var elements1 = "";
-        var i = 0;
-
-        foreach (var e in _elements)
+        var result = NodeLine(indent) + "ArrayDeclarationExpression(\n";
+        for (var i = 0; i < _elements.Count; i++)
         {
-            elements1 += e.PrettyPrint();
-            if (i < _elements.Count - 1)
-                elements1 += ", ";
-            else
-                elements1 += " ";
-            i++;
+            result += BlankLine(indent + 1) + $"element {i}\n" + ChildNodeLine(indent + 1);
+            result += $"{_elements[i].PrettyPrint(indent + 2)}\n";
         }
 
-        return "{ " + elements1 + "}";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

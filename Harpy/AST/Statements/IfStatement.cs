@@ -47,24 +47,44 @@ public class IfStatement : Statement
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var output = $"if {_ifCondition.PrettyPrint()}\n";
+        var result = NodeLine(indent) + "IfStatement(\n";
 
-        output = _ifBody.Aggregate(output, (current, statement) => current + statement.PrettyPrint() + "\n");
+        result += BlankLine(indent + 1) + "ifCondition\n" + ChildNodeLine(indent + 1) +
+                  _ifCondition.PrettyPrint(indent + 2) + "\n";
 
-        foreach (var item in _elseIfConditions)
+        if (_ifBody.Count > 0)
         {
-            var elseIfBody = item.Item2.Aggregate("", (current, statement) => current + statement.PrettyPrint());
-
-            output += $"elseif {item.Item1.PrettyPrint()}\n{elseIfBody}\n";
+            result += BlankLine(indent + 1) + "ifBody\n";
+            foreach (var stmt in _ifBody)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
         }
 
-        if (_elseBody.Count <= 0) return output + "endif";
+        if (_elseIfConditions.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "elseIfConditions\n";
+            foreach (var (condition, statements) in _elseIfConditions)
+            {
+                result += ChildNodeLine(indent + 1) + "condition\n" + ChildNodeLine(indent + 2) +
+                          condition.PrettyPrint(indent + 3) + "\n";
+                if (statements.Count > 0)
+                {
+                    result += ChildNodeLine(indent + 1) + "body\n";
+                    foreach (var stmt in statements)
+                        result += ChildNodeLine(indent + 2) + stmt.PrettyPrint(indent + 3) + "\n";
+                }
+            }
+        }
 
-        output += "else\n";
-        output = _elseBody.Aggregate(output, (current, statement) => current + $"{statement.PrettyPrint()}\n");
+        if (_elseBody.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "elseBody\n";
+            foreach (var stmt in _elseBody)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+        }
 
-        return output + "endif";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

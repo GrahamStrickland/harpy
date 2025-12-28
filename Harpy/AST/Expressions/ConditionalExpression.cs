@@ -26,8 +26,15 @@ public class ConditionalExpression : Expression
         Children.Add(_elseArm);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return $"iif({_ifArm.PrettyPrint()}, {_thenArm.PrettyPrint()}, {_elseArm.PrettyPrint()})";
+        return NodeLine(indent) +
+               "ConditionalExpression(\n" + BlankLine(indent + 1) + "if\n" + ChildNodeLine(indent + 1) +
+               $"{_ifArm.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent + 1) + "then\n" + ChildNodeLine(indent + 1) +
+               $"{_thenArm.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent + 1) + "else\n" + ChildNodeLine(indent + 1) +
+               $"{_elseArm.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent) + ")";
     }
 }

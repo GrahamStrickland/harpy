@@ -8,7 +8,7 @@ namespace Harpy.AST.Expressions;
 public class PostfixExpression : Expression
 {
     private readonly Expression _left;
-    private readonly HarbourSyntaxToken _operator;
+    private readonly HarbourSyntaxTokenNode _operatorNode;
 
     /// <summary>
     ///     A postfix unary arithmetic expression like <c>a!</c>.
@@ -16,21 +16,25 @@ public class PostfixExpression : Expression
     public PostfixExpression(Expression left, HarbourSyntaxToken @operator) : base(false, [])
     {
         _left = left;
-        _operator = @operator;
 
         _left.Parent = this;
         Children.Add(_left);
 
-        var operatorNode = new HarbourSyntaxTokenNode(_operator, []);
-        {
-            Parent = this;
-        }
-        Children.Add(operatorNode);
+        _operatorNode = new HarbourSyntaxTokenNode(@operator, []);
+        _operatorNode.Parent = this;
+        Children.Add(_operatorNode);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return
-            $"({_left.PrettyPrint()}{HarbourSyntaxToken.SimpleOperator(_operator.Text) ?? HarbourSyntaxToken.CompoundOperator(_operator.Text)})";
+        return NodeLine(indent) +
+               "PostfixExpression(\n" +
+               BlankLine(indent + 1) + "left\n" +
+               ChildNodeLine(indent + 1) +
+               $"{_left.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent + 1) + "operator\n" +
+               ChildNodeLine(indent + 1) +
+               $"{_operatorNode.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent) + ")";
     }
 }

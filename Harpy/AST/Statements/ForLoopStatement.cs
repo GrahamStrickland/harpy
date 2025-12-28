@@ -42,18 +42,23 @@ public class ForLoopStatement : Statement
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var output = $"for {_initializer.PrettyPrint()} to {_bound.PrettyPrint()}";
+        var output = NodeLine(indent) + "ForLoop(\n" + BlankLine(indent + 1) + "initializer\n" +
+                     ChildNodeLine(indent + 1) +
+                     _initializer.PrettyPrint(indent + 2) + "\n" + BlankLine(indent + 1) + "bound\n" +
+                     ChildNodeLine(indent + 1) + _bound.PrettyPrint(indent + 2);
 
         if (_step != null)
-            output += $" step {_step.PrettyPrint()}\n";
-        else
-            output += "\n";
+            output += "\n" + BlankLine(indent + 1) + "step\n" + ChildNodeLine(indent + 1) +
+                      _step.PrettyPrint(indent + 2);
 
-        if (_body != null)
-            output = _body.Aggregate(output, (current, statement) => current + statement.PrettyPrint() + "\n");
+        if (_body == null) return output + "\n" + BlankLine(indent) + ")";
 
-        return output + "next";
+        output += "\n" + BlankLine(indent + 1) + "body\n";
+        output = _body.Aggregate(output,
+            (current, statement) => current + ChildNodeLine(indent + 1) + statement.PrettyPrint(indent + 2) + "\n");
+
+        return output + BlankLine(indent) + ")";
     }
 }

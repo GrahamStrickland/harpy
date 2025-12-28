@@ -10,22 +10,21 @@ public class ForEachLoopStatement : Statement
 {
     private readonly List<Statement>? _body;
     private readonly Expression _collection;
-    private readonly HarbourSyntaxToken _variable;
+    private readonly HarbourSyntaxTokenNode _variableNode;
 
     /// <summary>
     ///     Represents a <c>for each</c> loop.
     /// </summary>
     public ForEachLoopStatement(HarbourSyntaxToken variable, Expression collection, List<Statement>? body) : base([])
     {
-        _variable = variable;
         _collection = collection;
         _body = body;
 
-        var variableNode = new HarbourSyntaxTokenNode(_variable, [])
+        _variableNode = new HarbourSyntaxTokenNode(variable, [])
         {
             Parent = this
         };
-        Children.Add(variableNode);
+        Children.Add(_variableNode);
 
         _collection.Parent = this;
         Children.Add(_collection);
@@ -38,13 +37,21 @@ public class ForEachLoopStatement : Statement
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var output = $"for each {_variable.Text} in {_collection.PrettyPrint()}\n";
+        var result = NodeLine(indent) + "ForEachLoopStatement(\n";
+        result += BlankLine(indent + 1) + "variable\n" + ChildNodeLine(indent + 1) +
+                  _variableNode.PrettyPrint(indent + 2) + "\n";
+        result += BlankLine(indent + 1) + "collection\n" + ChildNodeLine(indent + 1) +
+                  _collection.PrettyPrint(indent + 2) + "\n";
+        if (_body != null && _body.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "body\n";
+            foreach (var stmt in _body)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+        }
 
-        if (_body != null)
-            output = _body.Aggregate(output, (current, statement) => current + statement.PrettyPrint() + "\n");
-
-        return output + "next";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

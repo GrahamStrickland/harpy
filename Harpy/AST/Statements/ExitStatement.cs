@@ -5,8 +5,8 @@ namespace Harpy.AST.Statements;
 /// </summary>
 public class ExitStatement() : Statement([])
 {
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return "exit";
+        return NodeLine(indent) + "ExitStatement";
     }
 }

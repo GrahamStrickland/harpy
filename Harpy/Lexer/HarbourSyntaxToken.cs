@@ -170,4 +170,10 @@ public class HarbourSyntaxToken : HarbourSyntaxElement
             _ => null
         };
     }
+
+    public string PrettyPrint(int indent = 0)
+    {
+        return new string(' ', (indent > 0 ? indent - 1 : indent) * 4) + "+---Token('" + Text +
+               $"',{Line},[{Start}:{End}))";
+    }
 }

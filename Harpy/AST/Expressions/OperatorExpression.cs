@@ -8,7 +8,7 @@ namespace Harpy.AST.Expressions;
 public class OperatorExpression : Expression
 {
     private readonly Expression _left;
-    private readonly HarbourSyntaxToken _operator;
+    private readonly HarbourSyntaxTokenNode _operatorNode;
     private readonly Expression _right;
 
     /// <summary>
@@ -17,29 +17,32 @@ public class OperatorExpression : Expression
     public OperatorExpression(Expression left, HarbourSyntaxToken @operator, Expression right) : base(false, [])
     {
         _left = left;
-        _operator = @operator;
         _right = right;
 
         _left.Parent = this;
         Children.Add(_left);
 
-        var operatorNode = new HarbourSyntaxTokenNode(_operator, []);
-        {
-            Parent = this;
-        }
-        Children.Add(operatorNode);
+        _operatorNode = new HarbourSyntaxTokenNode(@operator, []);
+        _operatorNode.Parent = this;
+        Children.Add(_operatorNode);
 
         _right.Parent = this;
         Children.Add(_right);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        if (_operator.CompoundOperator() != null)
-            return $"({_left.PrettyPrint()} {_operator.CompoundOperator()} {_right.PrettyPrint()})";
-
-        return _operator.SimpleOperator() != null
-            ? $"({_left.PrettyPrint()} {_operator.SimpleOperator()} {_right.PrettyPrint()})"
-            : throw new InvalidSyntaxException($"Invalid operator '{_operator.Text}'");
+        return NodeLine(indent) +
+               "OperatorExpression(\n" +
+               BlankLine(indent + 1) + "left\n" +
+               ChildNodeLine(indent + 1) +
+               $"{_left.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent + 1) + "operator\n" +
+               ChildNodeLine(indent + 1) +
+               $"{_operatorNode.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent + 1) + "right\n" +
+               ChildNodeLine(indent + 1) +
+               $"{_right.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent) + ")";
     }
 }

@@ -22,8 +22,12 @@ public class AssignmentExpression : Expression
         Children.Add(_right);
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        return $"({_left.PrettyPrint()} := {_right.PrettyPrint()})";
+        return NodeLine(indent) +
+               "AssignmentExpression(\n" + BlankLine(indent + 1) + "left\n" + ChildNodeLine(indent + 1) +
+               $"{_left.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent + 1) + "right\n" + ChildNodeLine(indent + 1) + $"{_right.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent) + ")";
     }
 }

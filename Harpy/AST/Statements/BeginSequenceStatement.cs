@@ -8,7 +8,7 @@ public class BeginSequenceStatement : Statement
     private readonly List<Statement> _alwaysBody;
     private readonly List<Statement> _beginSequenceBody;
     private readonly CodeblockExpression? _errorHandler;
-    private readonly HarbourSyntaxToken? _exception;
+    private readonly HarbourSyntaxTokenNode? _exceptionNode;
     private readonly List<Statement> _recoverBody;
 
     public BeginSequenceStatement(CodeblockExpression? errorHandler,
@@ -18,7 +18,6 @@ public class BeginSequenceStatement : Statement
         List<Statement> alwaysBody) : base([])
     {
         _errorHandler = errorHandler;
-        _exception = exception;
         _beginSequenceBody = beginSequenceBody;
         _recoverBody = recoverBody;
         _alwaysBody = alwaysBody;
@@ -29,13 +28,13 @@ public class BeginSequenceStatement : Statement
             Children.Add(_errorHandler);
         }
 
-        if (_exception != null)
+        if (exception != null)
         {
-            var exceptionNode = new HarbourSyntaxTokenNode(_exception, [])
+            _exceptionNode = new HarbourSyntaxTokenNode(exception, [])
             {
                 Parent = this
             };
-            Children.Add(exceptionNode);
+            Children.Add(_exceptionNode);
         }
 
         foreach (var statement in _beginSequenceBody)
@@ -57,29 +56,40 @@ public class BeginSequenceStatement : Statement
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var output = "begin sequence";
+        var result = NodeLine(indent) + "BeginSequenceStatement(\n";
+        if (_errorHandler != null)
+        {
+            result += BlankLine(indent + 1) + "errorHandler\n" + ChildNodeLine(indent + 1) +
+                      _errorHandler.PrettyPrint(indent + 2) + "\n";
+        }
 
-        if (_errorHandler != null) output += $" with {_errorHandler?.PrettyPrint()}";
-
-        output += "\n";
-        output = _beginSequenceBody.Aggregate(output, (current, statement) => current + statement.PrettyPrint() + "\n");
+        if (_beginSequenceBody.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "beginSequenceBody\n";
+            foreach (var stmt in _beginSequenceBody)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+        }
 
         if (_recoverBody.Count > 0)
         {
-            output += "recover";
-            if (_exception != null)
-                output += $" using {_exception.Text}";
-            output += "\n";
+            result += BlankLine(indent + 1) + "recoverBody\n";
+            if (_exceptionNode != null)
+                result += BlankLine(indent + 2) + "exception\n" + ChildNodeLine(indent + 2) +
+                          _exceptionNode.PrettyPrint(indent + 3) + "\n";
+            foreach (var stmt in _recoverBody)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
         }
 
-        output = _recoverBody.Aggregate(output, (current, statement) => current + $"{statement.PrettyPrint()}\n");
+        if (_alwaysBody.Count > 0)
+        {
+            result += BlankLine(indent + 1) + "alwaysBody\n";
+            foreach (var stmt in _alwaysBody)
+                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+        }
 
-        if (_alwaysBody.Count > 0) output += "always\n";
-
-        output = _alwaysBody.Aggregate(output, (current, statement) => current + $"{statement.PrettyPrint()}\n");
-
-        return output + "end sequence";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

@@ -26,19 +26,17 @@ public class IndexExpression : Expression
         }
     }
 
-    public override string PrettyPrint()
+    public override string PrettyPrint(int indent = 0)
     {
-        var indexExpressions = "";
-        var i = 0;
-
-        foreach (var e in _right)
+        var result = NodeLine(indent) + "IndexExpression(\n";
+        result += BlankLine(indent + 1) + "left\n" + ChildNodeLine(indent + 1) + _left.PrettyPrint(indent + 2) + "\n";
+        if (_right.Count > 0)
         {
-            indexExpressions += e.PrettyPrint();
-            if (i < _right.Count - 1)
-                indexExpressions += ", ";
-            i++;
+            result += BlankLine(indent + 1) + "index\n";
+            foreach (var r in _right) result += ChildNodeLine(indent + 1) + r.PrettyPrint(indent + 2) + "\n";
         }
 
-        return $"{_left.PrettyPrint()}[{indexExpressions}]";
+        result += BlankLine(indent) + ")";
+        return result;
     }
 }

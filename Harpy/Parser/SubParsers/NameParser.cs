@@ -10,7 +10,7 @@ public class NameParser : IPrefixSubParser
 {
     public Expression Parse(ExpressionParser parser, HarbourSyntaxToken token)
     {
-        return new NameExpression(token.Text);
+        return new NameExpression(token);
     }
 
     public Precedence GetPrecedence()

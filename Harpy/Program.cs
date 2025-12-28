@@ -39,6 +39,6 @@ internal static class Program
         var lexer = new Lexer.Lexer(source);
         var parser = new Parser.Parser(lexer);
 
-        Console.WriteLine(parser.Parse().PrettyPrint());
+        Console.WriteLine(parser.Parse(Path.GetFileName(sourceFile)).PrettyPrint());
     }
 }
