@@ -14,14 +14,16 @@ public class LiteralExpression : Expression
     /// </summary>
     public LiteralExpression(HarbourSyntaxToken literal) : base(false, [])
     {
-        _literalNode = new HarbourSyntaxTokenNode(literal, []);
-        _literalNode.Parent = this;
+        _literalNode = new HarbourSyntaxTokenNode(literal, [])
+        {
+            Parent = this
+        };
         Children.Add(_literalNode);
     }
 
     public override string PrettyPrint(int indent = 0)
     {
-        return NodeLine(indent) + "LiteralExpression(\n" + BlankLine(indent + 1) + "literal\n" +
+        return NodeLine(indent) + "LiteralExpression(\n" + BlankLine(indent + 1) + $"literal(type={_literalNode.token.Literal()})\n" +
                ChildNodeLine(indent + 1) + _literalNode.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 }

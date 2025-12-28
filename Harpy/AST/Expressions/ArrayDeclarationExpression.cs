@@ -23,14 +23,23 @@ public class ArrayDeclarationExpression : Expression
 
     public override string PrettyPrint(int indent = 0)
     {
-        var result = NodeLine(indent) + "ArrayDeclarationExpression(\n";
-        for (var i = 0; i < _elements.Count; i++)
+        var result = NodeLine(indent) + "ArrayDeclarationExpression(";
+
+        if (_elements.Count > 0)
         {
-            result += BlankLine(indent + 1) + $"element {i}\n" + ChildNodeLine(indent + 1);
-            result += $"{_elements[i].PrettyPrint(indent + 2)}\n";
+            result += "\n";
+
+            for (var i = 0; i < _elements.Count; i++)
+            {
+                result += BlankLine(indent + 1) + $"element {i}\n" + ChildNodeLine(indent + 1);
+                result += $"{_elements[i].PrettyPrint(indent + 2)}\n";
+            }
+
+            result += BlankLine(indent);
         }
 
-        result += BlankLine(indent) + ")";
+        result += ")";
+
         return result;
     }
 }

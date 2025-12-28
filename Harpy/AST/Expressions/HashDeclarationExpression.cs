@@ -25,17 +25,27 @@ public class HashDeclarationExpression : Expression
 
     public override string PrettyPrint(int indent = 0)
     {
-        var result = NodeLine(indent) + "HashDeclarationExpression(\n";
-        foreach (var (key, value) in _valuePairs)
+        var result = NodeLine(indent) + "HashDeclarationExpression(";
+
+        if (_valuePairs.Count > 0)
         {
-            result += BlankLine(indent + 1) + "pair\n";
-            result += ChildNodeLine(indent + 1) + BlankLine(indent + 2) + "key\n" + ChildNodeLine(indent + 2) +
-                      key.PrettyPrint(indent + 3) + "\n";
-            result += ChildNodeLine(indent + 1) + BlankLine(indent + 2) + "value\n" + ChildNodeLine(indent + 2) +
-                      value.PrettyPrint(indent + 3) + "\n";
+            var i = 0;
+            result += "\n";
+
+            foreach (var (key, value) in _valuePairs)
+            {
+                result += BlankLine(indent + 1) + $"key {i}\n" + ChildNodeLine(indent + 1) +
+                          key.PrettyPrint(indent + 2) + "\n";
+                result += BlankLine(indent + 1) + $"value {i}\n" + ChildNodeLine(indent + 1) +
+                          value.PrettyPrint(indent + 2) + "\n";
+                i++;
+            }
+
+            result += BlankLine(indent);
         }
 
-        result += BlankLine(indent) + ")";
+        result += ")";
+
         return result;
     }
 }

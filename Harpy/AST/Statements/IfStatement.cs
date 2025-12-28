@@ -66,11 +66,11 @@ public class IfStatement : Statement
             result += BlankLine(indent + 1) + "elseIfConditions\n";
             foreach (var (condition, statements) in _elseIfConditions)
             {
-                result += ChildNodeLine(indent + 1) + "condition\n" + ChildNodeLine(indent + 2) +
+                result += BlankLine(indent + 2) + "condition\n" + ChildNodeLine(indent + 2) +
                           condition.PrettyPrint(indent + 3) + "\n";
                 if (statements.Count > 0)
                 {
-                    result += ChildNodeLine(indent + 1) + "body\n";
+                    result += BlankLine(indent + 2) + "body\n";
                     foreach (var stmt in statements)
                         result += ChildNodeLine(indent + 2) + stmt.PrettyPrint(indent + 3) + "\n";
                 }

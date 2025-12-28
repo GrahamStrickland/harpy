@@ -163,17 +163,16 @@ public class HarbourSyntaxToken : HarbourSyntaxElement
     {
         return Kind switch
         {
-            HarbourSyntaxKind.BOOL_LITERAL => "<bool>",
-            HarbourSyntaxKind.NUM_LITERAL => "<num>",
-            HarbourSyntaxKind.STR_LITERAL => "<str>",
-            HarbourSyntaxKind.NIL => "<nil>",
+            HarbourSyntaxKind.BOOL_LITERAL => "boolean",
+            HarbourSyntaxKind.NUM_LITERAL => "number",
+            HarbourSyntaxKind.STR_LITERAL => "string",
+            HarbourSyntaxKind.NIL => "nil",
             _ => null
         };
     }
 
     public string PrettyPrint(int indent = 0)
     {
-        return new string(' ', (indent > 0 ? indent - 1 : indent) * 4) + "+---Token('" + Text +
-               $"',{Line},[{Start}:{End}))";
+        return new string(' ', (indent > 0 ? indent - 1 : indent) * 4) + $"+---Token({(Text[0] == '\'' ? "\"" + Text + "\"" : "'" + Text + "'")},{Line},[{Start}:{End}))";
     }
 }

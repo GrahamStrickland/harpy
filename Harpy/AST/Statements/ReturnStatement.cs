@@ -17,16 +17,15 @@ public class ReturnStatement : Statement
 
     public override string PrettyPrint(int indent = 0)
     {
-        var result = NodeLine(indent) + "ReturnStatement(\n";
+        var result = NodeLine(indent) + "ReturnStatement(";
         
         if (_returnValue != null)
         {
-            result += BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) + 
-                      _returnValue.PrettyPrint(indent + 2) + "\n";
+            result += "\n" + BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) + 
+                      _returnValue.PrettyPrint(indent + 2) + "\n" + BlankLine(indent);
         }
         
-        result += BlankLine(indent) + ")";
-        return result;
+        return result + ")";
     }
 
     public Expression? ReturnValue()
