@@ -2678,6 +2678,6 @@ public sealed class TestExpressionParser
 
         var result = parser.Parse();
         var actual = result?.PrettyPrint();
-        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(expected.Replace("\r\n", "\n"), actual);
     }
 }
