@@ -213,6 +213,6 @@ public class TestHarpy
         var root = parser.Parse("test");
         var actual = root.PrettyPrint();
 
-        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(expected.Replace("\r\n", "\n"), actual);
     }
 }
