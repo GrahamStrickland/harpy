@@ -173,6 +173,6 @@ public class HarbourSyntaxToken : HarbourSyntaxElement
 
     public string PrettyPrint(int indent = 0)
     {
-        return new string(' ', (indent > 0 ? indent - 1 : indent) * 4) + $"├───Token({(Text[0] == '\'' ? "\"" + Text + "\"" : "'" + Text + "'")},{Line},[{Start}:{End}))";
+        return new string(' ', (indent > 0 ? indent - 1 : indent) * 4) + $"└───Token({(Text[0] == '\'' ? "\"" + Text + "\"" : "'" + Text + "'")},{Line},[{Start}:{End}))";
     }
 }

@@ -13,186 +13,186 @@ public class TestHarpy
             "/*******\n* Function header\n*******/\n\n#include \"header.ch\"\n\nstatic s_a := .f.\n\nfunction a(b)\n\n    local c := b\n\n    if b > 0\n        return 0\n    endif\n\nreturn c\n\nfunction d(e)\n\n    local c := e\n\n    if e > 0\n        return 0\n    endif\n\nreturn 1",
             """
             SourceRoot(name='test')
-            ├───VariableDeclaration(
+            └───VariableDeclaration(
                     scope
                     │
-                    ├───Token('static',7,[1:7))
+                    └───Token('static',7,[1:7))
                     name
                     │
-                    ├───Token('s_a',7,[7:11))
+                    └───Token('s_a',7,[7:11))
                     assignment
                     │
-                    ├───AssignmentExpression(
+                    └───AssignmentExpression(
                             left
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('s_a',7,[7:11))
+                                    └───Token('s_a',7,[7:11))
                                 )
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=boolean)
                                     │
-                                    ├───Token('.f.',7,[14:18))
+                                    └───Token('.f.',7,[14:18))
                                 )
                         )
                 )
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',9,[9:11))
+                    └───Token('a',9,[9:11))
                     parameters
                     │
-                    ├───Token('b',9,[11:13))
+                    └───Token('b',9,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',11,[4:10))
+                            └───Token('local',11,[4:10))
                             name
                             │
-                            ├───Token('c',11,[10:12))
+                            └───Token('c',11,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',11,[10:12))
+                                            └───Token('c',11,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',11,[15:17))
+                                            └───Token('b',11,[15:17))
                                         )
                                 )
                         )
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───OperatorExpression(
+                            └───OperatorExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',13,[7:9))
+                                            └───Token('b',13,[7:9))
                                         )
                                     operator
                                     │
-                                    ├───Token('>',13,[9:11))
+                                    └───Token('>',13,[9:11))
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',13,[11:13))
+                                            └───Token('0',13,[11:13))
                                         )
                                 )
                             ifBody
                             │
-                            ├───ReturnStatement(
+                            └───ReturnStatement(
                                     returnValue
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',14,[15:17))
+                                            └───Token('0',14,[15:17))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',17,[7:9))
+                            └───Token('c',17,[7:9))
                         )
                 )
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('d',19,[9:11))
+                    └───Token('d',19,[9:11))
                     parameters
                     │
-                    ├───Token('e',19,[11:13))
+                    └───Token('e',19,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',21,[4:10))
+                            └───Token('local',21,[4:10))
                             name
                             │
-                            ├───Token('c',21,[10:12))
+                            └───Token('c',21,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',21,[10:12))
+                                            └───Token('c',21,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',21,[15:17))
+                                            └───Token('e',21,[15:17))
                                         )
                                 )
                         )
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───OperatorExpression(
+                            └───OperatorExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',23,[7:9))
+                                            └───Token('e',23,[7:9))
                                         )
                                     operator
                                     │
-                                    ├───Token('>',23,[9:11))
+                                    └───Token('>',23,[9:11))
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',23,[11:13))
+                                            └───Token('0',23,[11:13))
                                         )
                                 )
                             ifBody
                             │
-                            ├───ReturnStatement(
+                            └───ReturnStatement(
                                     returnValue
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',24,[15:17))
+                                            └───Token('0',24,[15:17))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───LiteralExpression(
+                    └───LiteralExpression(
                             literal(type=number)
                             │
-                            ├───Token('1',27,[7:9))
+                            └───Token('1',27,[7:9))
                         )
                 )
 

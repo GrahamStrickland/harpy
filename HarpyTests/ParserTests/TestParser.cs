@@ -13,44 +13,44 @@ public class TestParser
             "function a()\n\n    local c := b\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -60,47 +60,47 @@ public class TestParser
             "function a(b)\n\n    local c := b\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     parameters
                     │
-                    ├───Token('b',1,[11:13))
+                    └───Token('b',1,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -110,51 +110,51 @@ public class TestParser
             "function a(b, c, d)\n\n    local c := b\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     parameters
                     │
-                    ├───Token('b',1,[11:13))
+                    └───Token('b',1,[11:13))
                     │
-                    ├───Token('c',1,[14:16))
+                    └───Token('c',1,[14:16))
                     │
-                    ├───Token('d',1,[17:19))
+                    └───Token('d',1,[17:19))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -164,82 +164,82 @@ public class TestParser
             "function a(b)\n\n    local c := b\n\n    if b > 0\n        return 0\n    endif\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     parameters
                     │
-                    ├───Token('b',1,[11:13))
+                    └───Token('b',1,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───OperatorExpression(
+                            └───OperatorExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',5,[7:9))
+                                            └───Token('b',5,[7:9))
                                         )
                                     operator
                                     │
-                                    ├───Token('>',5,[9:11))
+                                    └───Token('>',5,[9:11))
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',5,[11:13))
+                                            └───Token('0',5,[11:13))
                                         )
                                 )
                             ifBody
                             │
-                            ├───ReturnStatement(
+                            └───ReturnStatement(
                                     returnValue
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',6,[15:17))
+                                            └───Token('0',6,[15:17))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',9,[7:9))
+                            └───Token('c',9,[7:9))
                         )
                 )
 
@@ -249,82 +249,82 @@ public class TestParser
             "function a(b)\n\n    local c := b\n\n    if b > 0\n        return .t.\n    endif\n\nreturn .f.",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     parameters
                     │
-                    ├───Token('b',1,[11:13))
+                    └───Token('b',1,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───OperatorExpression(
+                            └───OperatorExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',5,[7:9))
+                                            └───Token('b',5,[7:9))
                                         )
                                     operator
                                     │
-                                    ├───Token('>',5,[9:11))
+                                    └───Token('>',5,[9:11))
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',5,[11:13))
+                                            └───Token('0',5,[11:13))
                                         )
                                 )
                             ifBody
                             │
-                            ├───ReturnStatement(
+                            └───ReturnStatement(
                                     returnValue
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=boolean)
                                             │
-                                            ├───Token('.t.',6,[15:19))
+                                            └───Token('.t.',6,[15:19))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───LiteralExpression(
+                    └───LiteralExpression(
                             literal(type=boolean)
                             │
-                            ├───Token('.f.',9,[7:11))
+                            └───Token('.f.',9,[7:11))
                         )
                 )
 
@@ -339,35 +339,35 @@ public class TestParser
             "procedure a()\n\n    local c := b\n\nreturn",
             """
             SourceRoot(name='test')
-            ├───ProcedureStatement(
+            └───ProcedureStatement(
                     name
                     │
-                    ├───Token('a',1,[10:12))
+                    └───Token('a',1,[10:12))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
@@ -379,38 +379,38 @@ public class TestParser
             "procedure a(b)\n\n    local c := b\n\nreturn",
             """
             SourceRoot(name='test')
-            ├───ProcedureStatement(
+            └───ProcedureStatement(
                     name
                     │
-                    ├───Token('a',1,[10:12))
+                    └───Token('a',1,[10:12))
                     parameters
                     │
-                    ├───Token('b',1,[12:14))
+                    └───Token('b',1,[12:14))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
@@ -422,42 +422,42 @@ public class TestParser
             "procedure a(b, c, d)\n\n    local c := b\n\nreturn",
             """
             SourceRoot(name='test')
-            ├───ProcedureStatement(
+            └───ProcedureStatement(
                     name
                     │
-                    ├───Token('a',1,[10:12))
+                    └───Token('a',1,[10:12))
                     parameters
                     │
-                    ├───Token('b',1,[12:14))
+                    └───Token('b',1,[12:14))
                     │
-                    ├───Token('c',1,[15:17))
+                    └───Token('c',1,[15:17))
                     │
-                    ├───Token('d',1,[18:20))
+                    └───Token('d',1,[18:20))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
@@ -469,67 +469,67 @@ public class TestParser
             "procedure a(b)\n\n    local c := b\n\n    if b > 0\n        return\n    endif\n\nreturn",
             """
             SourceRoot(name='test')
-            ├───ProcedureStatement(
+            └───ProcedureStatement(
                     name
                     │
-                    ├───Token('a',1,[10:12))
+                    └───Token('a',1,[10:12))
                     parameters
                     │
-                    ├───Token('b',1,[12:14))
+                    └───Token('b',1,[12:14))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───OperatorExpression(
+                            └───OperatorExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',5,[7:9))
+                                            └───Token('b',5,[7:9))
                                         )
                                     operator
                                     │
-                                    ├───Token('>',5,[9:11))
+                                    └───Token('>',5,[9:11))
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',5,[11:13))
+                                            └───Token('0',5,[11:13))
                                         )
                                 )
                             ifBody
                             │
-                            ├───ReturnStatement()
+                            └───ReturnStatement()
                         )
                 )
 
@@ -539,88 +539,88 @@ public class TestParser
             "procedure a(b)\n\n    local c := b\n\n    if b > 0\n        \n        d(b)\nreturn\n    endif\n\nreturn",
             """
             SourceRoot(name='test')
-            ├───ProcedureStatement(
+            └───ProcedureStatement(
                     name
                     │
-                    ├───Token('a',1,[10:12))
+                    └───Token('a',1,[10:12))
                     parameters
                     │
-                    ├───Token('b',1,[12:14))
+                    └───Token('b',1,[12:14))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───OperatorExpression(
+                            └───OperatorExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',5,[7:9))
+                                            └───Token('b',5,[7:9))
                                         )
                                     operator
                                     │
-                                    ├───Token('>',5,[9:11))
+                                    └───Token('>',5,[9:11))
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('0',5,[11:13))
+                                            └───Token('0',5,[11:13))
                                         )
                                 )
                             ifBody
                             │
-                            ├───CallStatement(
+                            └───CallStatement(
                                     callExpression
                                     │
-                                    ├───CallExpression(
+                                    └───CallExpression(
                                             function
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('d',7,[8:10))
+                                                    └───Token('d',7,[8:10))
                                                 )
                                             arguments
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('b',7,[10:12))
+                                                    └───Token('b',7,[10:12))
                                                 )
                                         )
                                 )
                             │
-                            ├───ReturnStatement()
+                            └───ReturnStatement()
                         )
                 )
 
@@ -635,58 +635,58 @@ public class TestParser
             "function a(b)\n\n    local c := b[1]\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     parameters
                     │
-                    ├───Token('b',1,[11:13))
+                    └───Token('b',1,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───IndexExpression(
+                                    └───IndexExpression(
                                             left
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('b',3,[15:17))
+                                                    └───Token('b',3,[15:17))
                                                 )
                                             index
                                             │
-                                            ├───LiteralExpression(
+                                            └───LiteralExpression(
                                                     literal(type=number)
                                                     │
-                                                    ├───Token('1',3,[17:19))
+                                                    └───Token('1',3,[17:19))
                                                 )
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -696,58 +696,58 @@ public class TestParser
             "function a(b)\n\n    local c := b['key']\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     parameters
                     │
-                    ├───Token('b',1,[11:13))
+                    └───Token('b',1,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───IndexExpression(
+                                    └───IndexExpression(
                                             left
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('b',3,[15:17))
+                                                    └───Token('b',3,[15:17))
                                                 )
                                             index
                                             │
-                                            ├───LiteralExpression(
+                                            └───LiteralExpression(
                                                     literal(type=string)
                                                     │
-                                                    ├───Token("'key'",3,[17:23))
+                                                    └───Token("'key'",3,[17:23))
                                                 )
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -765,64 +765,64 @@ public class TestParser
             "function a(b)\n\n    local c := b[1,2]\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     parameters
                     │
-                    ├───Token('b',1,[11:13))
+                    └───Token('b',1,[11:13))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───IndexExpression(
+                                    └───IndexExpression(
                                             left
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('b',3,[15:17))
+                                                    └───Token('b',3,[15:17))
                                                 )
                                             index
                                             │
-                                            ├───LiteralExpression(
+                                            └───LiteralExpression(
                                                     literal(type=number)
                                                     │
-                                                    ├───Token('1',3,[17:19))
+                                                    └───Token('1',3,[17:19))
                                                 )
                                             │
-                                            ├───LiteralExpression(
+                                            └───LiteralExpression(
                                                     literal(type=number)
                                                     │
-                                                    ├───Token('2',3,[19:21))
+                                                    └───Token('2',3,[19:21))
                                                 )
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -837,29 +837,29 @@ public class TestParser
             "static a := b",
             """
             SourceRoot(name='test')
-            ├───VariableDeclaration(
+            └───VariableDeclaration(
                     scope
                     │
-                    ├───Token('static',1,[1:7))
+                    └───Token('static',1,[1:7))
                     name
                     │
-                    ├───Token('a',1,[7:9))
+                    └───Token('a',1,[7:9))
                     assignment
                     │
-                    ├───AssignmentExpression(
+                    └───AssignmentExpression(
                             left
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[7:9))
+                                    └───Token('a',1,[7:9))
                                 )
                             right
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[12:14))
+                                    └───Token('b',1,[12:14))
                                 )
                         )
                 )
@@ -870,29 +870,29 @@ public class TestParser
             "static a := nil",
             """
             SourceRoot(name='test')
-            ├───VariableDeclaration(
+            └───VariableDeclaration(
                     scope
                     │
-                    ├───Token('static',1,[1:7))
+                    └───Token('static',1,[1:7))
                     name
                     │
-                    ├───Token('a',1,[7:9))
+                    └───Token('a',1,[7:9))
                     assignment
                     │
-                    ├───AssignmentExpression(
+                    └───AssignmentExpression(
                             left
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[7:9))
+                                    └───Token('a',1,[7:9))
                                 )
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=nil)
                                     │
-                                    ├───Token('nil',1,[12:16))
+                                    └───Token('nil',1,[12:16))
                                 )
                         )
                 )
@@ -903,44 +903,44 @@ public class TestParser
             "static function a()\n\n    local c := b\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(static
+            └───FunctionStatement(static
                     name
                     │
-                    ├───Token('a',1,[16:18))
+                    └───Token('a',1,[16:18))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('local',3,[4:10))
+                            └───Token('local',3,[4:10))
                             name
                             │
-                            ├───Token('c',3,[10:12))
+                            └───Token('c',3,[10:12))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[10:12))
+                                            └───Token('c',3,[10:12))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[15:17))
+                                            └───Token('b',3,[15:17))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -950,44 +950,44 @@ public class TestParser
             "function a()\n\n    static c := b\n\nreturn c",
             """
             SourceRoot(name='test')
-            ├───FunctionStatement(
+            └───FunctionStatement(
                     name
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     body
                     │
-                    ├───VariableDeclaration(
+                    └───VariableDeclaration(
                             scope
                             │
-                            ├───Token('static',3,[4:11))
+                            └───Token('static',3,[4:11))
                             name
                             │
-                            ├───Token('c',3,[11:13))
+                            └───Token('c',3,[11:13))
                             assignment
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[11:13))
+                                            └───Token('c',3,[11:13))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[16:18))
+                                            └───Token('b',3,[16:18))
                                         )
                                 )
                         )
                     returnValue
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('c',5,[7:9))
+                            └───Token('c',5,[7:9))
                         )
                 )
 
@@ -1002,49 +1002,49 @@ public class TestParser
             "if a(b, c, d)\n\n    e()\n\nendif",
             """
             SourceRoot(name='test')
-            ├───IfStatement(
+            └───IfStatement(
                     ifCondition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[3:5))
+                                    └───Token('a',1,[3:5))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[5:7))
+                                    └───Token('b',1,[5:7))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[8:10))
+                                    └───Token('c',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[11:13))
+                                    └───Token('d',1,[11:13))
                                 )
                         )
                     ifBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                 )
                         )
@@ -1056,77 +1056,77 @@ public class TestParser
             "if !a(b, c, d) .and. !e\n\n    f()\n\nendif",
             """
             SourceRoot(name='test')
-            ├───IfStatement(
+            └───IfStatement(
                     ifCondition
                     │
-                    ├───OperatorExpression(
+                    └───OperatorExpression(
                             left
                             │
-                            ├───PrefixExpression(
+                            └───PrefixExpression(
                                     operator
                                     │
-                                    ├───Token('!',1,[3:5))
+                                    └───Token('!',1,[3:5))
                                     right
                                     │
-                                    ├───CallExpression(
+                                    └───CallExpression(
                                             function
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('a',1,[4:6))
+                                                    └───Token('a',1,[4:6))
                                                 )
                                             arguments
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('b',1,[6:8))
+                                                    └───Token('b',1,[6:8))
                                                 )
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('c',1,[9:11))
+                                                    └───Token('c',1,[9:11))
                                                 )
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('d',1,[12:14))
+                                                    └───Token('d',1,[12:14))
                                                 )
                                         )
                                 )
                             operator
                             │
-                            ├───Token('.and.',1,[15:21))
+                            └───Token('.and.',1,[15:21))
                             right
                             │
-                            ├───PrefixExpression(
+                            └───PrefixExpression(
                                     operator
                                     │
-                                    ├───Token('!',1,[21:23))
+                                    └───Token('!',1,[21:23))
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',1,[22:24))
+                                            └───Token('e',1,[22:24))
                                         )
                                 )
                         )
                     ifBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('f',3,[4:6))
+                                            └───Token('f',3,[4:6))
                                         )
                                 )
                         )
@@ -1138,64 +1138,64 @@ public class TestParser
             "if a(b, c, d)\n\n    e()\n\nelse\n\n    f()\n\nendif",
             """
             SourceRoot(name='test')
-            ├───IfStatement(
+            └───IfStatement(
                     ifCondition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[3:5))
+                                    └───Token('a',1,[3:5))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[5:7))
+                                    └───Token('b',1,[5:7))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[8:10))
+                                    └───Token('c',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[11:13))
+                                    └───Token('d',1,[11:13))
                                 )
                         )
                     ifBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                 )
                         )
                     elseBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('f',7,[4:6))
+                                            └───Token('f',7,[4:6))
                                         )
                                 )
                         )
@@ -1207,83 +1207,83 @@ public class TestParser
             "if a(b, c, d)\n\n    e()\n\nelseif f(b)\n\n    g()\n\n\n\nendif",
             """
             SourceRoot(name='test')
-            ├───IfStatement(
+            └───IfStatement(
                     ifCondition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[3:5))
+                                    └───Token('a',1,[3:5))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[5:7))
+                                    └───Token('b',1,[5:7))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[8:10))
+                                    └───Token('c',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[11:13))
+                                    └───Token('d',1,[11:13))
                                 )
                         )
                     ifBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                 )
                         )
                     elseIfConditions
                         condition
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('f',5,[7:9))
+                                        └───Token('f',5,[7:9))
                                     )
                                 arguments
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',5,[9:11))
+                                        └───Token('b',5,[9:11))
                                     )
                             )
                         body
                         │
-                        ├───CallStatement(
+                        └───CallStatement(
                                 callExpression
                                 │
-                                ├───CallExpression(
+                                └───CallExpression(
                                         function
                                         │
-                                        ├───NameExpression(
+                                        └───NameExpression(
                                                 name
                                                 │
-                                                ├───Token('g',7,[4:6))
+                                                └───Token('g',7,[4:6))
                                             )
                                     )
                             )
@@ -1295,98 +1295,98 @@ public class TestParser
             "if a(b, /*@*/c, d)\n\n    e()\n\nelseif f(b)\n\n    g()\n\nelse\n\n    h()\n\nendif",
             """
             SourceRoot(name='test')
-            ├───IfStatement(
+            └───IfStatement(
                     ifCondition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[3:5))
+                                    └───Token('a',1,[3:5))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[5:7))
+                                    └───Token('b',1,[5:7))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[13:15))
+                                    └───Token('c',1,[13:15))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[16:18))
+                                    └───Token('d',1,[16:18))
                                 )
                         )
                     ifBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                 )
                         )
                     elseIfConditions
                         condition
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('f',5,[7:9))
+                                        └───Token('f',5,[7:9))
                                     )
                                 arguments
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',5,[9:11))
+                                        └───Token('b',5,[9:11))
                                     )
                             )
                         body
                         │
-                        ├───CallStatement(
+                        └───CallStatement(
                                 callExpression
                                 │
-                                ├───CallExpression(
+                                └───CallExpression(
                                         function
                                         │
-                                        ├───NameExpression(
+                                        └───NameExpression(
                                                 name
                                                 │
-                                                ├───Token('g',7,[4:6))
+                                                └───Token('g',7,[4:6))
                                             )
                                     )
                             )
                     elseBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('h',11,[4:6))
+                                            └───Token('h',11,[4:6))
                                         )
                                 )
                         )
@@ -1403,49 +1403,49 @@ public class TestParser
             "while a(b, c, d)\n\n    e()\n\nend",
             """
             SourceRoot(name='test')
-            ├───WhileLoopStatement(
+            └───WhileLoopStatement(
                     condition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[6:8))
+                                    └───Token('a',1,[6:8))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[8:10))
+                                    └───Token('b',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[11:13))
+                                    └───Token('c',1,[11:13))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[14:16))
+                                    └───Token('d',1,[14:16))
                                 )
                         )
                     body
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                 )
                         )
@@ -1457,63 +1457,63 @@ public class TestParser
             "while a(b, c, d)\n\n    e()\n    f()\n\nend",
             """
             SourceRoot(name='test')
-            ├───WhileLoopStatement(
+            └───WhileLoopStatement(
                     condition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[6:8))
+                                    └───Token('a',1,[6:8))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[8:10))
+                                    └───Token('b',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[11:13))
+                                    └───Token('c',1,[11:13))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[14:16))
+                                    └───Token('d',1,[14:16))
                                 )
                         )
                     body
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                 )
                         )
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('f',4,[4:6))
+                                            └───Token('f',4,[4:6))
                                         )
                                 )
                         )
@@ -1525,63 +1525,63 @@ public class TestParser
             "while a(b, c, d)\n\n    e()\n    f()\n\nend while",
             """
             SourceRoot(name='test')
-            ├───WhileLoopStatement(
+            └───WhileLoopStatement(
                     condition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[6:8))
+                                    └───Token('a',1,[6:8))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[8:10))
+                                    └───Token('b',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[11:13))
+                                    └───Token('c',1,[11:13))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[14:16))
+                                    └───Token('d',1,[14:16))
                                 )
                         )
                     body
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                 )
                         )
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('f',4,[4:6))
+                                            └───Token('f',4,[4:6))
                                         )
                                 )
                         )
@@ -1593,63 +1593,63 @@ public class TestParser
             "  // Be careful with this\nwhile a(b, c, d)\n\n    e()\n    f()\n\nendwhile",
             """
             SourceRoot(name='test')
-            ├───WhileLoopStatement(
+            └───WhileLoopStatement(
                     condition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',2,[6:8))
+                                    └───Token('a',2,[6:8))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',2,[8:10))
+                                    └───Token('b',2,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',2,[11:13))
+                                    └───Token('c',2,[11:13))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',2,[14:16))
+                                    └───Token('d',2,[14:16))
                                 )
                         )
                     body
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',4,[4:6))
+                                            └───Token('e',4,[4:6))
                                         )
                                 )
                         )
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('f',5,[4:6))
+                                            └───Token('f',5,[4:6))
                                         )
                                 )
                         )
@@ -1666,51 +1666,51 @@ public class TestParser
             "for i := 1 to 10\n\n    a(i)\n\nnext",
             """
             SourceRoot(name='test')
-            ├───ForLoop(
+            └───ForLoop(
                     initializer
                     │
-                    ├───AssignmentExpression(
+                    └───AssignmentExpression(
                             left
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('i',1,[4:6))
+                                    └───Token('i',1,[4:6))
                                 )
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=number)
                                     │
-                                    ├───Token('1',1,[9:11))
+                                    └───Token('1',1,[9:11))
                                 )
                         )
                     bound
                     │
-                    ├───LiteralExpression(
+                    └───LiteralExpression(
                             literal(type=number)
                             │
-                            ├───Token('10',1,[14:17))
+                            └───Token('10',1,[14:17))
                         )
                     body
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',3,[4:6))
+                                            └───Token('a',3,[4:6))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('i',3,[6:8))
+                                            └───Token('i',3,[6:8))
                                         )
                                 )
                         )
@@ -1722,65 +1722,65 @@ public class TestParser
             "for i := 10 to 1 step -1\n\n    a(i)\n\nnext",
             """
             SourceRoot(name='test')
-            ├───ForLoop(
+            └───ForLoop(
                     initializer
                     │
-                    ├───AssignmentExpression(
+                    └───AssignmentExpression(
                             left
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('i',1,[4:6))
+                                    └───Token('i',1,[4:6))
                                 )
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=number)
                                     │
-                                    ├───Token('10',1,[9:12))
+                                    └───Token('10',1,[9:12))
                                 )
                         )
                     bound
                     │
-                    ├───LiteralExpression(
+                    └───LiteralExpression(
                             literal(type=number)
                             │
-                            ├───Token('1',1,[15:17))
+                            └───Token('1',1,[15:17))
                         )
                     step
                     │
-                    ├───PrefixExpression(
+                    └───PrefixExpression(
                             operator
                             │
-                            ├───Token('-',1,[22:24))
+                            └───Token('-',1,[22:24))
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=number)
                                     │
-                                    ├───Token('1',1,[23:25))
+                                    └───Token('1',1,[23:25))
                                 )
                         )
                     body
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',3,[4:6))
+                                            └───Token('a',3,[4:6))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('i',3,[6:8))
+                                            └───Token('i',3,[6:8))
                                         )
                                 )
                         )
@@ -1792,36 +1792,36 @@ public class TestParser
             "for each a in b\n\n    c(a)\n\nnext",
             """
             SourceRoot(name='test')
-            ├───ForEachLoopStatement(
+            └───ForEachLoopStatement(
                     variable
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     collection
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('b',1,[14:16))
+                            └───Token('b',1,[14:16))
                         )
                     body
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[4:6))
+                                            └───Token('c',3,[4:6))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',3,[6:8))
+                                            └───Token('a',3,[6:8))
                                         )
                                 )
                         )
@@ -1833,92 +1833,92 @@ public class TestParser
             "for i := 10 to 1 step -1\n\n    if c(i)\n\n\n\n        d(i)\n\n    else\n\n        loop\n\n    endif\n\nnext",
             """
             SourceRoot(name='test')
-            ├───ForLoop(
+            └───ForLoop(
                     initializer
                     │
-                    ├───AssignmentExpression(
+                    └───AssignmentExpression(
                             left
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('i',1,[4:6))
+                                    └───Token('i',1,[4:6))
                                 )
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=number)
                                     │
-                                    ├───Token('10',1,[9:12))
+                                    └───Token('10',1,[9:12))
                                 )
                         )
                     bound
                     │
-                    ├───LiteralExpression(
+                    └───LiteralExpression(
                             literal(type=number)
                             │
-                            ├───Token('1',1,[15:17))
+                            └───Token('1',1,[15:17))
                         )
                     step
                     │
-                    ├───PrefixExpression(
+                    └───PrefixExpression(
                             operator
                             │
-                            ├───Token('-',1,[22:24))
+                            └───Token('-',1,[22:24))
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=number)
                                     │
-                                    ├───Token('1',1,[23:25))
+                                    └───Token('1',1,[23:25))
                                 )
                         )
                     body
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[7:9))
+                                            └───Token('c',3,[7:9))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('i',3,[9:11))
+                                            └───Token('i',3,[9:11))
                                         )
                                 )
                             ifBody
                             │
-                            ├───CallStatement(
+                            └───CallStatement(
                                     callExpression
                                     │
-                                    ├───CallExpression(
+                                    └───CallExpression(
                                             function
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('d',7,[8:10))
+                                                    └───Token('d',7,[8:10))
                                                 )
                                             arguments
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('i',7,[10:12))
+                                                    └───Token('i',7,[10:12))
                                                 )
                                         )
                                 )
                             elseBody
                             │
-                            ├───LoopStatement
+                            └───LoopStatement
                         )
                 )
 
@@ -1928,63 +1928,63 @@ public class TestParser
             "for each a in b\n\n    if c(a)\n\n\n\n        d(a)\n\n    else\n\n        loop\n\n    endif\n\nnext",
             """
             SourceRoot(name='test')
-            ├───ForEachLoopStatement(
+            └───ForEachLoopStatement(
                     variable
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     collection
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('b',1,[14:16))
+                            └───Token('b',1,[14:16))
                         )
                     body
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[7:9))
+                                            └───Token('c',3,[7:9))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',3,[9:11))
+                                            └───Token('a',3,[9:11))
                                         )
                                 )
                             ifBody
                             │
-                            ├───CallStatement(
+                            └───CallStatement(
                                     callExpression
                                     │
-                                    ├───CallExpression(
+                                    └───CallExpression(
                                             function
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('d',7,[8:10))
+                                                    └───Token('d',7,[8:10))
                                                 )
                                             arguments
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('a',7,[10:12))
+                                                    └───Token('a',7,[10:12))
                                                 )
                                         )
                                 )
                             elseBody
                             │
-                            ├───LoopStatement
+                            └───LoopStatement
                         )
                 )
 
@@ -1994,92 +1994,92 @@ public class TestParser
             "for i := 10 to 1 step -1\n\n    if c(i)\n\n\n\n        d(i)\n\n    else\n\n        exit\n\n    endif\n\nnext",
             """
             SourceRoot(name='test')
-            ├───ForLoop(
+            └───ForLoop(
                     initializer
                     │
-                    ├───AssignmentExpression(
+                    └───AssignmentExpression(
                             left
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('i',1,[4:6))
+                                    └───Token('i',1,[4:6))
                                 )
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=number)
                                     │
-                                    ├───Token('10',1,[9:12))
+                                    └───Token('10',1,[9:12))
                                 )
                         )
                     bound
                     │
-                    ├───LiteralExpression(
+                    └───LiteralExpression(
                             literal(type=number)
                             │
-                            ├───Token('1',1,[15:17))
+                            └───Token('1',1,[15:17))
                         )
                     step
                     │
-                    ├───PrefixExpression(
+                    └───PrefixExpression(
                             operator
                             │
-                            ├───Token('-',1,[22:24))
+                            └───Token('-',1,[22:24))
                             right
                             │
-                            ├───LiteralExpression(
+                            └───LiteralExpression(
                                     literal(type=number)
                                     │
-                                    ├───Token('1',1,[23:25))
+                                    └───Token('1',1,[23:25))
                                 )
                         )
                     body
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[7:9))
+                                            └───Token('c',3,[7:9))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('i',3,[9:11))
+                                            └───Token('i',3,[9:11))
                                         )
                                 )
                             ifBody
                             │
-                            ├───CallStatement(
+                            └───CallStatement(
                                     callExpression
                                     │
-                                    ├───CallExpression(
+                                    └───CallExpression(
                                             function
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('d',7,[8:10))
+                                                    └───Token('d',7,[8:10))
                                                 )
                                             arguments
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('i',7,[10:12))
+                                                    └───Token('i',7,[10:12))
                                                 )
                                         )
                                 )
                             elseBody
                             │
-                            ├───ExitStatement
+                            └───ExitStatement
                         )
                 )
 
@@ -2089,63 +2089,63 @@ public class TestParser
             "for each a in b\n\n    if c(a)\n\n\n\n        d(a)\n\n    else\n\n        exit\n\n    endif\n\nnext",
             """
             SourceRoot(name='test')
-            ├───ForEachLoopStatement(
+            └───ForEachLoopStatement(
                     variable
                     │
-                    ├───Token('a',1,[9:11))
+                    └───Token('a',1,[9:11))
                     collection
                     │
-                    ├───NameExpression(
+                    └───NameExpression(
                             name
                             │
-                            ├───Token('b',1,[14:16))
+                            └───Token('b',1,[14:16))
                         )
                     body
                     │
-                    ├───IfStatement(
+                    └───IfStatement(
                             ifCondition
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',3,[7:9))
+                                            └───Token('c',3,[7:9))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',3,[9:11))
+                                            └───Token('a',3,[9:11))
                                         )
                                 )
                             ifBody
                             │
-                            ├───CallStatement(
+                            └───CallStatement(
                                     callExpression
                                     │
-                                    ├───CallExpression(
+                                    └───CallExpression(
                                             function
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('d',7,[8:10))
+                                                    └───Token('d',7,[8:10))
                                                 )
                                             arguments
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('a',7,[10:12))
+                                                    └───Token('a',7,[10:12))
                                                 )
                                         )
                                 )
                             elseBody
                             │
-                            ├───ExitStatement
+                            └───ExitStatement
                         )
                 )
 
@@ -2160,34 +2160,34 @@ public class TestParser
             "begin sequence\n\n    a()\n\nrecover\n\n    c()\n\nend sequence",
             """
             SourceRoot(name='test')
-            ├───BeginSequenceStatement(
+            └───BeginSequenceStatement(
                     beginSequenceBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',3,[4:6))
+                                            └───Token('a',3,[4:6))
                                         )
                                 )
                         )
                     recoverBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',7,[4:6))
+                                            └───Token('c',7,[4:6))
                                         )
                                 )
                         )
@@ -2199,44 +2199,44 @@ public class TestParser
             "begin sequence\n\n    a()\n\nrecover using b\n\n    c(b)\n\nend sequence",
             """
             SourceRoot(name='test')
-            ├───BeginSequenceStatement(
+            └───BeginSequenceStatement(
                     beginSequenceBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',3,[4:6))
+                                            └───Token('a',3,[4:6))
                                         )
                                 )
                         )
                     recoverBody
                         exception
                         │
-                        ├───Token('b',5,[14:16))
+                        └───Token('b',5,[14:16))
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',7,[4:6))
+                                            └───Token('c',7,[4:6))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',7,[6:8))
+                                            └───Token('b',7,[6:8))
                                         )
                                 )
                         )
@@ -2248,73 +2248,73 @@ public class TestParser
             "begin sequence with { |e| a(e) }\n\n    b()\n\nrecover using c\n\n    d(c)\n\nendsequence",
             """
             SourceRoot(name='test')
-            ├───BeginSequenceStatement(
+            └───BeginSequenceStatement(
                     errorHandler
                     │
-                    ├───CodeblockExpression(
+                    └───CodeblockExpression(
                             parameters
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('e',1,[23:25))
+                                    └───Token('e',1,[23:25))
                                 )
                             expressions
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',1,[26:28))
+                                            └───Token('a',1,[26:28))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',1,[28:30))
+                                            └───Token('e',1,[28:30))
                                         )
                                 )
                         )
                     beginSequenceBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[4:6))
+                                            └───Token('b',3,[4:6))
                                         )
                                 )
                         )
                     recoverBody
                         exception
                         │
-                        ├───Token('c',5,[14:16))
+                        └───Token('c',5,[14:16))
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('d',7,[4:6))
+                                            └───Token('d',7,[4:6))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',7,[6:8))
+                                            └───Token('c',7,[6:8))
                                         )
                                 )
                         )
@@ -2326,88 +2326,88 @@ public class TestParser
             "begin sequence with { |e| a(e) }\n\n    b()\n\nrecover using c\n\n    d(c)\n\nalways\n    e()\n\nend",
             """
             SourceRoot(name='test')
-            ├───BeginSequenceStatement(
+            └───BeginSequenceStatement(
                     errorHandler
                     │
-                    ├───CodeblockExpression(
+                    └───CodeblockExpression(
                             parameters
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('e',1,[23:25))
+                                    └───Token('e',1,[23:25))
                                 )
                             expressions
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',1,[26:28))
+                                            └───Token('a',1,[26:28))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',1,[28:30))
+                                            └───Token('e',1,[28:30))
                                         )
                                 )
                         )
                     beginSequenceBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',3,[4:6))
+                                            └───Token('b',3,[4:6))
                                         )
                                 )
                         )
                     recoverBody
                         exception
                         │
-                        ├───Token('c',5,[14:16))
+                        └───Token('c',5,[14:16))
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('d',7,[4:6))
+                                            └───Token('d',7,[4:6))
                                         )
                                     arguments
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',7,[6:8))
+                                            └───Token('c',7,[6:8))
                                         )
                                 )
                         )
                     alwaysBody
                     │
-                    ├───CallStatement(
+                    └───CallStatement(
                             callExpression
                             │
-                            ├───CallExpression(
+                            └───CallExpression(
                                     function
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',10,[4:6))
+                                            └───Token('e',10,[4:6))
                                         )
                                 )
                         )
@@ -2424,34 +2424,34 @@ public class TestParser
             "a:b(c)",
             """
             SourceRoot(name='test')
-            ├───CallStatement(
+            └───CallStatement(
                     callExpression
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───ObjectAccessExpression(
+                            └───ObjectAccessExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('a',1,[1:2))
+                                            └───Token('a',1,[1:2))
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('b',1,[2:4))
+                                            └───Token('b',1,[2:4))
                                         )
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[4:6))
+                                    └───Token('c',1,[4:6))
                                 )
                         )
                 )
@@ -2462,45 +2462,45 @@ public class TestParser
             "a:b:c(d)",
             """
             SourceRoot(name='test')
-            ├───CallStatement(
+            └───CallStatement(
                     callExpression
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───ObjectAccessExpression(
+                            └───ObjectAccessExpression(
                                     left
                                     │
-                                    ├───ObjectAccessExpression(
+                                    └───ObjectAccessExpression(
                                             left
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('a',1,[1:2))
+                                                    └───Token('a',1,[1:2))
                                                 )
                                             right
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('b',1,[2:4))
+                                                    └───Token('b',1,[2:4))
                                                 )
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',1,[4:6))
+                                            └───Token('c',1,[4:6))
                                         )
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[6:8))
+                                    └───Token('d',1,[6:8))
                                 )
                         )
                 )
@@ -2511,49 +2511,49 @@ public class TestParser
             "a():b:c(d)",
             """
             SourceRoot(name='test')
-            ├───CallStatement(
+            └───CallStatement(
                     callExpression
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───ObjectAccessExpression(
+                            └───ObjectAccessExpression(
                                     left
                                     │
-                                    ├───ObjectAccessExpression(
+                                    └───ObjectAccessExpression(
                                             left
                                             │
-                                            ├───CallExpression(
+                                            └───CallExpression(
                                                     function
                                                     │
-                                                    ├───NameExpression(
+                                                    └───NameExpression(
                                                             name
                                                             │
-                                                            ├───Token('a',1,[1:2))
+                                                            └───Token('a',1,[1:2))
                                                         )
                                                 )
                                             right
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('b',1,[4:6))
+                                                    └───Token('b',1,[4:6))
                                                 )
                                         )
                                     right
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('c',1,[6:8))
+                                            └───Token('c',1,[6:8))
                                         )
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[8:10))
+                                    └───Token('d',1,[8:10))
                                 )
                         )
                 )
@@ -2569,56 +2569,56 @@ public class TestParser
             "if a(b, c, d)\n\n    e := 1\n\nendif",
             """
             SourceRoot(name='test')
-            ├───IfStatement(
+            └───IfStatement(
                     ifCondition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[3:5))
+                                    └───Token('a',1,[3:5))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[5:7))
+                                    └───Token('b',1,[5:7))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[8:10))
+                                    └───Token('c',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[11:13))
+                                    └───Token('d',1,[11:13))
                                 )
                         )
                     ifBody
                     │
-                    ├───AssignmentStatement(
+                    └───AssignmentStatement(
                             assignmentExpression
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───NameExpression(
+                                    └───NameExpression(
                                             name
                                             │
-                                            ├───Token('e',3,[4:6))
+                                            └───Token('e',3,[4:6))
                                         )
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('1',3,[9:11))
+                                            └───Token('1',3,[9:11))
                                         )
                                 )
                         )
@@ -2630,67 +2630,67 @@ public class TestParser
             "if a(b, c, d)\n\n    e:f := 1\n\nendif",
             """
             SourceRoot(name='test')
-            ├───IfStatement(
+            └───IfStatement(
                     ifCondition
                     │
-                    ├───CallExpression(
+                    └───CallExpression(
                             function
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('a',1,[3:5))
+                                    └───Token('a',1,[3:5))
                                 )
                             arguments
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('b',1,[5:7))
+                                    └───Token('b',1,[5:7))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('c',1,[8:10))
+                                    └───Token('c',1,[8:10))
                                 )
                             │
-                            ├───NameExpression(
+                            └───NameExpression(
                                     name
                                     │
-                                    ├───Token('d',1,[11:13))
+                                    └───Token('d',1,[11:13))
                                 )
                         )
                     ifBody
                     │
-                    ├───AssignmentStatement(
+                    └───AssignmentStatement(
                             assignmentExpression
                             │
-                            ├───AssignmentExpression(
+                            └───AssignmentExpression(
                                     left
                                     │
-                                    ├───ObjectAccessExpression(
+                                    └───ObjectAccessExpression(
                                             left
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('e',3,[4:6))
+                                                    └───Token('e',3,[4:6))
                                                 )
                                             right
                                             │
-                                            ├───NameExpression(
+                                            └───NameExpression(
                                                     name
                                                     │
-                                                    ├───Token('f',3,[6:8))
+                                                    └───Token('f',3,[6:8))
                                                 )
                                         )
                                     right
                                     │
-                                    ├───LiteralExpression(
+                                    └───LiteralExpression(
                                             literal(type=number)
                                             │
-                                            ├───Token('1',3,[11:13))
+                                            └───Token('1',3,[11:13))
                                         )
                                 )
                         )

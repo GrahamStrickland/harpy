@@ -15,10 +15,10 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
             )
             """
@@ -29,17 +29,17 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 arguments
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[2:4))
+                        └───Token('b',1,[2:4))
                     )
             )
             """
@@ -50,23 +50,23 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 arguments
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[2:4))
+                        └───Token('b',1,[2:4))
                     )
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[5:7))
+                        └───Token('c',1,[5:7))
                     )
             )
             """
@@ -77,28 +77,28 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         arguments
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
                 arguments
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[5:7))
+                        └───Token('c',1,[5:7))
                     )
             )
             """
@@ -109,41 +109,41 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         arguments
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
                 operator
                 │
-                ├───Token('+',1,[5:7))
+                └───Token('+',1,[5:7))
                 right
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[7:9))
+                                └───Token('c',1,[7:9))
                             )
                         arguments
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('d',1,[9:11))
+                                └───Token('d',1,[9:11))
                             )
                     )
             )
@@ -155,54 +155,54 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         arguments
                         │
-                        ├───PrefixExpression(
+                        └───PrefixExpression(
                                 operator
                                 │
-                                ├───Token('@',1,[2:4))
+                                └───Token('@',1,[2:4))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[3:5))
+                                        └───Token('b',1,[3:5))
                                     )
                             )
                     )
                 operator
                 │
-                ├───Token('+',1,[6:8))
+                └───Token('+',1,[6:8))
                 right
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[8:10))
+                                └───Token('c',1,[8:10))
                             )
                         arguments
                         │
-                        ├───PrefixExpression(
+                        └───PrefixExpression(
                                 operator
                                 │
-                                ├───Token('@',1,[10:12))
+                                └───Token('@',1,[10:12))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('d',1,[11:13))
+                                        └───Token('d',1,[11:13))
                                     )
                             )
                     )
@@ -220,13 +220,13 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('++',1,[1:3))
+                └───Token('++',1,[1:3))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[2:4))
+                        └───Token('a',1,[2:4))
                     )
             )
             """
@@ -237,19 +237,19 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('++',1,[1:3))
+                └───Token('++',1,[1:3))
                 right
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('--',1,[2:5))
+                        └───Token('--',1,[2:5))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[4:6))
+                                └───Token('a',1,[4:6))
                             )
                     )
             )
@@ -261,20 +261,20 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('++',1,[1:3))
+                └───Token('++',1,[1:3))
                 right
                 │
-                ├───PostfixExpression(
+                └───PostfixExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[2:4))
+                                └───Token('a',1,[2:4))
                             )
                         operator
                         │
-                        ├───Token('--',1,[3:6))
+                        └───Token('--',1,[3:6))
                     )
             )
             """
@@ -285,25 +285,25 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('!',1,[1:2))
+                └───Token('!',1,[1:2))
                 right
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('-',1,[1:3))
+                        └───Token('-',1,[1:3))
                         right
                         │
-                        ├───PrefixExpression(
+                        └───PrefixExpression(
                                 operator
                                 │
-                                ├───Token('+',1,[2:4))
+                                └───Token('+',1,[2:4))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[3:5))
+                                        └───Token('a',1,[3:5))
                                     )
                             )
                     )
@@ -316,25 +316,25 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('!',1,[1:2))
+                └───Token('!',1,[1:2))
                 right
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('-',1,[1:3))
+                        └───Token('-',1,[1:3))
                         right
                         │
-                        ├───PrefixExpression(
+                        └───PrefixExpression(
                                 operator
                                 │
-                                ├───Token('++',1,[2:5))
+                                └───Token('++',1,[2:5))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[4:6))
+                                        └───Token('a',1,[4:6))
                                     )
                             )
                     )
@@ -347,26 +347,26 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('!',1,[1:2))
+                └───Token('!',1,[1:2))
                 right
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('-',1,[1:3))
+                        └───Token('-',1,[1:3))
                         right
                         │
-                        ├───PostfixExpression(
+                        └───PostfixExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[2:4))
+                                        └───Token('a',1,[2:4))
                                     )
                                 operator
                                 │
-                                ├───Token('++',1,[3:6))
+                                └───Token('++',1,[3:6))
                             )
                     )
             )
@@ -378,25 +378,25 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('!',1,[1:2))
+                └───Token('!',1,[1:2))
                 right
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('!',1,[1:3))
+                        └───Token('!',1,[1:3))
                         right
                         │
-                        ├───PrefixExpression(
+                        └───PrefixExpression(
                                 operator
                                 │
-                                ├───Token('!',1,[2:4))
+                                └───Token('!',1,[2:4))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[3:5))
+                                        └───Token('a',1,[3:5))
                                     )
                             )
                     )
@@ -409,13 +409,13 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('@',1,[1:2))
+                └───Token('@',1,[1:2))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:3))
+                        └───Token('a',1,[1:3))
                     )
             )
             """
@@ -431,27 +431,27 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('-',1,[1:2))
+                        └───Token('-',1,[1:2))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:3))
+                                └───Token('a',1,[1:3))
                             )
                     )
                 operator
                 │
-                ├───Token('*',1,[3:5))
+                └───Token('*',1,[3:5))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[5:7))
+                        └───Token('b',1,[5:7))
                     )
             )
             """
@@ -462,27 +462,27 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('-',1,[1:2))
+                        └───Token('-',1,[1:2))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:3))
+                                └───Token('a',1,[1:3))
                             )
                     )
                 operator
                 │
-                ├───Token('%',1,[3:5))
+                └───Token('%',1,[3:5))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[5:7))
+                        └───Token('b',1,[5:7))
                     )
             )
             """
@@ -493,27 +493,27 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('!',1,[1:2))
+                        └───Token('!',1,[1:2))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:3))
+                                └───Token('a',1,[1:3))
                             )
                     )
                 operator
                 │
-                ├───Token('+',1,[3:5))
+                └───Token('+',1,[3:5))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[5:7))
+                        └───Token('b',1,[5:7))
                     )
             )
             """
@@ -524,27 +524,27 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('!',1,[1:2))
+                        └───Token('!',1,[1:2))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:3))
+                                └───Token('a',1,[1:3))
                             )
                     )
                 operator
                 │
-                ├───Token('^',1,[3:5))
+                └───Token('^',1,[3:5))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[5:7))
+                        └───Token('b',1,[5:7))
                     )
             )
             """
@@ -555,13 +555,13 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('-',1,[1:2))
+                └───Token('-',1,[1:2))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:3))
+                        └───Token('a',1,[1:3))
                     )
             )
             """
@@ -572,13 +572,13 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('!',1,[1:2))
+                └───Token('!',1,[1:2))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:3))
+                        └───Token('a',1,[1:3))
                     )
             )
             """
@@ -594,85 +594,85 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───OperatorExpression(
+                        └───OperatorExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[5:7))
+                                        └───Token('b',1,[5:7))
                                     )
                                 operator
                                 │
-                                ├───Token('+',1,[7:9))
+                                └───Token('+',1,[7:9))
                                 right
                                 │
-                                ├───OperatorExpression(
+                                └───OperatorExpression(
                                         left
                                         │
-                                        ├───NameExpression(
+                                        └───NameExpression(
                                                 name
                                                 │
-                                                ├───Token('c',1,[9:11))
+                                                └───Token('c',1,[9:11))
                                             )
                                         operator
                                         │
-                                        ├───Token('*',1,[11:13))
+                                        └───Token('*',1,[11:13))
                                         right
                                         │
-                                        ├───OperatorExpression(
+                                        └───OperatorExpression(
                                                 left
                                                 │
-                                                ├───NameExpression(
+                                                └───NameExpression(
                                                         name
                                                         │
-                                                        ├───Token('d',1,[13:15))
+                                                        └───Token('d',1,[13:15))
                                                     )
                                                 operator
                                                 │
-                                                ├───Token('^',1,[15:17))
+                                                └───Token('^',1,[15:17))
                                                 right
                                                 │
-                                                ├───NameExpression(
+                                                └───NameExpression(
                                                         name
                                                         │
-                                                        ├───Token('e',1,[17:19))
+                                                        └───Token('e',1,[17:19))
                                                     )
                                             )
                                     )
                             )
                         operator
                         │
-                        ├───Token('-',1,[19:21))
+                        └───Token('-',1,[19:21))
                         right
                         │
-                        ├───OperatorExpression(
+                        └───OperatorExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('f',1,[21:23))
+                                        └───Token('f',1,[21:23))
                                     )
                                 operator
                                 │
-                                ├───Token('/',1,[23:25))
+                                └───Token('/',1,[23:25))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('g',1,[25:27))
+                                        └───Token('g',1,[25:27))
                                     )
                             )
                     )
@@ -690,27 +690,27 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───AssignmentExpression(
+                └───AssignmentExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                     )
             )
@@ -722,30 +722,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('=',1,[7:9))
+                        └───Token('=',1,[7:9))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[9:11))
+                                └───Token('c',1,[9:11))
                             )
                     )
             )
@@ -757,30 +757,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('==',1,[7:10))
+                        └───Token('==',1,[7:10))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                     )
             )
@@ -792,30 +792,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('<',1,[7:9))
+                        └───Token('<',1,[7:9))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[9:11))
+                                └───Token('c',1,[9:11))
                             )
                     )
             )
@@ -827,30 +827,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('<=',1,[7:10))
+                        └───Token('<=',1,[7:10))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                     )
             )
@@ -862,30 +862,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('#',1,[5:7))
+                        └───Token('#',1,[5:7))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[7:9))
+                                └───Token('c',1,[7:9))
                             )
                     )
             )
@@ -897,30 +897,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('!=',1,[7:10))
+                        └───Token('!=',1,[7:10))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                     )
             )
@@ -932,33 +932,33 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 operator
                 │
-                ├───Token('+=',1,[2:5))
+                └───Token('+=',1,[2:5))
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('*=',1,[7:10))
+                        └───Token('*=',1,[7:10))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                     )
             )
@@ -970,34 +970,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('%=',1,[2:5))
+                        └───Token('%=',1,[2:5))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                     )
                 operator
                 │
-                ├───Token('-=',1,[7:10))
+                └───Token('-=',1,[7:10))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[10:12))
+                        └───Token('c',1,[10:12))
                     )
             )
             """
@@ -1008,34 +1008,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('+',1,[2:4))
+                        └───Token('+',1,[2:4))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[4:6))
+                                └───Token('b',1,[4:6))
                             )
                     )
                 operator
                 │
-                ├───Token('-',1,[6:8))
+                └───Token('-',1,[6:8))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[8:10))
+                        └───Token('c',1,[8:10))
                     )
             )
             """
@@ -1046,34 +1046,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('+',1,[2:4))
+                        └───Token('+',1,[2:4))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[4:6))
+                                └───Token('b',1,[4:6))
                             )
                     )
                 operator
                 │
-                ├───Token('>',1,[6:8))
+                └───Token('>',1,[6:8))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[8:10))
+                        └───Token('c',1,[8:10))
                     )
             )
             """
@@ -1084,34 +1084,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('+',1,[2:4))
+                        └───Token('+',1,[2:4))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[4:6))
+                                └───Token('b',1,[4:6))
                             )
                     )
                 operator
                 │
-                ├───Token('>=',1,[6:9))
+                └───Token('>=',1,[6:9))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[9:11))
+                        └───Token('c',1,[9:11))
                     )
             )
             """
@@ -1122,34 +1122,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('*',1,[2:4))
+                        └───Token('*',1,[2:4))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[4:6))
+                                └───Token('b',1,[4:6))
                             )
                     )
                 operator
                 │
-                ├───Token('/',1,[6:8))
+                └───Token('/',1,[6:8))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[8:10))
+                        └───Token('c',1,[8:10))
                     )
             )
             """
@@ -1160,33 +1160,33 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 operator
                 │
-                ├───Token('^',1,[2:4))
+                └───Token('^',1,[2:4))
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[4:6))
+                                └───Token('b',1,[4:6))
                             )
                         operator
                         │
-                        ├───Token('^',1,[6:8))
+                        └───Token('^',1,[6:8))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[8:10))
+                                └───Token('c',1,[8:10))
                             )
                     )
             )
@@ -1198,33 +1198,33 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 operator
                 │
-                ├───Token('^',1,[1:3))
+                └───Token('^',1,[1:3))
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                         operator
                         │
-                        ├───Token('^',1,[3:5))
+                        └───Token('^',1,[3:5))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[4:6))
+                                └───Token('c',1,[4:6))
                             )
                     )
             )
@@ -1236,34 +1236,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('*',1,[2:4))
+                        └───Token('*',1,[2:4))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[4:6))
+                                └───Token('b',1,[4:6))
                             )
                     )
                 operator
                 │
-                ├───Token('%',1,[6:8))
+                └───Token('%',1,[6:8))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[8:10))
+                        └───Token('c',1,[8:10))
                     )
             )
             """
@@ -1274,34 +1274,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('$',1,[2:4))
+                        └───Token('$',1,[2:4))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[4:6))
+                                └───Token('b',1,[4:6))
                             )
                     )
                 operator
                 │
-                ├───Token('$',1,[6:8))
+                └───Token('$',1,[6:8))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[8:10))
+                        └───Token('c',1,[8:10))
                     )
             )
             """
@@ -1312,20 +1312,20 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 operator
                 │
-                ├───Token('.or.',1,[2:7))
+                └───Token('.or.',1,[2:7))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[7:9))
+                        └───Token('b',1,[7:9))
                     )
             )
             """
@@ -1336,20 +1336,20 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 operator
                 │
-                ├───Token('.and.',1,[2:8))
+                └───Token('.and.',1,[2:8))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[8:10))
+                        └───Token('b',1,[8:10))
                     )
             )
             """
@@ -1360,34 +1360,34 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('.and.',1,[2:8))
+                        └───Token('.and.',1,[2:8))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[8:10))
+                                └───Token('b',1,[8:10))
                             )
                     )
                 operator
                 │
-                ├───Token('.or.',1,[10:15))
+                └───Token('.or.',1,[10:15))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[15:17))
+                        └───Token('c',1,[15:17))
                     )
             )
             """
@@ -1398,33 +1398,33 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 operator
                 │
-                ├───Token('.or.',1,[2:7))
+                └───Token('.or.',1,[2:7))
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[7:9))
+                                └───Token('b',1,[7:9))
                             )
                         operator
                         │
-                        ├───Token('.and.',1,[9:15))
+                        └───Token('.and.',1,[9:15))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[15:17))
+                                └───Token('c',1,[15:17))
                             )
                     )
             )
@@ -1436,54 +1436,54 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───PrefixExpression(
+                        └───PrefixExpression(
                                 operator
                                 │
-                                ├───Token('!',1,[1:2))
+                                └───Token('!',1,[1:2))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[1:3))
+                                        └───Token('a',1,[1:3))
                                     )
                             )
                         operator
                         │
-                        ├───Token('.and.',1,[3:9))
+                        └───Token('.and.',1,[3:9))
                         right
                         │
-                        ├───PrefixExpression(
+                        └───PrefixExpression(
                                 operator
                                 │
-                                ├───Token('!',1,[9:11))
+                                └───Token('!',1,[9:11))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[10:12))
+                                        └───Token('b',1,[10:12))
                                     )
                             )
                     )
                 operator
                 │
-                ├───Token('.or.',1,[12:17))
+                └───Token('.or.',1,[12:17))
                 right
                 │
-                ├───PrefixExpression(
+                └───PrefixExpression(
                         operator
                         │
-                        ├───Token('!',1,[17:19))
+                        └───Token('!',1,[17:19))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[18:20))
+                                └───Token('c',1,[18:20))
                             )
                     )
             )
@@ -1495,39 +1495,39 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('!',1,[1:2))
+                └───Token('!',1,[1:2))
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[2:4))
+                                └───Token('a',1,[2:4))
                             )
                         operator
                         │
-                        ├───Token('.or.',1,[4:9))
+                        └───Token('.or.',1,[4:9))
                         right
                         │
-                        ├───OperatorExpression(
+                        └───OperatorExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[9:11))
+                                        └───Token('b',1,[9:11))
                                     )
                                 operator
                                 │
-                                ├───Token('.and.',1,[11:17))
+                                └───Token('.and.',1,[11:17))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('c',1,[17:19))
+                                        └───Token('c',1,[17:19))
                                     )
                             )
                     )
@@ -1545,48 +1545,48 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         operator
                         │
-                        ├───Token('+',1,[2:4))
+                        └───Token('+',1,[2:4))
                         right
                         │
-                        ├───OperatorExpression(
+                        └───OperatorExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[5:7))
+                                        └───Token('b',1,[5:7))
                                     )
                                 operator
                                 │
-                                ├───Token('+',1,[7:9))
+                                └───Token('+',1,[7:9))
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('c',1,[9:11))
+                                        └───Token('c',1,[9:11))
                                     )
                             )
                     )
                 operator
                 │
-                ├───Token('+',1,[12:14))
+                └───Token('+',1,[12:14))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('d',1,[14:16))
+                        └───Token('d',1,[14:16))
                     )
             )
             """
@@ -1597,33 +1597,33 @@ public sealed class TestExpressionParser
             OperatorExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 operator
                 │
-                ├───Token('^',1,[2:4))
+                └───Token('^',1,[2:4))
                 right
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[5:7))
+                                └───Token('b',1,[5:7))
                             )
                         operator
                         │
-                        ├───Token('+',1,[7:9))
+                        └───Token('+',1,[7:9))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[9:11))
+                                └───Token('c',1,[9:11))
                             )
                     )
             )
@@ -1635,13 +1635,13 @@ public sealed class TestExpressionParser
             PrefixExpression(
                 operator
                 │
-                ├───Token('!',1,[1:3))
+                └───Token('!',1,[1:3))
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[2:4))
+                        └───Token('a',1,[2:4))
                     )
             )
             """
@@ -1657,7 +1657,7 @@ public sealed class TestExpressionParser
             LiteralExpression(
                 literal(type=boolean)
                 │
-                ├───Token('.t.',1,[1:4))
+                └───Token('.t.',1,[1:4))
             )
             """
         );
@@ -1667,7 +1667,7 @@ public sealed class TestExpressionParser
             LiteralExpression(
                 literal(type=number)
                 │
-                ├───Token('123',1,[1:4))
+                └───Token('123',1,[1:4))
             )
             """
         );
@@ -1677,7 +1677,7 @@ public sealed class TestExpressionParser
             LiteralExpression(
                 literal(type=string)
                 │
-                ├───Token("'hello'",1,[1:8))
+                └───Token("'hello'",1,[1:8))
             )
             """
         );
@@ -1687,7 +1687,7 @@ public sealed class TestExpressionParser
             LiteralExpression(
                 literal(type=nil)
                 │
-                ├───Token('NIL',1,[1:4))
+                └───Token('NIL',1,[1:4))
             )
             """
         );
@@ -1697,7 +1697,7 @@ public sealed class TestExpressionParser
             LiteralExpression(
                 literal(type=nil)
                 │
-                ├───Token('nil',1,[1:4))
+                └───Token('nil',1,[1:4))
             )
             """
         );
@@ -1712,17 +1712,17 @@ public sealed class TestExpressionParser
             ObjectAccessExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('b',1,[2:4))
+                        └───Token('b',1,[2:4))
                     )
             )
             """
@@ -1733,28 +1733,28 @@ public sealed class TestExpressionParser
             ObjectAccessExpression(
                 left
                 │
-                ├───ObjectAccessExpression(
+                └───ObjectAccessExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[4:6))
+                        └───Token('c',1,[4:6))
                     )
             )
             """
@@ -1765,20 +1765,20 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───ObjectAccessExpression(
+                └───ObjectAccessExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
             )
@@ -1790,28 +1790,28 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───ObjectAccessExpression(
+                └───ObjectAccessExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
                 arguments
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[4:6))
+                        └───Token('c',1,[4:6))
                     )
             )
             """
@@ -1822,32 +1822,32 @@ public sealed class TestExpressionParser
             ObjectAccessExpression(
                 left
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───ObjectAccessExpression(
+                        └───ObjectAccessExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[1:2))
+                                        └───Token('a',1,[1:2))
                                     )
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[2:4))
+                                        └───Token('b',1,[2:4))
                                     )
                             )
                     )
                 right
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[6:8))
+                        └───Token('c',1,[6:8))
                     )
             )
             """
@@ -1858,32 +1858,32 @@ public sealed class TestExpressionParser
             IndexExpression(
                 left
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───ObjectAccessExpression(
+                        └───ObjectAccessExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[1:2))
+                                        └───Token('a',1,[1:2))
                                     )
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[2:4))
+                                        └───Token('b',1,[2:4))
                                     )
                             )
                     )
                 index
                 │
-                ├───LiteralExpression(
+                └───LiteralExpression(
                         literal(type=number)
                         │
-                        ├───Token('1',1,[6:8))
+                        └───Token('1',1,[6:8))
                     )
             )
             """
@@ -1894,32 +1894,32 @@ public sealed class TestExpressionParser
             IndexExpression(
                 left
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───ObjectAccessExpression(
+                        └───ObjectAccessExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[1:2))
+                                        └───Token('a',1,[1:2))
                                     )
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[2:4))
+                                        └───Token('b',1,[2:4))
                                     )
                             )
                     )
                 index
                 │
-                ├───LiteralExpression(
+                └───LiteralExpression(
                         literal(type=string)
                         │
-                        ├───Token("'key'",1,[6:12))
+                        └───Token("'key'",1,[6:12))
                     )
             )
             """
@@ -1930,45 +1930,45 @@ public sealed class TestExpressionParser
             IndexExpression(
                 left
                 │
-                ├───CallExpression(
+                └───CallExpression(
                         function
                         │
-                        ├───ObjectAccessExpression(
+                        └───ObjectAccessExpression(
                                 left
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('a',1,[1:2))
+                                        └───Token('a',1,[1:2))
                                     )
                                 right
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[2:4))
+                                        └───Token('b',1,[2:4))
                                     )
                             )
                     )
                 index
                 │
-                ├───OperatorExpression(
+                └───OperatorExpression(
                         left
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[6:8))
+                                └───Token('1',1,[6:8))
                             )
                         operator
                         │
-                        ├───Token('+',1,[8:10))
+                        └───Token('+',1,[8:10))
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                     )
             )
@@ -1985,14 +1985,14 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───ArrayDeclarationExpression()
+                └───ArrayDeclarationExpression()
             )
             """
         );
@@ -2002,20 +2002,20 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───ArrayDeclarationExpression(
+                └───ArrayDeclarationExpression(
                         element 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[7:9))
+                                └───Token('1',1,[7:9))
                             )
                     )
             )
@@ -2027,27 +2027,27 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───ArrayDeclarationExpression(
+                └───ArrayDeclarationExpression(
                         element 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[7:9))
+                                └───Token('1',1,[7:9))
                             )
                         element 1
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('2',1,[10:12))
+                                └───Token('2',1,[10:12))
                             )
                     )
             )
@@ -2059,30 +2059,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───ArrayDeclarationExpression(
+                └───ArrayDeclarationExpression(
                         element 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[7:9))
+                                └───Token('1',1,[7:9))
                             )
                         element 1
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[10:12))
+                                        └───Token('b',1,[10:12))
                                     )
                             )
                     )
@@ -2095,30 +2095,30 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───ArrayDeclarationExpression(
+                └───ArrayDeclarationExpression(
                         element 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',2,[4:6))
+                                └───Token('1',2,[4:6))
                             )
                         element 1
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',3,[4:6))
+                                        └───Token('b',3,[4:6))
                                     )
                             )
                     )
@@ -2136,14 +2136,14 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───HashDeclarationExpression()
+                └───HashDeclarationExpression()
             )
             """
         );
@@ -2153,27 +2153,27 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───HashDeclarationExpression(
+                └───HashDeclarationExpression(
                         key 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=string)
                                 │
-                                ├───Token("'b'",1,[7:11))
+                                └───Token("'b'",1,[7:11))
                             )
                         value 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[14:16))
+                                └───Token('1',1,[14:16))
                             )
                     )
             )
@@ -2185,41 +2185,41 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───HashDeclarationExpression(
+                └───HashDeclarationExpression(
                         key 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=string)
                                 │
-                                ├───Token("'b'",1,[7:11))
+                                └───Token("'b'",1,[7:11))
                             )
                         value 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[14:16))
+                                └───Token('1',1,[14:16))
                             )
                         key 1
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=string)
                                 │
-                                ├───Token("'c'",1,[17:21))
+                                └───Token("'c'",1,[17:21))
                             )
                         value 1
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('2',1,[24:26))
+                                └───Token('2',1,[24:26))
                             )
                     )
             )
@@ -2231,44 +2231,44 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───HashDeclarationExpression(
+                └───HashDeclarationExpression(
                         key 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=string)
                                 │
-                                ├───Token("'b'",1,[7:11))
+                                └───Token("'b'",1,[7:11))
                             )
                         value 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[14:16))
+                                └───Token('1',1,[14:16))
                             )
                         key 1
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=string)
                                 │
-                                ├───Token("'c'",1,[17:21))
+                                └───Token("'c'",1,[17:21))
                             )
                         value 1
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('d',1,[24:26))
+                                        └───Token('d',1,[24:26))
                                     )
                             )
                     )
@@ -2281,44 +2281,44 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───HashDeclarationExpression(
+                └───HashDeclarationExpression(
                         key 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=string)
                                 │
-                                ├───Token("'b'",2,[4:8))
+                                └───Token("'b'",2,[4:8))
                             )
                         value 0
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',2,[11:13))
+                                └───Token('1',2,[11:13))
                             )
                         key 1
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=string)
                                 │
-                                ├───Token("'c'",3,[4:8))
+                                └───Token("'c'",3,[4:8))
                             )
                         value 1
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('d',3,[11:13))
+                                        └───Token('d',3,[11:13))
                                     )
                             )
                     )
@@ -2336,23 +2336,23 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───CodeblockExpression(
+                └───CodeblockExpression(
                         expressions
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[10:12))
+                                        └───Token('b',1,[10:12))
                                     )
                             )
                     )
@@ -2365,37 +2365,37 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───CodeblockExpression(
+                └───CodeblockExpression(
                         parameters
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[8:10))
+                                └───Token('b',1,[8:10))
                             )
                         expressions
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('c',1,[11:13))
+                                        └───Token('c',1,[11:13))
                                     )
                                 arguments
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[13:15))
+                                        └───Token('b',1,[13:15))
                                     )
                             )
                     )
@@ -2408,49 +2408,49 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───CodeblockExpression(
+                └───CodeblockExpression(
                         parameters
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[8:10))
+                                └───Token('b',1,[8:10))
                             )
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                         expressions
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('d',1,[13:15))
+                                        └───Token('d',1,[13:15))
                                     )
                                 arguments
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[15:17))
+                                        └───Token('b',1,[15:17))
                                     )
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('c',1,[18:20))
+                                        └───Token('c',1,[18:20))
                                     )
                             )
                     )
@@ -2463,60 +2463,60 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───CodeblockExpression(
+                └───CodeblockExpression(
                         parameters
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[8:10))
+                                └───Token('b',1,[8:10))
                             )
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('c',1,[10:12))
+                                └───Token('c',1,[10:12))
                             )
                         expressions
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('d',1,[13:15))
+                                        └───Token('d',1,[13:15))
                                     )
                                 arguments
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('b',1,[15:17))
+                                        └───Token('b',1,[15:17))
                                     )
                             )
                         │
-                        ├───CallExpression(
+                        └───CallExpression(
                                 function
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('e',1,[19:21))
+                                        └───Token('e',1,[19:21))
                                     )
                                 arguments
                                 │
-                                ├───NameExpression(
+                                └───NameExpression(
                                         name
                                         │
-                                        ├───Token('c',1,[21:23))
+                                        └───Token('c',1,[21:23))
                                     )
                             )
                     )
@@ -2534,34 +2534,34 @@ public sealed class TestExpressionParser
             AssignmentExpression(
                 left
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('a',1,[1:2))
+                        └───Token('a',1,[1:2))
                     )
                 right
                 │
-                ├───ConditionalExpression(
+                └───ConditionalExpression(
                         if
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[9:11))
+                                └───Token('b',1,[9:11))
                             )
                         then
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('1',1,[12:14))
+                                └───Token('1',1,[12:14))
                             )
                         else
                         │
-                        ├───LiteralExpression(
+                        └───LiteralExpression(
                                 literal(type=number)
                                 │
-                                ├───Token('0',1,[15:17))
+                                └───Token('0',1,[15:17))
                             )
                     )
             )
@@ -2578,28 +2578,28 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───ObjectAccessExpression(
+                └───ObjectAccessExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
                 arguments
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[4:6))
+                        └───Token('c',1,[4:6))
                     )
             )
             """
@@ -2610,28 +2610,28 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───ObjectAccessExpression(
+                └───ObjectAccessExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
                 arguments
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[41:43))
+                        └───Token('c',1,[41:43))
                     )
             )
             """
@@ -2642,28 +2642,28 @@ public sealed class TestExpressionParser
             CallExpression(
                 function
                 │
-                ├───ObjectAccessExpression(
+                └───ObjectAccessExpression(
                         left
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('a',1,[1:2))
+                                └───Token('a',1,[1:2))
                             )
                         right
                         │
-                        ├───NameExpression(
+                        └───NameExpression(
                                 name
                                 │
-                                ├───Token('b',1,[2:4))
+                                └───Token('b',1,[2:4))
                             )
                     )
                 arguments
                 │
-                ├───NameExpression(
+                └───NameExpression(
                         name
                         │
-                        ├───Token('c',1,[4:6))
+                        └───Token('c',1,[4:6))
                     )
             )
             """
