@@ -24,6 +24,12 @@ public class ExpressionParser
 
         Register(HarbourSyntaxKind.NAME, new NameParser());
         Register(HarbourSyntaxKind.ASSIGN, new AssignmentParser());
+        Register(HarbourSyntaxKind.PLUSEQ, new AssignmentParser());
+        Register(HarbourSyntaxKind.MINUSEQ, new AssignmentParser());
+        Register(HarbourSyntaxKind.MULTEQ, new AssignmentParser());
+        Register(HarbourSyntaxKind.DIVEQ, new AssignmentParser());
+        Register(HarbourSyntaxKind.MODEQ, new AssignmentParser());
+        Register(HarbourSyntaxKind.EXPEQ, new AssignmentParser());
         Register(HarbourSyntaxKind.LEFT_PAREN, new GroupParser());
         Register(HarbourSyntaxKind.LEFT_PAREN, new CallParser());
         Register(HarbourSyntaxKind.LEFT_BRACKET, new IndexParser());
@@ -42,13 +48,6 @@ public class ExpressionParser
 
         Postfix(HarbourSyntaxKind.PLUSPLUS, Precedence.POSTFIX);
         Postfix(HarbourSyntaxKind.MINUSMINUS, Precedence.POSTFIX);
-
-        InfixRight(HarbourSyntaxKind.PLUSEQ, Precedence.SUMEQ);
-        InfixRight(HarbourSyntaxKind.MINUSEQ, Precedence.SUMEQ);
-        InfixRight(HarbourSyntaxKind.MULTEQ, Precedence.MULTEQ);
-        InfixRight(HarbourSyntaxKind.DIVEQ, Precedence.MULTEQ);
-        InfixRight(HarbourSyntaxKind.MODEQ, Precedence.MULTEQ);
-        InfixRight(HarbourSyntaxKind.EXPEQ, Precedence.EXPEQ);
 
         InfixRight(HarbourSyntaxKind.OR, Precedence.OR);
         InfixRight(HarbourSyntaxKind.AND, Precedence.AND);
