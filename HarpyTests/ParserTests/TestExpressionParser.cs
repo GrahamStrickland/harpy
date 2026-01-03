@@ -72,6 +72,29 @@ public sealed class TestExpressionParser
             """
         );
         AssertParsedEqualsExpected(
+            "a(, b)",
+            """
+            CallExpression(
+                function
+                │
+                └───NameExpression(
+                        name
+                        │
+                        └───Token('a',1,[1:2))
+                    )
+                arguments
+                │
+                └───nil
+                │
+                └───NameExpression(
+                        name
+                        │
+                        └───Token('b',1,[4:6))
+                    )
+            )
+            """
+        );
+        AssertParsedEqualsExpected(
             "a(b)(c)",
             """
             CallExpression(

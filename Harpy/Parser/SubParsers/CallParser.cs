@@ -11,20 +11,16 @@ public class CallParser : IInfixSubParser
 {
     public Expression Parse(ExpressionParser parser, Expression left, HarbourSyntaxToken token)
     {
-        // Parse the comma-separated arguments until we hit ")".
-        List<Expression> arguments = [];
+        // Parse the comma-separated arguments (possibly implicitly nil) until we hit ")".
+        List<Expression?> arguments = [];
 
         if (!parser.Match(HarbourSyntaxKind.RIGHT_PAREN))
         {
-            arguments.Add(parser.Parse() ??
-                          throw new InvalidSyntaxException(
-                              $"Expected expression after left expression '{left.PrettyPrint()}' after token '{token.Text}' on line {token.Line}, column {token.Start}, found null."));
+            arguments.Add(parser.Match(HarbourSyntaxKind.COMMA) ? null : parser.Parse());
             while (parser.Match(HarbourSyntaxKind.COMMA))
             {
                 parser.Consume(HarbourSyntaxKind.COMMA);
-                arguments.Add(parser.Parse() ??
-                              throw new InvalidSyntaxException(
-                                  $"Expected expression after left expression '{left.PrettyPrint()}' after token '{token.Text}' on line {token.Line}, column {token.Start}, found null."));
+                arguments.Add(parser.Match(HarbourSyntaxKind.COMMA) ? null : parser.Parse());
             }
         }
 

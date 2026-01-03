@@ -5,13 +5,13 @@ namespace Harpy.AST.Expressions;
 /// </summary>
 public class CallExpression : Expression
 {
-    private readonly List<Expression> _arguments;
+    private readonly List<Expression?> _arguments;
     private readonly Expression _function;
 
     /// <summary>
     ///     A function call like <c>a(b, c, d)</c>.
     /// </summary>
-    public CallExpression(Expression function, List<Expression> arguments) : base(true, [])
+    public CallExpression(Expression function, List<Expression?> arguments) : base(true, [])
     {
         _function = function;
         _arguments = arguments;
@@ -21,15 +21,18 @@ public class CallExpression : Expression
 
         foreach (var e in arguments)
         {
-            e.Parent = this;
-            Children.Add(e);
+            if (e is not null)
+            {
+                e.Parent = this;
+                Children.Add(e);
+            }
         }
     }
 
     public override string PrettyPrint(int indent = 0)
     {
         var argumentString = _arguments.Aggregate("",
-            (current, e) => current + ChildNodeLine(indent + 1) + e.PrettyPrint(indent + 2) + "\n");
+            (current, e) => current + ChildNodeLine(indent + 1) + (e is not null ? e.PrettyPrint(indent + 2) : NodeLine(indent + 2) + "nil") + "\n");
 
         return NodeLine(indent) + "CallExpression(\n" + BlankLine(indent + 1) + "function\n" +
                ChildNodeLine(indent + 1) +
