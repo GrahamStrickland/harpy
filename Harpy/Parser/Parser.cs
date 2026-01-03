@@ -49,7 +49,7 @@ public class Parser
         {
             statement = token.Kind switch
             {
-                HarbourSyntaxKind.RETURN => ReturnStatement(token),
+                HarbourSyntaxKind.RETURN => Return(token),
                 HarbourSyntaxKind.STATIC => _reader.LookAhead().Kind switch
                 {
                     HarbourSyntaxKind.FUNCTION => FunctionDefinition(_reader.LookAhead(), true),
@@ -58,8 +58,8 @@ public class Parser
                 },
                 HarbourSyntaxKind.FUNCTION => FunctionDefinition(token),
                 HarbourSyntaxKind.PROCEDURE => ProcedureDefinition(token),
-                HarbourSyntaxKind.LOCAL => LocalDeclarationStatement(token),
-                HarbourSyntaxKind.IF => IfStatement(token),
+                HarbourSyntaxKind.LOCAL => LocalDeclaration(token),
+                HarbourSyntaxKind.IF => If(token),
                 HarbourSyntaxKind.WHILE => WhileLoop(token),
                 HarbourSyntaxKind.FOR => ForLoop(token),
                 HarbourSyntaxKind.LOOP => Loop(token),
@@ -71,14 +71,14 @@ public class Parser
         }
         else
         {
-            statement = CallStatement(token);
-            statement ??= AssignmentStatement(token);
+            statement = Call(token);
+            statement ??= Assignment(token);
         }
 
         return statement;
     }
 
-    private ReturnStatement ReturnStatement(HarbourSyntaxToken token)
+    private ReturnStatement Return(HarbourSyntaxToken token)
     {
         if (!_inFunctionOrProcedureDefinition)
             throw new InvalidSyntaxException(
@@ -190,7 +190,7 @@ public class Parser
         return new StaticVariableDeclaration(token, name, assignment);
     }
 
-    private LocalVariableDeclaration LocalDeclarationStatement(HarbourSyntaxToken token)
+    private LocalVariableDeclaration LocalDeclaration(HarbourSyntaxToken token)
     {
         VariableDeclarationStatement(token, out var name, out var assignment);
         return new LocalVariableDeclaration(token, name, assignment);
@@ -214,7 +214,7 @@ public class Parser
             name = _reader.Consume(HarbourSyntaxKind.NAME);
     }
 
-    private IfStatement IfStatement(HarbourSyntaxToken token)
+    private IfStatement If(HarbourSyntaxToken token)
     {
         var ifCondition = _expressionParser.Parse(Precedence.NONE, false, true);
         List<Tuple<Expression, List<Statement>>> elseIfConditions = [];
@@ -475,7 +475,7 @@ public class Parser
         return new BeginSequenceStatement(errorHandler, exception, beginSequenceBody, recoverBody, alwaysBody);
     }
 
-    private CallStatement? CallStatement(HarbourSyntaxToken name)
+    private CallStatement? Call(HarbourSyntaxToken name)
     {
         if (name.Kind is not HarbourSyntaxKind.NAME)
             return null;
@@ -503,7 +503,7 @@ public class Parser
         return new CallStatement(callExpression);
     }
 
-    private AssignmentStatement? AssignmentStatement(HarbourSyntaxToken token)
+    private AssignmentStatement? Assignment(HarbourSyntaxToken token)
     {
         _reader.PutBack(token);
         var leftExpression = _expressionParser.Parse(Precedence.NONE, false, true);
