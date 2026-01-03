@@ -60,6 +60,7 @@ public class Parser
                 HarbourSyntaxKind.PROCEDURE => ProcedureDefinition(token),
                 HarbourSyntaxKind.LOCAL => LocalDeclaration(token),
                 HarbourSyntaxKind.IF => If(token),
+                HarbourSyntaxKind.IIF => Conditional(token),
                 HarbourSyntaxKind.WHILE => WhileLoop(token),
                 HarbourSyntaxKind.FOR => ForLoop(token),
                 HarbourSyntaxKind.LOOP => Loop(token),
@@ -253,7 +254,7 @@ public class Parser
                 }
                 else
                     throw new InvalidSyntaxException(
-                                        $"Expected conditional expression after else if beginning with token '{elseIfToken.Text}' on line {elseIfToken.Line}, column {elseIfToken.Start}, found null.");
+                                        $"Expected boolean expression after else if beginning with token '{elseIfToken.Text}' on line {elseIfToken.Line}, column {elseIfToken.Start}, found null.");
             }
             else
             {
@@ -267,8 +268,18 @@ public class Parser
 
         return new IfStatement(ifCondition ??
                                throw new InvalidSyntaxException(
-                                   $"Expected conditional expression after if statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."),
+                                   $"Expected boolean expression after if statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."),
             elseIfConditions, ifBody, elseBody);
+    }
+
+    private ConditionalStatement? Conditional(HarbourSyntaxToken token)
+    {
+        _reader.PutBack(token);
+        var expression = _expressionParser.Parse(Precedence.NONE, false, true);
+        if (expression is ConditionalExpression conditionalExpression)
+            return new ConditionalStatement(conditionalExpression);
+
+        throw new InvalidSyntaxException($"Expected conditional expression after conditional statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
     }
 
     private WhileLoopStatement WhileLoop(HarbourSyntaxToken token)
@@ -296,7 +307,7 @@ public class Parser
 
         return new WhileLoopStatement(
             condition ?? throw new InvalidSyntaxException(
-                $"Expected conditional expression in while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."),
+                $"Expected boolean expression in while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."),
             body);
     }
 

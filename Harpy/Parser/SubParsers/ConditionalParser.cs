@@ -16,12 +16,11 @@ public class ConditionalParser : IPrefixSubParser
         var ifArm = parser.Parse() ?? throw new InvalidSyntaxException(
             $"Expected expression after conditional expression with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
         parser.Consume(HarbourSyntaxKind.COMMA);
-        var thenArm = parser.Parse() ?? throw new InvalidSyntaxException(
-            $"Expected expression after conditional expression with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
-        parser.Consume(HarbourSyntaxKind.COMMA);
-        var elseArm = parser.Parse() ?? throw new InvalidSyntaxException(
-            $"Expected expression after conditional expression with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
 
+        var thenArm = parser.Match(HarbourSyntaxKind.COMMA) ? null : parser.Parse();
+        parser.Consume(HarbourSyntaxKind.COMMA);
+
+        var elseArm = parser.Match(HarbourSyntaxKind.RIGHT_PAREN) ? null : parser.Parse();
         parser.Consume(HarbourSyntaxKind.RIGHT_PAREN);
 
         return new ConditionalExpression(ifArm, thenArm, elseArm);

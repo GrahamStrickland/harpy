@@ -2491,6 +2491,78 @@ public sealed class TestExpressionParser
             )
             """
         );
+
+        AssertParsedEqualsExpected(
+            "a := iif(b, 1, )",
+            """
+            AssignmentExpression(
+                left
+                │
+                └───NameExpression(
+                        name
+                        │
+                        └───Token('a',1,[1:2))
+                    )
+                right
+                │
+                └───ConditionalExpression(
+                        if
+                        │
+                        └───NameExpression(
+                                name
+                                │
+                                └───Token('b',1,[9:11))
+                            )
+                        then
+                        │
+                        └───LiteralExpression(
+                                literal(type=number)
+                                │
+                                └───Token('1',1,[12:14))
+                            )
+                        else
+                        │
+                        └───nil
+                    )
+            )
+            """
+        );
+
+        AssertParsedEqualsExpected(
+            "a := iif(b, , 0)",
+            """
+            AssignmentExpression(
+                left
+                │
+                └───NameExpression(
+                        name
+                        │
+                        └───Token('a',1,[1:2))
+                    )
+                right
+                │
+                └───ConditionalExpression(
+                        if
+                        │
+                        └───NameExpression(
+                                name
+                                │
+                                └───Token('b',1,[9:11))
+                            )
+                        then
+                        │
+                        └───nil
+                        else
+                        │
+                        └───LiteralExpression(
+                                literal(type=number)
+                                │
+                                └───Token('0',1,[14:16))
+                            )
+                    )
+            )
+            """
+        );
     }
 
     [TestMethod]
