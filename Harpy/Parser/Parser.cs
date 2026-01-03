@@ -284,7 +284,9 @@ public class Parser
 
     private WhileLoopStatement WhileLoop(HarbourSyntaxToken token)
     {
+        var quitLoop = !_inLoop;
         _inLoop = true;
+
         var condition = _expressionParser.Parse(Precedence.NONE, false, true);
         List<Statement> body = [];
 
@@ -303,7 +305,7 @@ public class Parser
             _reader.Consume(HarbourSyntaxKind.ENDWHILE);
         }
 
-        _inLoop = false;
+        _inLoop = !quitLoop && _inLoop;
 
         return new WhileLoopStatement(
             condition ?? throw new InvalidSyntaxException(
@@ -313,10 +315,11 @@ public class Parser
 
     private Statement ForLoop(HarbourSyntaxToken token)
     {
+        var quitLoop = !_inLoop;
         _inLoop = true;
 
         if (_reader.Match(HarbourSyntaxKind.EACH))
-            return ForEachLoop(token);
+            return ForEachLoop(token, quitLoop);
 
         var initializer = _expressionParser.Parse(Precedence.NONE, false, true);
         if (initializer is not AssignmentExpression)
@@ -350,7 +353,7 @@ public class Parser
 
             _reader.Consume(HarbourSyntaxKind.NEXT);
 
-            _inLoop = false;
+            _inLoop = !quitLoop && _inLoop;
 
             return new ForLoopStatement(initializer, bound, step, body);
         }
@@ -359,7 +362,7 @@ public class Parser
                 $"Expected bound expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
     }
 
-    private ForEachLoopStatement ForEachLoop(HarbourSyntaxToken token)
+    private ForEachLoopStatement ForEachLoop(HarbourSyntaxToken token, bool quitLoop)
     {
         _reader.Consume(HarbourSyntaxKind.EACH);
 
@@ -384,7 +387,7 @@ public class Parser
 
             _reader.Consume(HarbourSyntaxKind.NEXT);
 
-            _inLoop = false;
+            _inLoop = !quitLoop && _inLoop;
 
             return new ForEachLoopStatement(variable, collection, body);
         }
