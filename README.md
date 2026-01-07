@@ -22,17 +22,41 @@ be inferred more accurately, e.g., `var cName as string`.
 
 ## Current State
 
-Harpy currently only parses some parts of the Harbour grammar and can output the AST representation of the source code.
+Harpy currently parses portions of the Harbour grammar and can output the AST representation of the source
+code. The parser uses a Pratt parser approach for expressions and handles statements including functions,
+procedures, control flow, and variable declarations.
 
-The goal of this project is to be able to generate such an AST representation and transform it into
-a C# AST which will be used to generate C# source code via the
-[Roslyn SDK](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/).
+## Development Plan
 
-One major issue affecting this task is the extensible nature of Harbour's
-[preprocessor directives](https://harbour.github.io/ng/c53g01c/ng11fd89.html), which can essentially be 
-used to generate arbitrary syntax extensions. Ultimately Harpy will probably need its own preprocessor, 
-but for now the aim is to treat the [Class(y)](https://harbour.github.io/ng/classy/menu.html) class 
+The project is working toward generating C# source code from the Harbour AST using the 
+[Roslyn SDK](https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/). The implementation approach
+modifies AST node `Walk()` methods to return Roslyn syntax nodes instead of being void. This keeps code
+generation logic close to the AST structure it operates on.
+
+The development plan consists of three main milestones:
+
+**Milestone 1: Infrastructure Setup** establishes the foundation by adding Roslyn dependencies, creating
+helper utilities for type inference and index adjustment, and modifying base AST classes to support
+returning syntax nodes. Type inference uses Hungarian notation conventions from the target codebase
+to map variable prefixes to C# types where possible, falling back to `dynamic` when types cannot be determined.
+
+**Milestone 2: Expression Code Generation** implements code generation for all expression types including
+literals, operators, function calls, array and hash declarations, indexing, member access, and codeblocks.
+Special handling converts Harbour's 1-based array indices to C#'s 0-based indices and maps Harbour operators
+like `.AND.` and `^` to their C# equivalents.
+
+**Milestone 3: Statement Code Generation** implements code generation for statements including variable
+declarations, assignments, control flow (if/while/for), function and procedure definitions, and exception
+handling constructs. Functions and procedures become C# methods, with consideration for using top-level
+statements for simpler code organization.
+
+## Known Challenges
+
+One major issue affecting this task is the extensible nature of Harbour's 
+[preprocessor directives](https://harbour.github.io/ng/c53g01c/ng11fd89.html), which can essentially be
+used to generate arbitrary syntax extensions. Ultimately Harpy will probably need its own preprocessor,
+but for now the aim is to treat the [Class(y)](https://harbour.github.io/ng/classy/menu.html) class
 definitions as source code instead of using a preprocessor, since that syntax is fairly well-defined.
 
-Other preprocessor directives, like macros, may also end up being treated like source code until a better
-plan for the preprocessor is created.
+Other preprocessor directives, like macros, may also end up being treated like source code until a
+better plan for the preprocessor is created.
