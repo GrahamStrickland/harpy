@@ -47,8 +47,8 @@ like `.AND.` and `^` to their C# equivalents.
 
 **Milestone 3: Statement Code Generation** implements code generation for statements including variable
 declarations, assignments, control flow (if/while/for), function and procedure definitions, and exception
-handling constructs. Functions and procedures become C# methods, with consideration for using top-level
-statements for simpler code organization.
+handling constructs. Functions and procedures become C# methods of a "global" partial class, except where 
+an actual class has been defined.
 
 ## Known Challenges
 
