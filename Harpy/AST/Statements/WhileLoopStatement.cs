@@ -1,4 +1,6 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -43,5 +45,11 @@ public class WhileLoopStatement : Statement
 
         result += BlankLine(indent) + ")";
         return result;
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement while loop statement code generation
+        throw new NotImplementedException("WhileLoopStatement.WalkStatement not yet implemented");
     }
 }

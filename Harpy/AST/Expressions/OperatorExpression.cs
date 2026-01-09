@@ -1,4 +1,6 @@
+using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
 
@@ -44,5 +46,11 @@ public class OperatorExpression : Expression
                ChildNodeLine(indent + 1) +
                $"{_right.PrettyPrint(indent + 2)}\n" +
                BlankLine(indent) + ")";
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement operator expression code generation
+        throw new NotImplementedException("OperatorExpression.WalkExpression not yet implemented");
     }
 }

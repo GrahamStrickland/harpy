@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Harpy.AST.Expressions;
 
 /// <summary>
@@ -47,5 +50,11 @@ public class HashDeclarationExpression : Expression
         result += ")";
 
         return result;
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement hash declaration code generation
+        throw new NotImplementedException("HashDeclarationExpression.WalkExpression not yet implemented");
     }
 }

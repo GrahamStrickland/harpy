@@ -1,4 +1,6 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -24,5 +26,11 @@ public class CallStatement : Statement
     {
         return NodeLine(indent) + "CallStatement(\n" + BlankLine(indent + 1) + "callExpression\n" +
                ChildNodeLine(indent + 1) + _callExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement call statement code generation
+        throw new NotImplementedException("CallStatement.WalkStatement not yet implemented");
     }
 }

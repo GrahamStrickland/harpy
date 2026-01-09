@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Harpy.AST.Expressions;
 
 /// <summary>
@@ -42,5 +45,11 @@ public class ConditionalExpression : Expression
                BlankLine(indent + 1) + "else\n" + ChildNodeLine(indent + 1) +
                $"{(_elseArm is not null ? _elseArm.PrettyPrint(indent + 2) : NodeLine(indent + 2) + "nil")}\n" +
                BlankLine(indent) + ")";
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement conditional expression code generation
+        throw new NotImplementedException("ConditionalExpression.WalkExpression not yet implemented");
     }
 }

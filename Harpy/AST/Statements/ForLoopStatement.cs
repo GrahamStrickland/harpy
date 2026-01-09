@@ -1,4 +1,6 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -60,5 +62,11 @@ public class ForLoopStatement : Statement
             (current, statement) => current + ChildNodeLine(indent + 1) + statement.PrettyPrint(indent + 2) + "\n");
 
         return output + BlankLine(indent) + ")";
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement for loop statement code generation
+        throw new NotImplementedException("ForLoopStatement.WalkStatement not yet implemented");
     }
 }

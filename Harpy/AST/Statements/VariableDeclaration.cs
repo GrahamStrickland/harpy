@@ -1,5 +1,7 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -45,5 +47,11 @@ public abstract class VariableDeclaration : Statement
                    : BlankLine(indent + 1) + "assignment\n" + ChildNodeLine(indent + 1) +
                      _assignment.PrettyPrint(indent + 2))
                + "\n" + BlankLine(indent) + ")";
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement variable declaration code generation
+        throw new NotImplementedException("VariableDeclaration.WalkStatement not yet implemented");
     }
 }

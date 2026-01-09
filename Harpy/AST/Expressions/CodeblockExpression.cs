@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Harpy.AST.Expressions;
 
 /// <summary>
@@ -46,5 +49,11 @@ public class CodeblockExpression : Expression
 
         result += BlankLine(indent) + ")";
         return result;
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement codeblock expression code generation
+        throw new NotImplementedException("CodeblockExpression.WalkExpression not yet implemented");
     }
 }

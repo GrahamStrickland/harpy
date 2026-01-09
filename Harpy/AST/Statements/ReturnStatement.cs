@@ -1,4 +1,6 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -31,5 +33,11 @@ public class ReturnStatement : Statement
     public Expression? ReturnValue()
     {
         return _returnValue;
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement return statement code generation
+        throw new NotImplementedException("ReturnStatement.WalkStatement not yet implemented");
     }
 }

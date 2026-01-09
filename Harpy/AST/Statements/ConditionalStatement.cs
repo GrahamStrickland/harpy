@@ -1,4 +1,6 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -24,5 +26,11 @@ public class ConditionalStatement : Statement
     {
         return NodeLine(indent) + "ConditionalStatement(\n" + BlankLine(indent + 1) + "conditionalExpression\n" +
                ChildNodeLine(indent + 1) + _conditionalExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement conditional statement code generation
+        throw new NotImplementedException("ConditionalStatement.WalkStatement not yet implemented");
     }
 }

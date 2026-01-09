@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Harpy.AST.Expressions;
 
 /// <summary>
@@ -41,5 +44,11 @@ public class ArrayDeclarationExpression : Expression
         result += ")";
 
         return result;
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement array declaration code generation
+        throw new NotImplementedException("ArrayDeclarationExpression.WalkExpression not yet implemented");
     }
 }

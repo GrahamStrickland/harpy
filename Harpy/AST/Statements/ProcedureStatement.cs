@@ -1,4 +1,6 @@
+using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -65,5 +67,11 @@ public class ProcedureStatement : Statement
 
         result += BlankLine(indent) + ")";
         return result;
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement procedure statement code generation
+        throw new NotImplementedException("ProcedureStatement.WalkStatement not yet implemented");
     }
 }

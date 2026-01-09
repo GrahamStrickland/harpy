@@ -1,5 +1,7 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -91,5 +93,11 @@ public class BeginSequenceStatement : Statement
 
         result += BlankLine(indent) + ")";
         return result;
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement begin sequence statement code generation
+        throw new NotImplementedException("BeginSequenceStatement.WalkStatement not yet implemented");
     }
 }

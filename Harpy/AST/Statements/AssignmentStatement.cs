@@ -1,4 +1,6 @@
 using Harpy.AST.Expressions;
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Statements;
 
@@ -25,5 +27,11 @@ public class AssignmentStatement : Statement
         return NodeLine(indent) + "AssignmentStatement(\n" + BlankLine(indent + 1) + "assignmentExpression\n" +
                ChildNodeLine(indent + 1) +
                _assignmentExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
+    }
+
+    public override StatementSyntax WalkStatement(CodeGenContext context)
+    {
+        // TODO: Implement assignment statement code generation
+        throw new NotImplementedException("AssignmentStatement.WalkStatement not yet implemented");
     }
 }

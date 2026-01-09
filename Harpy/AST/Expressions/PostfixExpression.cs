@@ -1,4 +1,6 @@
+using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
 
@@ -36,5 +38,11 @@ public class PostfixExpression : Expression
                ChildNodeLine(indent + 1) +
                $"{_operatorNode.PrettyPrint(indent + 2)}\n" +
                BlankLine(indent) + ")";
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement postfix expression code generation
+        throw new NotImplementedException("PostfixExpression.WalkExpression not yet implemented");
     }
 }

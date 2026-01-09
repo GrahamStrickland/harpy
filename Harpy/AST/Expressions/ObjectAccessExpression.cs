@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Harpy.AST.Expressions;
 
 /// <summary>
@@ -28,5 +31,11 @@ public class ObjectAccessExpression : Expression
                "ObjectAccessExpression(\n" + BlankLine(indent + 1) + "left\n" + ChildNodeLine(indent + 1) +
                $"{_left.PrettyPrint(indent + 2)}\n" + BlankLine(indent + 1) + "right\n" + ChildNodeLine(indent + 1) +
                $"{_right.PrettyPrint(indent + 2)}\n" + BlankLine(indent) + ")";
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement object access expression code generation
+        throw new NotImplementedException("ObjectAccessExpression.WalkExpression not yet implemented");
     }
 }

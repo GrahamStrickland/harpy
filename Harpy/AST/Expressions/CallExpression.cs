@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Harpy.AST.Expressions;
 
 /// <summary>
@@ -40,5 +43,11 @@ public class CallExpression : Expression
                (_arguments.Count > 0
                    ? "\n" + BlankLine(indent + 1) + "arguments\n" + argumentString
                    : "\n") + BlankLine(indent) + ")";
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement call expression code generation
+        throw new NotImplementedException("CallExpression.WalkExpression not yet implemented");
     }
 }

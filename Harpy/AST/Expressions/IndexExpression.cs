@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace Harpy.AST.Expressions;
 
 /// <summary>
@@ -38,5 +41,11 @@ public class IndexExpression : Expression
 
         result += BlankLine(indent) + ")";
         return result;
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        // TODO: Implement index expression code generation
+        throw new NotImplementedException("IndexExpression.WalkExpression not yet implemented");
     }
 }
