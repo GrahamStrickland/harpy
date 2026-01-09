@@ -16,3 +16,6 @@ obj/
 # Rider files
 .idea/
 *.user
+
+# OpenCode sessions
+sessions
