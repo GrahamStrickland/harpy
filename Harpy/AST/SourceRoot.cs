@@ -23,9 +23,9 @@ public class SourceRoot(string name, List<HarbourAstNode> children) : HarbourAst
 
         foreach (var child in Children)
         {
-            if (child is FunctionStatement or ProcedureStatement)
+            if (child is FunctionStatement or ProcedureStatement or StaticVariableDeclaration)
             {
-                // Functions and procedures become static methods in the partial class
+                // Functions, procedures, and file-level statics become members of the partial class
                 classMembers.Add((MemberDeclarationSyntax)child.Walk(context));
             }
             else if (child is Statement statement)
@@ -55,8 +55,8 @@ public class SourceRoot(string name, List<HarbourAstNode> children) : HarbourAst
         var partialClass = SyntaxFactory.ClassDeclaration(context.PartialClassName)
             .AddModifiers(
                 SyntaxFactory.Token(SyntaxKind.PublicKeyword),
-                SyntaxFactory.Token(SyntaxKind.PartialKeyword),
-                SyntaxFactory.Token(SyntaxKind.StaticKeyword))
+                SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                SyntaxFactory.Token(SyntaxKind.PartialKeyword))
             .AddMembers([.. classMembers]);
 
         var compilationUnit = SyntaxFactory.CompilationUnit()

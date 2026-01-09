@@ -10,9 +10,9 @@ namespace Harpy.AST.Statements;
 /// </summary>
 public abstract class VariableDeclaration : Statement
 {
-    private readonly Expression? _assignment;
-    private readonly HarbourSyntaxToken _name;
-    private readonly HarbourSyntaxToken _scope;
+    public Expression? Assignment { get; }
+    public HarbourSyntaxToken Name { get; }
+    public HarbourSyntaxToken Scope { get; }
 
     /// <summary>
     ///     Represents a local or static variable declaration, e.g. <c>local a</c> or <c>static b := 1</c>.
@@ -22,30 +22,30 @@ public abstract class VariableDeclaration : Statement
     /// <param name="assignment">Optional assignment value.</param>
     protected VariableDeclaration(HarbourSyntaxToken scope, HarbourSyntaxToken name, Expression? assignment) : base([])
     {
-        _scope = scope;
-        _name = name;
-        _assignment = assignment;
+        Scope = scope;
+        Name = name;
+        Assignment = assignment;
 
-        var nameNode = new HarbourSyntaxTokenNode(_name, []);
+        var nameNode = new HarbourSyntaxTokenNode(Name, [])
         {
-            Parent = this;
-        }
+            Parent = this
+        };
         Children.Add(nameNode);
 
-        if (_assignment == null) return;
-        _assignment.Parent = this;
-        Children.Add(_assignment);
+        if (Assignment == null) return;
+        Assignment.Parent = this;
+        Children.Add(Assignment);
     }
 
     public override string PrettyPrint(int indent = 0)
     {
         return NodeLine(indent) + "VariableDeclaration(\n" + BlankLine(indent + 1) + "scope\n" +
-               ChildNodeLine(indent + 1) + _scope.PrettyPrint(indent + 2) + "\n" +
+               ChildNodeLine(indent + 1) + Scope.PrettyPrint(indent + 2) + "\n" +
                BlankLine(indent + 1) + "name\n" + ChildNodeLine(indent + 1) +
-               _name.PrettyPrint(indent + 2) + "\n" + (_assignment == null
+               Name.PrettyPrint(indent + 2) + "\n" + (Assignment == null
                    ? ""
                    : BlankLine(indent + 1) + "assignment\n" + ChildNodeLine(indent + 1) +
-                     _assignment.PrettyPrint(indent + 2))
+                     Assignment.PrettyPrint(indent + 2))
                + "\n" + BlankLine(indent) + ")";
     }
 

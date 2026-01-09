@@ -8,35 +8,37 @@ namespace Harpy.AST.Expressions;
 /// </summary>
 public class AssignmentExpression : Expression
 {
-    private readonly Expression _left;
-    private readonly Expression _right;
+    public Expression Left { get; }
+    public Expression Right { get; }
 
     /// <summary>
     ///     An assignment expression like <c>a := b</c>.
     /// </summary>
     public AssignmentExpression(Expression left, Expression right) : base(false, [])
     {
-        _left = left;
-        _right = right;
+        Left = left;
+        Right = right;
 
-        _left.Parent = this;
-        Children.Add(_left);
-        _right.Parent = this;
-        Children.Add(_right);
+        Left.Parent = this;
+        Children.Add(Left);
+        Right.Parent = this;
+        Children.Add(Right);
     }
 
     public override string PrettyPrint(int indent = 0)
     {
         return NodeLine(indent) +
                "AssignmentExpression(\n" + BlankLine(indent + 1) + "left\n" + ChildNodeLine(indent + 1) +
-               $"{_left.PrettyPrint(indent + 2)}\n" +
-               BlankLine(indent + 1) + "right\n" + ChildNodeLine(indent + 1) + $"{_right.PrettyPrint(indent + 2)}\n" +
+               $"{Left.PrettyPrint(indent + 2)}\n" +
+               BlankLine(indent + 1) + "right\n" + ChildNodeLine(indent + 1) + $"{Right.PrettyPrint(indent + 2)}\n" +
                BlankLine(indent) + ")";
     }
 
     public override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement assignment expression code generation
-        throw new NotImplementedException("AssignmentExpression.WalkExpression not yet implemented");
+        return Microsoft.CodeAnalysis.CSharp.SyntaxFactory.AssignmentExpression(
+            Microsoft.CodeAnalysis.CSharp.SyntaxKind.SimpleAssignmentExpression,
+            (ExpressionSyntax)Left.Walk(context),
+            (ExpressionSyntax)Right.Walk(context));
     }
 }
