@@ -1,4 +1,7 @@
+using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
 
@@ -25,5 +28,62 @@ public class LiteralExpression : Expression
     {
         return NodeLine(indent) + "LiteralExpression(\n" + BlankLine(indent + 1) + $"literal(type={_literalNode.token.Literal()})\n" +
                ChildNodeLine(indent + 1) + _literalNode.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
+    }
+
+    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    {
+        var token = _literalNode.token;
+        var literalType = token.Literal();
+
+        return literalType switch
+        {
+            "boolean" => token.Text.ToLower() switch
+            {
+                ".t." => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression),
+                ".f." => SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression),
+                _ => throw new InvalidOperationException($"Unknown boolean literal: {token.Text}")
+            },
+            "number" => ParseNumericLiteral(token.Text),
+            "string" => SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                SyntaxFactory.Literal(UnescapeString(token.Text))),
+            "nil" => SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression),
+            _ => throw new NotImplementedException($"Literal type {literalType} not implemented")
+        };
+    }
+
+    private static ExpressionSyntax ParseNumericLiteral(string text)
+    {
+        if (int.TryParse(text, out var intValue))
+        {
+            return SyntaxFactory.LiteralExpression(
+                SyntaxKind.NumericLiteralExpression,
+                SyntaxFactory.Literal(intValue));
+        }
+
+        if (double.TryParse(text, out var doubleValue))
+        {
+            return SyntaxFactory.LiteralExpression(
+                SyntaxKind.NumericLiteralExpression,
+                SyntaxFactory.Literal(doubleValue));
+        }
+
+        throw new InvalidOperationException($"Unable to parse numeric literal: {text}");
+    }
+
+    private static string UnescapeString(string str)
+    {
+        if (str.Length >= 2 && (str[0] == '"' || str[0] == '\'' || str[0] == '['))
+        {
+            str = str[1..^1];
+        }
+
+        return str
+            .Replace("\\n", "\n")
+            .Replace("\\r", "\r")
+            .Replace("\\t", "\t")
+            .Replace("\\\\", "\\")
+            .Replace("\\\"", "\"")
+            .Replace("\\'", "'");
     }
 }

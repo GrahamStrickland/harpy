@@ -1,3 +1,6 @@
+using Harpy.CodeGen;
+using Microsoft.CodeAnalysis;
+
 namespace Harpy.AST;
 
 public abstract class HarbourAstNode(List<HarbourAstNode> children)
@@ -15,12 +18,11 @@ public abstract class HarbourAstNode(List<HarbourAstNode> children)
     }
 
     /// <summary>
-    ///     Walk through all children of the AST node in order.
+    ///     Walk through the AST node and generate equivalent C# syntax.
     /// </summary>
-    public void Walk()
-    {
-        foreach (var child in Children) child.Walk();
-    }
+    /// <param name="context">The code generation context</param>
+    /// <returns>A Roslyn syntax node representing the equivalent C# code</returns>
+    public abstract SyntaxNode Walk(CodeGenContext context);
 
     protected static string NodeLine(int indent = 0)
     {
