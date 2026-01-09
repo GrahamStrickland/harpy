@@ -27,11 +27,9 @@ public static class IndexAdjuster
                     SyntaxKind.NumericLiteralExpression,
                     SyntaxFactory.Literal(intValue - 1));
             }
-            if (literal.Token.Value is double doubleValue)
+            if (literal.Token.Value is double)
             {
-                return SyntaxFactory.LiteralExpression(
-                    SyntaxKind.NumericLiteralExpression,
-                    SyntaxFactory.Literal((int)doubleValue - 1));
+                throw new InvalidSyntaxException($"Unable to index using a floating point variable, encountered floating point index {literal.Token}");
             }
         }
 
