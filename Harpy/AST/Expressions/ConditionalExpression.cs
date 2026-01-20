@@ -28,6 +28,7 @@ public class ConditionalExpression : Expression
             _thenArm.Parent = this;
             Children.Add(_thenArm);
         }
+
         if (_elseArm is not null)
         {
             _elseArm.Parent = this;

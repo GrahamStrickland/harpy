@@ -48,9 +48,9 @@ public class ProcedureStatement : Statement
     public override string PrettyPrint(int indent = 0)
     {
         var result = NodeLine(indent) + "ProcedureStatement(" + (_isStatic ? "static" : "") + "\n";
-        result += BlankLine(indent + 1) + "name\n" + ChildNodeLine(indent + 1) + 
+        result += BlankLine(indent + 1) + "name\n" + ChildNodeLine(indent + 1) +
                   Children[0].PrettyPrint(indent + 2) + "\n";
-        
+
         if (_parameters.Count > 0)
         {
             result += BlankLine(indent + 1) + "parameters\n";

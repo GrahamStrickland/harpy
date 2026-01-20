@@ -27,7 +27,8 @@ public class LiteralExpression : Expression
 
     public override string PrettyPrint(int indent = 0)
     {
-        return NodeLine(indent) + "LiteralExpression(\n" + BlankLine(indent + 1) + $"literal(type={_literalNode.token.Literal()})\n" +
+        return NodeLine(indent) + "LiteralExpression(\n" + BlankLine(indent + 1) +
+               $"literal(type={_literalNode.token.Literal()})\n" +
                ChildNodeLine(indent + 1) + _literalNode.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 
@@ -56,35 +57,27 @@ public class LiteralExpression : Expression
     private static ExpressionSyntax ParseNumericLiteral(string text)
     {
         if (int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
-        {
             return SyntaxFactory.LiteralExpression(
                 SyntaxKind.NumericLiteralExpression,
                 SyntaxFactory.Literal(intValue));
-        }
 
-        if ((text.StartsWith("0x") || text.StartsWith("0X")) && int.TryParse(text[2..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hexValue))
-        {
+        if ((text.StartsWith("0x") || text.StartsWith("0X")) && int.TryParse(text[2..], NumberStyles.HexNumber,
+                CultureInfo.InvariantCulture, out var hexValue))
             return SyntaxFactory.LiteralExpression(
                 SyntaxKind.NumericLiteralExpression,
                 SyntaxFactory.Literal(text, hexValue));
-        }
 
         if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleValue))
-        {
             return SyntaxFactory.LiteralExpression(
                 SyntaxKind.NumericLiteralExpression,
                 SyntaxFactory.Literal(doubleValue));
-        }
 
         throw new InvalidOperationException($"Unable to parse numeric literal: {text}");
     }
 
     private static string UnescapeString(string str)
     {
-        if (str.Length >= 2 && (str[0] == '"' || str[0] == '\'' || str[0] == '['))
-        {
-            str = str[1..^1];
-        }
+        if (str.Length >= 2 && (str[0] == '"' || str[0] == '\'' || str[0] == '[')) str = str[1..^1];
 
         return str
             .Replace("\\n", "\n")

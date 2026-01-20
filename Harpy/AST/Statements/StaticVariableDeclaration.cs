@@ -24,13 +24,9 @@ public class StaticVariableDeclaration(HarbourSyntaxToken scope, HarbourSyntaxTo
         {
             ExpressionSyntax initializer;
             if (Assignment is AssignmentExpression assignmentExpr)
-            {
                 initializer = (ExpressionSyntax)assignmentExpr.Right.Walk(context);
-            }
             else
-            {
                 initializer = (ExpressionSyntax)Assignment.Walk(context);
-            }
 
             variableDeclarator = variableDeclarator.WithInitializer(
                 SyntaxFactory.EqualsValueClause(initializer));
@@ -45,12 +41,13 @@ public class StaticVariableDeclaration(HarbourSyntaxToken scope, HarbourSyntaxTo
                 SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 
         context.TopLevelMembers.Add(fieldDeclaration);
-        
+
         return fieldDeclaration;
     }
 
     public override StatementSyntax WalkStatement(CodeGenContext context)
     {
-        throw new NotImplementedException("StaticVariableDeclaration.WalkStatement not implemented for local scope yet.");
+        throw new NotImplementedException(
+            "StaticVariableDeclaration.WalkStatement not implemented for local scope yet.");
     }
 }

@@ -19,5 +19,8 @@ public abstract class Statement(List<HarbourAstNode> children) : HarbourAstNode(
     /// <summary>
     ///     Implementation of the base Walk method that calls the statement-specific <c>Walk</c>.
     /// </summary>
-    public override SyntaxNode Walk(CodeGenContext context) => WalkStatement(context);
+    public override SyntaxNode Walk(CodeGenContext context)
+    {
+        return WalkStatement(context);
+    }
 }

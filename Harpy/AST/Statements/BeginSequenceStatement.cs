@@ -62,10 +62,8 @@ public class BeginSequenceStatement : Statement
     {
         var result = NodeLine(indent) + "BeginSequenceStatement(\n";
         if (_errorHandler != null)
-        {
             result += BlankLine(indent + 1) + "errorHandler\n" + ChildNodeLine(indent + 1) +
                       _errorHandler.PrettyPrint(indent + 2) + "\n";
-        }
 
         if (_beginSequenceBody.Count > 0)
         {

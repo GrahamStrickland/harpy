@@ -79,7 +79,7 @@ public class TestIndexAdjuster
             SyntaxKind.NumericLiteralExpression,
             SyntaxFactory.Literal(5.5));
 
-        Assert.ThrowsException<InvalidSyntaxException>(() => 
+        Assert.ThrowsException<InvalidSyntaxException>(() =>
             IndexAdjuster.AdjustIndex(indexExpr, _context));
     }
 
@@ -93,7 +93,7 @@ public class TestIndexAdjuster
         Assert.IsInstanceOfType<ParenthesizedExpressionSyntax>(result);
         var paren = (ParenthesizedExpressionSyntax)result;
         Assert.IsInstanceOfType<BinaryExpressionSyntax>(paren.Expression);
-        
+
         var binary = (BinaryExpressionSyntax)paren.Expression;
         Assert.AreEqual(SyntaxKind.SubtractExpression, binary.Kind());
         Assert.AreEqual("myIndex", binary.Left.ToString());
@@ -115,7 +115,7 @@ public class TestIndexAdjuster
         Assert.IsInstanceOfType<ParenthesizedExpressionSyntax>(result);
         var paren = (ParenthesizedExpressionSyntax)result;
         Assert.IsInstanceOfType<BinaryExpressionSyntax>(paren.Expression);
-        
+
         var binary = (BinaryExpressionSyntax)paren.Expression;
         Assert.AreEqual(SyntaxKind.SubtractExpression, binary.Kind());
         Assert.AreEqual("(a+b)", binary.Left.ToString());
@@ -135,7 +135,7 @@ public class TestIndexAdjuster
         Assert.IsInstanceOfType<ParenthesizedExpressionSyntax>(result);
         var paren = (ParenthesizedExpressionSyntax)result;
         Assert.IsInstanceOfType<BinaryExpressionSyntax>(paren.Expression);
-        
+
         var binary = (BinaryExpressionSyntax)paren.Expression;
         Assert.AreEqual(SyntaxKind.SubtractExpression, binary.Kind());
         Assert.AreEqual("obj.index", binary.Left.ToString());
@@ -153,7 +153,7 @@ public class TestIndexAdjuster
         Assert.IsInstanceOfType<ParenthesizedExpressionSyntax>(result);
         var paren = (ParenthesizedExpressionSyntax)result;
         Assert.IsInstanceOfType<BinaryExpressionSyntax>(paren.Expression);
-        
+
         var binary = (BinaryExpressionSyntax)paren.Expression;
         Assert.AreEqual(SyntaxKind.SubtractExpression, binary.Kind());
         Assert.AreEqual("GetIndex()", binary.Left.ToString());
@@ -176,7 +176,7 @@ public class TestIndexAdjuster
             SyntaxFactory.Literal(10));
 
         var result = IndexAdjuster.AdjustIndex(indexExpr, _context);
-        
+
         // Verify the result is exactly what we expect
         Assert.AreEqual("9", result.ToString());
     }
@@ -187,7 +187,7 @@ public class TestIndexAdjuster
         var indexExpr = SyntaxFactory.IdentifierName("i");
 
         var result = IndexAdjuster.AdjustIndex(indexExpr, _context);
-        
+
         // Verify the result includes parentheses and subtraction
         Assert.AreEqual("(i-1)", result.ToString());
     }

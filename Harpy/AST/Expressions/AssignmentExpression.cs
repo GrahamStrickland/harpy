@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -8,9 +9,6 @@ namespace Harpy.AST.Expressions;
 /// </summary>
 public class AssignmentExpression : Expression
 {
-    public Expression Left { get; }
-    public Expression Right { get; }
-
     /// <summary>
     ///     An assignment expression like <c>a := b</c>.
     /// </summary>
@@ -25,6 +23,9 @@ public class AssignmentExpression : Expression
         Children.Add(Right);
     }
 
+    public Expression Left { get; }
+    public Expression Right { get; }
+
     public override string PrettyPrint(int indent = 0)
     {
         return NodeLine(indent) +
@@ -36,8 +37,8 @@ public class AssignmentExpression : Expression
 
     public override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        return Microsoft.CodeAnalysis.CSharp.SyntaxFactory.AssignmentExpression(
-            Microsoft.CodeAnalysis.CSharp.SyntaxKind.SimpleAssignmentExpression,
+        return SyntaxFactory.AssignmentExpression(
+            SyntaxKind.SimpleAssignmentExpression,
             (ExpressionSyntax)Left.Walk(context),
             (ExpressionSyntax)Right.Walk(context));
     }

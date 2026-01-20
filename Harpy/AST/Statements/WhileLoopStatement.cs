@@ -33,9 +33,9 @@ public class WhileLoopStatement : Statement
     public override string PrettyPrint(int indent = 0)
     {
         var result = NodeLine(indent) + "WhileLoopStatement(\n";
-        result += BlankLine(indent + 1) + "condition\n" + ChildNodeLine(indent + 1) + 
+        result += BlankLine(indent + 1) + "condition\n" + ChildNodeLine(indent + 1) +
                   _condition.PrettyPrint(indent + 2) + "\n";
-        
+
         if (_body.Count > 0)
         {
             result += BlankLine(indent + 1) + "body\n";

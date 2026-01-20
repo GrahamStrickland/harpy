@@ -22,15 +22,12 @@ public static class IndexAdjuster
         {
             // If it's a numeric literal, we can adjust it at compile time
             if (literal.Token.Value is int intValue)
-            {
                 return SyntaxFactory.LiteralExpression(
                     SyntaxKind.NumericLiteralExpression,
                     SyntaxFactory.Literal(intValue - 1));
-            }
             if (literal.Token.Value is double)
-            {
-                throw new InvalidSyntaxException($"Unable to index using a floating point variable, encountered floating point index {literal.Token}");
-            }
+                throw new InvalidSyntaxException(
+                    $"Unable to index using a floating point variable, encountered floating point index {literal.Token}");
         }
 
         // For non-literal expressions, generate: (expr - 1)

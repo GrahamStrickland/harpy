@@ -17,11 +17,8 @@ public class HarbourSyntaxTokenNode(HarbourSyntaxToken token, List<HarbourAstNod
     public override SyntaxNode Walk(CodeGenContext context)
     {
         // Token nodes are typically handled by their parent nodes
-        if (token.Kind == HarbourSyntaxKind.NAME)
-        {
-            return SyntaxFactory.IdentifierName(token.Text);
-        }
-        
+        if (token.Kind == HarbourSyntaxKind.NAME) return SyntaxFactory.IdentifierName(token.Text);
+
         throw new NotImplementedException($"Walk not implemented for token type {token.Kind}");
     }
 }

@@ -25,7 +25,8 @@ public class ConditionalStatement : Statement
     public override string PrettyPrint(int indent = 0)
     {
         return NodeLine(indent) + "ConditionalStatement(\n" + BlankLine(indent + 1) + "conditionalExpression\n" +
-               ChildNodeLine(indent + 1) + _conditionalExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
+               ChildNodeLine(indent + 1) + _conditionalExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) +
+               ")";
     }
 
     public override StatementSyntax WalkStatement(CodeGenContext context)

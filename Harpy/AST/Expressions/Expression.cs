@@ -18,5 +18,8 @@ public abstract class Expression(bool leftExpression, List<HarbourAstNode> child
     /// <summary>
     ///     Implementation of the base <c>Walk</c> method that calls the expression-specific Walk.
     /// </summary>
-    public override SyntaxNode Walk(CodeGenContext context) => WalkExpression(context);
+    public override SyntaxNode Walk(CodeGenContext context)
+    {
+        return WalkExpression(context);
+    }
 }

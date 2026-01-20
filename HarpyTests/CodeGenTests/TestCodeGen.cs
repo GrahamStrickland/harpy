@@ -2,6 +2,7 @@ using Harpy.CodeGen;
 using Harpy.Lexer;
 using Harpy.Parser;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace HarpyTests.CodeGenTests;
 
@@ -115,7 +116,7 @@ public class TestCodeGen
 
         // Normalize whitespace for comparison
         var actual = syntaxNode.NormalizeWhitespace().ToFullString();
-        var expectedNormalized = Microsoft.CodeAnalysis.CSharp.SyntaxFactory.ParseCompilationUnit(expected)
+        var expectedNormalized = SyntaxFactory.ParseCompilationUnit(expected)
             .NormalizeWhitespace().ToFullString();
 
         Assert.AreEqual(expectedNormalized, actual);

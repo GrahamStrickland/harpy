@@ -321,7 +321,8 @@ public class TestTypeInference
     [TestMethod]
     public void TestGetDefaultValue_Dictionary_ReturnsNewDictionary()
     {
-        Assert.AreEqual("new Dictionary<string, dynamic>()", TypeInference.GetDefaultValue("Dictionary<string, dynamic>"));
+        Assert.AreEqual("new Dictionary<string, dynamic>()",
+            TypeInference.GetDefaultValue("Dictionary<string, dynamic>"));
     }
 
     [TestMethod]

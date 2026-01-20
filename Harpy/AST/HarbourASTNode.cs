@@ -26,8 +26,8 @@ public abstract class HarbourAstNode(List<HarbourAstNode> children)
 
     protected static string NodeLine(int indent = 0)
     {
-        return indent == 0 
-            ? "" 
+        return indent == 0
+            ? ""
             : new string(' ', 4 * (indent - 1)) + "└───";
     }
 

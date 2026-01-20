@@ -34,7 +34,7 @@ public class Parser
                 sourceRoot.Children.Add(statement);
             else
                 throw new InvalidSyntaxException(
-                                $"Expected statement with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+                    $"Expected statement with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
         }
 
         throw new InvalidSyntaxException(
@@ -253,8 +253,10 @@ public class Parser
                     elseIfConditions.Add(new Tuple<Expression, List<Statement>>(elseIfCondition, elseIfBody));
                 }
                 else
+                {
                     throw new InvalidSyntaxException(
-                                        $"Expected boolean expression after else if beginning with token '{elseIfToken.Text}' on line {elseIfToken.Line}, column {elseIfToken.Start}, found null.");
+                        $"Expected boolean expression after else if beginning with token '{elseIfToken.Text}' on line {elseIfToken.Line}, column {elseIfToken.Start}, found null.");
+                }
             }
             else
             {
@@ -279,7 +281,8 @@ public class Parser
         if (expression is ConditionalExpression conditionalExpression)
             return new ConditionalStatement(conditionalExpression);
 
-        throw new InvalidSyntaxException($"Expected conditional expression after conditional statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        throw new InvalidSyntaxException(
+            $"Expected conditional expression after conditional statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
     }
 
     private WhileLoopStatement WhileLoop(HarbourSyntaxToken token)
@@ -359,7 +362,7 @@ public class Parser
         }
 
         throw new InvalidSyntaxException(
-                $"Expected bound expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+            $"Expected bound expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
     }
 
     private ForEachLoopStatement ForEachLoop(HarbourSyntaxToken token, bool quitLoop)
@@ -393,7 +396,7 @@ public class Parser
         }
 
         throw new InvalidSyntaxException(
-                $"Expected collection expression in for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+            $"Expected collection expression in for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
     }
 
     private LoopStatement Loop(HarbourSyntaxToken token)

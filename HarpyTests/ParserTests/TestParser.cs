@@ -2150,7 +2150,7 @@ public class TestParser
                 )
 
             """
-              );
+        );
     }
 
     [TestMethod]

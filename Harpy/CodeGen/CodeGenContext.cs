@@ -42,6 +42,11 @@ public class CodeGenContext(string partialClassName)
     public List<MemberDeclarationSyntax> TopLevelMembers { get; } = [];
 
     /// <summary>
+    ///     Gets the current scope name, or "global" if at top level.
+    /// </summary>
+    public string CurrentScope => ScopeStack.Count > 0 ? ScopeStack.Peek() : "global";
+
+    /// <summary>
     ///     Enters a new scope with the given name.
     /// </summary>
     public void EnterScope(string scopeName)
@@ -57,11 +62,6 @@ public class CodeGenContext(string partialClassName)
         if (ScopeStack.Count > 0)
             ScopeStack.Pop();
     }
-
-    /// <summary>
-    ///     Gets the current scope name, or "global" if at top level.
-    /// </summary>
-    public string CurrentScope => ScopeStack.Count > 0 ? ScopeStack.Peek() : "global";
 
     /// <summary>
     ///     Registers a variable with its inferred type.

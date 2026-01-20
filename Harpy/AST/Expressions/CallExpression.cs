@@ -23,19 +23,18 @@ public class CallExpression : Expression
         Children.Add(_function);
 
         foreach (var e in arguments)
-        {
             if (e is not null)
             {
                 e.Parent = this;
                 Children.Add(e);
             }
-        }
     }
 
     public override string PrettyPrint(int indent = 0)
     {
         var argumentString = _arguments.Aggregate("",
-            (current, e) => current + ChildNodeLine(indent + 1) + (e is not null ? e.PrettyPrint(indent + 2) : NodeLine(indent + 2) + "nil") + "\n");
+            (current, e) => current + ChildNodeLine(indent + 1) +
+                            (e is not null ? e.PrettyPrint(indent + 2) : NodeLine(indent + 2) + "nil") + "\n");
 
         return NodeLine(indent) + "CallExpression(\n" + BlankLine(indent + 1) + "function\n" +
                ChildNodeLine(indent + 1) +

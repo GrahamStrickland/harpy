@@ -10,10 +10,6 @@ namespace Harpy.AST.Statements;
 /// </summary>
 public abstract class VariableDeclaration : Statement
 {
-    public Expression? Assignment { get; }
-    public HarbourSyntaxToken Name { get; }
-    public HarbourSyntaxToken Scope { get; }
-
     /// <summary>
     ///     Represents a local or static variable declaration, e.g. <c>local a</c> or <c>static b := 1</c>.
     /// </summary>
@@ -36,6 +32,10 @@ public abstract class VariableDeclaration : Statement
         Assignment.Parent = this;
         Children.Add(Assignment);
     }
+
+    public Expression? Assignment { get; }
+    public HarbourSyntaxToken Name { get; }
+    public HarbourSyntaxToken Scope { get; }
 
     public override string PrettyPrint(int indent = 0)
     {

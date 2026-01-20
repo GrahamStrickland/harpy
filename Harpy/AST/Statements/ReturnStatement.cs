@@ -20,13 +20,11 @@ public class ReturnStatement : Statement
     public override string PrettyPrint(int indent = 0)
     {
         var result = NodeLine(indent) + "ReturnStatement(";
-        
+
         if (_returnValue != null)
-        {
-            result += "\n" + BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) + 
+            result += "\n" + BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) +
                       _returnValue.PrettyPrint(indent + 2) + "\n" + BlankLine(indent);
-        }
-        
+
         return result + ")";
     }
 
