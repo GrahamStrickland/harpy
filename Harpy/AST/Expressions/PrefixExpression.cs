@@ -19,8 +19,10 @@ public class PrefixExpression : Expression
     {
         _right = right;
 
-        _operatorNode = new HarbourSyntaxTokenNode(@operator, []);
-        _operatorNode.Parent = this;
+        _operatorNode = new HarbourSyntaxTokenNode(@operator, [])
+        {
+            Parent = this
+        };
         Children.Add(_operatorNode);
 
         _right.Parent = this;
@@ -40,7 +42,7 @@ public class PrefixExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement prefix expression code generation
         throw new NotImplementedException("PrefixExpression.WalkExpression not yet implemented");

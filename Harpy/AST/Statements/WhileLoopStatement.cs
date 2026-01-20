@@ -39,8 +39,8 @@ public class WhileLoopStatement : Statement
         if (_body.Count > 0)
         {
             result += BlankLine(indent + 1) + "body\n";
-            foreach (var stmt in _body)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _body.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         result += BlankLine(indent) + ")";

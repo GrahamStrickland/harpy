@@ -36,14 +36,15 @@ public class IndexExpression : Expression
         if (_right.Count > 0)
         {
             result += BlankLine(indent + 1) + "index\n";
-            foreach (var r in _right) result += ChildNodeLine(indent + 1) + r.PrettyPrint(indent + 2) + "\n";
+            result = _right.Aggregate(result,
+                (current, r) => current + ChildNodeLine(indent + 1) + r.PrettyPrint(indent + 2) + "\n");
         }
 
         result += BlankLine(indent) + ")";
         return result;
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement index expression code generation
         throw new NotImplementedException("IndexExpression.WalkExpression not yet implemented");

@@ -23,7 +23,7 @@ public class AssignmentExpression : Expression
         Children.Add(Right);
     }
 
-    public Expression Left { get; }
+    private Expression Left { get; }
     public Expression Right { get; }
 
     public override string PrettyPrint(int indent = 0)
@@ -35,7 +35,7 @@ public class AssignmentExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         return SyntaxFactory.AssignmentExpression(
             SyntaxKind.SimpleAssignmentExpression,

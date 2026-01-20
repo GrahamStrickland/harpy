@@ -24,8 +24,10 @@ public class OperatorExpression : Expression
         _left.Parent = this;
         Children.Add(_left);
 
-        _operatorNode = new HarbourSyntaxTokenNode(@operator, []);
-        _operatorNode.Parent = this;
+        _operatorNode = new HarbourSyntaxTokenNode(@operator, [])
+        {
+            Parent = this
+        };
         Children.Add(_operatorNode);
 
         _right.Parent = this;
@@ -48,7 +50,7 @@ public class OperatorExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement operator expression code generation
         throw new NotImplementedException("OperatorExpression.WalkExpression not yet implemented");

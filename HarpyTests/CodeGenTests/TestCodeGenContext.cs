@@ -162,9 +162,11 @@ public class TestCodeGenContext
     [TestMethod]
     public void TestInLoop_CanBeSet()
     {
-        var context = new CodeGenContext("TestProgram");
+        var context = new CodeGenContext("TestProgram")
+        {
+            InLoop = true
+        };
 
-        context.InLoop = true;
         Assert.IsTrue(context.InLoop);
 
         context.InLoop = false;
@@ -174,9 +176,11 @@ public class TestCodeGenContext
     [TestMethod]
     public void TestInFunctionOrProcedure_CanBeSet()
     {
-        var context = new CodeGenContext("TestProgram");
+        var context = new CodeGenContext("TestProgram")
+        {
+            InFunctionOrProcedure = true
+        };
 
-        context.InFunctionOrProcedure = true;
         Assert.IsTrue(context.InFunctionOrProcedure);
 
         context.InFunctionOrProcedure = false;

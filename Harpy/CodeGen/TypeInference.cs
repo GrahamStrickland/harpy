@@ -23,9 +23,7 @@ public static class TypeInference
         var lowerName = variableName.ToLower();
         string[] intKeywords = ["column", "col", "error", "handle", "index", "length", "lines", "row"];
 
-        foreach (var keyword in intKeywords)
-            if (lowerName.Contains(keyword))
-                return "int";
+        if (intKeywords.Any(keyword => lowerName.Contains(keyword))) return "int";
 
         // Extract the prefix (first character + optional second character for two-char prefixes)
         var prefix = char.ToLower(variableName[0]);
@@ -59,16 +57,13 @@ public static class TypeInference
         var secondChar = variableName[1];
 
         // Check for static variable prefix 's' followed by type prefix
-        if (prefix == 's' && variableName.Length >= 3)
-        {
-            var typePrefix = char.ToLower(variableName[1]);
-            var thirdChar = variableName[2];
-            // Check if second char is a known prefix and third char is uppercase
-            return "lncdhaop".Contains(typePrefix) && char.IsUpper(thirdChar);
-        }
+        if (prefix != 's' || variableName.Length < 3) return "lncdhaop".Contains(prefix) && char.IsUpper(secondChar);
+        var typePrefix = char.ToLower(variableName[1]);
+        var thirdChar = variableName[2];
+        // Check if second char is a known prefix and third char is uppercase
+        return "lncdhaop".Contains(typePrefix) && char.IsUpper(thirdChar);
 
         // Check if first char is a known prefix and second char is uppercase (indicating CamelCase)
-        return "lncdhaop".Contains(prefix) && char.IsUpper(secondChar);
     }
 
     /// <summary>

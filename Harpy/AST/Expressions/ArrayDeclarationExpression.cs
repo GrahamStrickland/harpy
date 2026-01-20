@@ -46,7 +46,7 @@ public class ArrayDeclarationExpression : Expression
         return result;
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement array declaration code generation
         throw new NotImplementedException("ArrayDeclarationExpression.WalkExpression not yet implemented");

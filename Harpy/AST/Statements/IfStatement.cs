@@ -59,8 +59,8 @@ public class IfStatement : Statement
         if (_ifBody.Count > 0)
         {
             result += BlankLine(indent + 1) + "ifBody\n";
-            foreach (var stmt in _ifBody)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _ifBody.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         if (_elseIfConditions.Count > 0)
@@ -70,20 +70,18 @@ public class IfStatement : Statement
             {
                 result += BlankLine(indent + 2) + "condition\n" + ChildNodeLine(indent + 2) +
                           condition.PrettyPrint(indent + 3) + "\n";
-                if (statements.Count > 0)
-                {
-                    result += BlankLine(indent + 2) + "body\n";
-                    foreach (var stmt in statements)
-                        result += ChildNodeLine(indent + 2) + stmt.PrettyPrint(indent + 3) + "\n";
-                }
+                if (statements.Count <= 0) continue;
+                result += BlankLine(indent + 2) + "body\n";
+                result = statements.Aggregate(result,
+                    (current, stmt) => current + ChildNodeLine(indent + 2) + stmt.PrettyPrint(indent + 3) + "\n");
             }
         }
 
         if (_elseBody.Count > 0)
         {
             result += BlankLine(indent + 1) + "elseBody\n";
-            foreach (var stmt in _elseBody)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _elseBody.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         result += BlankLine(indent) + ")";

@@ -274,7 +274,7 @@ public class Parser
             elseIfConditions, ifBody, elseBody);
     }
 
-    private ConditionalStatement? Conditional(HarbourSyntaxToken token)
+    private ConditionalStatement Conditional(HarbourSyntaxToken token)
     {
         _reader.PutBack(token);
         var expression = _expressionParser.Parse(Precedence.NONE, false, true);

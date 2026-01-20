@@ -52,7 +52,7 @@ public class HashDeclarationExpression : Expression
         return result;
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement hash declaration code generation
         throw new NotImplementedException("HashDeclarationExpression.WalkExpression not yet implemented");

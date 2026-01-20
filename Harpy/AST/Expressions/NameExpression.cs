@@ -16,8 +16,10 @@ public class NameExpression : Expression
     /// </summary>
     public NameExpression(HarbourSyntaxToken name) : base(false, [])
     {
-        _nameNode = new HarbourSyntaxTokenNode(name, []);
-        _nameNode.Parent = this;
+        _nameNode = new HarbourSyntaxTokenNode(name, [])
+        {
+            Parent = this
+        };
         Children.Add(_nameNode);
     }
 
@@ -27,7 +29,7 @@ public class NameExpression : Expression
                _nameNode.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement name expression code generation
         throw new NotImplementedException("NameExpression.WalkExpression not yet implemented");

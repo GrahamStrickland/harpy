@@ -18,26 +18,27 @@ public static class IndexAdjuster
     public static ExpressionSyntax AdjustIndex(ExpressionSyntax indexExpression, CodeGenContext context)
     {
         // Check if it's a literal numeric expression
-        if (indexExpression is LiteralExpressionSyntax literal)
+        if (indexExpression is not LiteralExpressionSyntax literal)
+            return SyntaxFactory.ParenthesizedExpression(
+                SyntaxFactory.BinaryExpression(
+                    SyntaxKind.SubtractExpression,
+                    indexExpression,
+                    SyntaxFactory.LiteralExpression(
+                        SyntaxKind.NumericLiteralExpression,
+                        SyntaxFactory.Literal(1))));
+        return literal.Token.Value switch
         {
             // If it's a numeric literal, we can adjust it at compile time
-            if (literal.Token.Value is int intValue)
-                return SyntaxFactory.LiteralExpression(
-                    SyntaxKind.NumericLiteralExpression,
-                    SyntaxFactory.Literal(intValue - 1));
-            if (literal.Token.Value is double)
-                throw new InvalidSyntaxException(
-                    $"Unable to index using a floating point variable, encountered floating point index {literal.Token}");
-        }
+            int intValue => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression,
+                SyntaxFactory.Literal(intValue - 1)),
+            double => throw new InvalidSyntaxException(
+                $"Unable to index using a floating point variable, encountered floating point index {literal.Token}"),
+            _ => SyntaxFactory.ParenthesizedExpression(SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression,
+                indexExpression,
+                SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(1))))
+        };
 
         // For non-literal expressions, generate: (expr - 1)
-        return SyntaxFactory.ParenthesizedExpression(
-            SyntaxFactory.BinaryExpression(
-                SyntaxKind.SubtractExpression,
-                indexExpression,
-                SyntaxFactory.LiteralExpression(
-                    SyntaxKind.NumericLiteralExpression,
-                    SyntaxFactory.Literal(1))));
     }
 
     /// <summary>

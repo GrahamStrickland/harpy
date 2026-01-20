@@ -29,11 +29,9 @@ public class ConditionalExpression : Expression
             Children.Add(_thenArm);
         }
 
-        if (_elseArm is not null)
-        {
-            _elseArm.Parent = this;
-            Children.Add(_elseArm);
-        }
+        if (_elseArm is null) return;
+        _elseArm.Parent = this;
+        Children.Add(_elseArm);
     }
 
     public override string PrettyPrint(int indent = 0)
@@ -48,7 +46,7 @@ public class ConditionalExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement conditional expression code generation
         throw new NotImplementedException("ConditionalExpression.WalkExpression not yet implemented");

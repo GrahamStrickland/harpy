@@ -38,20 +38,22 @@ public class CodeblockExpression : Expression
         if (_parameters.Count > 0)
         {
             result += BlankLine(indent + 1) + "parameters\n";
-            foreach (var p in _parameters) result += ChildNodeLine(indent + 1) + p.PrettyPrint(indent + 2) + "\n";
+            result = _parameters.Aggregate(result,
+                (current, p) => current + ChildNodeLine(indent + 1) + p.PrettyPrint(indent + 2) + "\n");
         }
 
         if (_expressions.Count > 0)
         {
             result += BlankLine(indent + 1) + "expressions\n";
-            foreach (var e in _expressions) result += ChildNodeLine(indent + 1) + e.PrettyPrint(indent + 2) + "\n";
+            result = _expressions.Aggregate(result,
+                (current, e) => current + ChildNodeLine(indent + 1) + e.PrettyPrint(indent + 2) + "\n");
         }
 
         result += BlankLine(indent) + ")";
         return result;
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement codeblock expression code generation
         throw new NotImplementedException("CodeblockExpression.WalkExpression not yet implemented");

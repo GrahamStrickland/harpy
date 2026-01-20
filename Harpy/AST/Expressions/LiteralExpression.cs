@@ -28,13 +28,13 @@ public class LiteralExpression : Expression
     public override string PrettyPrint(int indent = 0)
     {
         return NodeLine(indent) + "LiteralExpression(\n" + BlankLine(indent + 1) +
-               $"literal(type={_literalNode.token.Literal()})\n" +
+               $"literal(type={_literalNode.Token.Literal()})\n" +
                ChildNodeLine(indent + 1) + _literalNode.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        var token = _literalNode.token;
+        var token = _literalNode.Token;
         var literalType = token.Literal();
 
         return literalType switch

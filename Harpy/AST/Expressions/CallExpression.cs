@@ -22,12 +22,11 @@ public class CallExpression : Expression
         _function.Parent = this;
         Children.Add(_function);
 
-        foreach (var e in arguments)
-            if (e is not null)
-            {
-                e.Parent = this;
-                Children.Add(e);
-            }
+        foreach (var e in arguments.OfType<Expression>())
+        {
+            e.Parent = this;
+            Children.Add(e);
+        }
     }
 
     public override string PrettyPrint(int indent = 0)
@@ -44,7 +43,7 @@ public class CallExpression : Expression
                    : "\n") + BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement call expression code generation
         throw new NotImplementedException("CallExpression.WalkExpression not yet implemented");

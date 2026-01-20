@@ -35,13 +35,12 @@ public class FunctionStatement : Statement
         };
         Children.Add(_nameNode);
 
-        _parameterNodes = new List<HarbourSyntaxTokenNode>();
-        foreach (var parameter in parameters)
+        _parameterNodes = [];
+        foreach (var parameterNode in parameters.Select(parameter => new HarbourSyntaxTokenNode(parameter, [])
+                 {
+                     Parent = this
+                 }))
         {
-            var parameterNode = new HarbourSyntaxTokenNode(parameter, [])
-            {
-                Parent = this
-            };
             _parameterNodes.Add(parameterNode);
             Children.Add(parameterNode);
         }
@@ -64,15 +63,15 @@ public class FunctionStatement : Statement
         if (_parameterNodes.Count > 0)
         {
             result += BlankLine(indent + 1) + "parameters\n";
-            foreach (var pNode in _parameterNodes)
-                result += ChildNodeLine(indent + 1) + pNode.PrettyPrint(indent + 2) + "\n";
+            result = _parameterNodes.Aggregate(result,
+                (current, pNode) => current + ChildNodeLine(indent + 1) + pNode.PrettyPrint(indent + 2) + "\n");
         }
 
         if (_body.Count > 0)
         {
             result += BlankLine(indent + 1) + "body\n";
-            foreach (var stmt in _body)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _body.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         result += BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) +

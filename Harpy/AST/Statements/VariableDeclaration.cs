@@ -33,9 +33,9 @@ public abstract class VariableDeclaration : Statement
         Children.Add(Assignment);
     }
 
-    public Expression? Assignment { get; }
-    public HarbourSyntaxToken Name { get; }
-    public HarbourSyntaxToken Scope { get; }
+    protected Expression? Assignment { get; }
+    protected HarbourSyntaxToken Name { get; }
+    private HarbourSyntaxToken Scope { get; }
 
     public override string PrettyPrint(int indent = 0)
     {

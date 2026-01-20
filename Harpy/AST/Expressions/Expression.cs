@@ -13,7 +13,7 @@ public abstract class Expression(bool leftExpression, List<HarbourAstNode> child
     /// </summary>
     /// <param name="context">The code generation context</param>
     /// <returns>A Roslyn <c>ExpressionSyntax</c> node representing the equivalent C# expression</returns>
-    public abstract ExpressionSyntax WalkExpression(CodeGenContext context);
+    protected abstract ExpressionSyntax WalkExpression(CodeGenContext context);
 
     /// <summary>
     ///     Implementation of the base <c>Walk</c> method that calls the expression-specific Walk.

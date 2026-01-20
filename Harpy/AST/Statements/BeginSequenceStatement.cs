@@ -68,8 +68,8 @@ public class BeginSequenceStatement : Statement
         if (_beginSequenceBody.Count > 0)
         {
             result += BlankLine(indent + 1) + "beginSequenceBody\n";
-            foreach (var stmt in _beginSequenceBody)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _beginSequenceBody.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         if (_recoverBody.Count > 0)
@@ -78,15 +78,15 @@ public class BeginSequenceStatement : Statement
             if (_exceptionNode != null)
                 result += BlankLine(indent + 2) + "exception\n" + ChildNodeLine(indent + 2) +
                           _exceptionNode.PrettyPrint(indent + 3) + "\n";
-            foreach (var stmt in _recoverBody)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _recoverBody.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         if (_alwaysBody.Count > 0)
         {
             result += BlankLine(indent + 1) + "alwaysBody\n";
-            foreach (var stmt in _alwaysBody)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _alwaysBody.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         result += BlankLine(indent) + ")";

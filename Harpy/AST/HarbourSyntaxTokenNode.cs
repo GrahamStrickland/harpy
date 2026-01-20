@@ -7,18 +7,18 @@ namespace Harpy.AST;
 
 public class HarbourSyntaxTokenNode(HarbourSyntaxToken token, List<HarbourAstNode> children) : HarbourAstNode(children)
 {
-    public HarbourSyntaxToken token = token;
+    public readonly HarbourSyntaxToken Token = token;
 
     public override string PrettyPrint(int indent = 0)
     {
-        return token.PrettyPrint(indent);
+        return Token.PrettyPrint(indent);
     }
 
     public override SyntaxNode Walk(CodeGenContext context)
     {
         // Token nodes are typically handled by their parent nodes
-        if (token.Kind == HarbourSyntaxKind.NAME) return SyntaxFactory.IdentifierName(token.Text);
-
-        throw new NotImplementedException($"Walk not implemented for token type {token.Kind}");
+        return Token.Kind == HarbourSyntaxKind.NAME
+            ? SyntaxFactory.IdentifierName(Token.Text)
+            : throw new NotImplementedException($"Walk not implemented for token type {Token.Kind}");
     }
 }

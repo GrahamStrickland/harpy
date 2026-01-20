@@ -33,7 +33,7 @@ public class ObjectAccessExpression : Expression
                $"{_right.PrettyPrint(indent + 2)}\n" + BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement object access expression code generation
         throw new NotImplementedException("ObjectAccessExpression.WalkExpression not yet implemented");

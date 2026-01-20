@@ -46,11 +46,11 @@ public class ForEachLoopStatement : Statement
                   _variableNode.PrettyPrint(indent + 2) + "\n";
         result += BlankLine(indent + 1) + "collection\n" + ChildNodeLine(indent + 1) +
                   _collection.PrettyPrint(indent + 2) + "\n";
-        if (_body != null && _body.Count > 0)
+        if (_body is { Count: > 0 })
         {
             result += BlankLine(indent + 1) + "body\n";
-            foreach (var stmt in _body)
-                result += ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n";
+            result = _body.Aggregate(result,
+                (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }
 
         result += BlankLine(indent) + ")";

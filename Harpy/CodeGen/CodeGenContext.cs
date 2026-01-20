@@ -72,10 +72,10 @@ public class CodeGenContext(string partialClassName)
     }
 
     /// <summary>
-    ///     Gets the type of a variable, or "dynamic" if not found.
+    ///     Gets the type of variable, or "dynamic" if not found.
     /// </summary>
     public string GetVariableType(string name)
     {
-        return VariableTypes.TryGetValue(name, out var type) ? type : "dynamic";
+        return VariableTypes.GetValueOrDefault(name, "dynamic");
     }
 }

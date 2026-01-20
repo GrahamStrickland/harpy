@@ -22,8 +22,10 @@ public class PostfixExpression : Expression
         _left.Parent = this;
         Children.Add(_left);
 
-        _operatorNode = new HarbourSyntaxTokenNode(@operator, []);
-        _operatorNode.Parent = this;
+        _operatorNode = new HarbourSyntaxTokenNode(@operator, [])
+        {
+            Parent = this
+        };
         Children.Add(_operatorNode);
     }
 
@@ -40,7 +42,7 @@ public class PostfixExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    public override ExpressionSyntax WalkExpression(CodeGenContext context)
+    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
         // TODO: Implement postfix expression code generation
         throw new NotImplementedException("PostfixExpression.WalkExpression not yet implemented");
