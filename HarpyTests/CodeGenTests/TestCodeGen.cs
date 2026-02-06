@@ -14,22 +14,22 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "static lVar := .t.",
-            @"
+            """
             public static partial class TestProgram
             {
                 private static bool lVar = true;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "static lVar := .f.",
-            @"
+            """
             public static partial class TestProgram
             {
                 private static bool lVar = false;
             }
-            "
+            """
         );
     }
 
@@ -38,32 +38,32 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "static nVar := 123",
-            @"
+            """
             public static partial class TestProgram
             {
                 private static double nVar = 123;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "static nVar := 0x1234",
-            @"
+            """
             public static partial class TestProgram
             {
                 private static double nVar = 0x1234;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "static nVar := 12.34",
-            @"
+            """
             public static partial class TestProgram
             {
                 private static double nVar = 12.34;
             }
-            "
+            """
         );
     }
 
@@ -100,12 +100,12 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "static xVar := nil",
-            @"
+            """
             public static partial class TestProgram
             {
                 private static dynamic xVar = null;
             }
-            "
+            """
         );
     }
 
@@ -114,32 +114,32 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "local lOK",
-            @"
+            """
             public static partial class TestProgram
             {
                 private bool lOK;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "local lOK := .t.",
-            @"
+            """
             public static partial class TestProgram
             {
                 private bool lOK = true;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "local nNumber := 1.2345",
-            @"
+            """
             public static partial class TestProgram
             {
                 private double nNumber = 1.2345;
             }
-            "
+            """
         );
     }
 
@@ -148,12 +148,12 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "local lVar := lLogical",
-            @"
+            """
             public static partial class TestProgram
             {
                 private bool lVar = lLogical;
             }
-            "
+            """
         );
     }
 
@@ -162,12 +162,12 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "local lVar := GetBool()",
-            @"
+            """
             public static partial class TestProgram
             {
                 private bool lVar = GetBool();
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
@@ -200,35 +200,35 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "local lBool := .t.\nlocal lVar := iif(lBool, .t., )",
-            @"
+            """
             public static partial class TestProgram
             {
                 private bool lBool = true;
                 private bool lVar = lBool ? true : null;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "local lBool := .t.\nlocal lVar := iif(lBool, , .f.)",
-            @"
+            """
             public static partial class TestProgram
             {
                 private bool lBool = true;
                 private bool lVar = lBool ? null : false;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "local lBool := .t.\nlocal lVar := iif(lBool, .t., .f.)",
-            @"
+            """
             public static partial class TestProgram
             {
                 private bool lBool = true;
                 private bool lVar = lBool ? true : false;
             }
-            "
+            """
         );
     }
 
@@ -237,22 +237,22 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "local nNumber := 1 + 2",
-            @"
+            """
             public static partial class TestProgram
             {
                 private double nNumber = 1 + 2;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "local nNumber := 1 * 2",
-            @"
+            """
             public static partial class TestProgram
             {
                 private double nNumber = 1 * 2;
             }
-            "
+            """
         );
 
         AssertCodeGenEqualsExpected(
@@ -267,12 +267,32 @@ public class TestCodeGen
 
         AssertCodeGenEqualsExpected(
             "local nNumber := 2 ^ 3",
-            @"
+            """
             public static partial class TestProgram
             {
                 private double nNumber = Math.Pow(2, 3);
             }
-            "
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local nNumber := (4 / 2) ^ 3",
+            """
+            public static partial class TestProgram
+            {
+                private double nNumber = Math.Pow(4 / 2, 3);
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local nNumber := ((4 * 6) / 2) ^ 3",
+            """
+            public static partial class TestProgram
+            {
+                private double nNumber = Math.Pow(4 * 6 / 2, 3);
+            }
+            """
         );
     }
 
