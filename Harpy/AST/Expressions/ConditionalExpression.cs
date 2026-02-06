@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -48,7 +49,17 @@ public class ConditionalExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement conditional expression code generation
-        throw new NotImplementedException("ConditionalExpression.WalkExpression not yet implemented");
+        ExpressionSyntax thenExpression, elseExpression;
+        if (_thenArm == null)
+            thenExpression = SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
+        else
+            thenExpression = (ExpressionSyntax)_thenArm.Walk(context);
+
+        if (_elseArm == null)
+            elseExpression = SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
+        else
+            elseExpression = (ExpressionSyntax)_elseArm.Walk(context);
+
+        return SyntaxFactory.ConditionalExpression((ExpressionSyntax)_ifArm.Walk(context), thenExpression, elseExpression);
     }
 }

@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -45,7 +46,24 @@ public class CallExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement call expression code generation
-        throw new NotImplementedException("CallExpression.WalkExpression not yet implemented");
+        var expressionSyntax = _function.Walk(context);
+        var arguments = SyntaxFactory.SeparatedList<ArgumentSyntax>();
+
+        if (_arguments != null)
+        {
+            foreach (var argument in _arguments)
+            {
+                if (argument is NameExpression)
+                {
+                    var argumentExpression = argument.Walk(context);
+                    if (argumentExpression is IdentifierNameSyntax identifierName)
+                        arguments = arguments.Add(SyntaxFactory.Argument(identifierName));
+                }
+            }
+        }
+
+        var argumentList = SyntaxFactory.ArgumentList(arguments);
+
+        return SyntaxFactory.InvocationExpression((ExpressionSyntax)expressionSyntax, argumentList);
     }
 }

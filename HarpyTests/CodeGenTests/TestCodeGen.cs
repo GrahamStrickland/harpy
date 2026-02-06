@@ -72,22 +72,26 @@ public class TestCodeGen
     {
         AssertCodeGenEqualsExpected(
             "static cVar := 'hello'",
-            @"
+            """
+
             public static partial class TestProgram
             {
-                private static string cVar = ""hello"";
+                private static string cVar = "hello";
             }
-            "
+            
+            """
         );
 
         AssertCodeGenEqualsExpected(
             "static cVar := \"world\"",
-            @"
+            """
+
             public static partial class TestProgram
             {
-                private static string cVar = ""world"";
+                private static string cVar = "world";
             }
-            "
+            
+            """
         );
     }
 
@@ -100,6 +104,129 @@ public class TestCodeGen
             public static partial class TestProgram
             {
                 private static dynamic xVar = null;
+            }
+            "
+        );
+    }
+
+    [TestMethod]
+    public void TestLocalVariableDeclaration()
+    {
+        AssertCodeGenEqualsExpected(
+            "local lOK",
+            @"
+            public static partial class TestProgram
+            {
+                private bool lOK;
+            }
+            "
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local lOK := .t.",
+            @"
+            public static partial class TestProgram
+            {
+                private bool lOK = true;
+            }
+            "
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local nNumber := 1.2345",
+            @"
+            public static partial class TestProgram
+            {
+                private double nNumber = 1.2345;
+            }
+            "
+        );
+    }
+
+    [TestMethod]
+    public void TestVariableDeclarationWithNameExpression()
+    {
+        AssertCodeGenEqualsExpected(
+            "local lVar := lLogical",
+            @"
+            public static partial class TestProgram
+            {
+                private bool lVar = lLogical;
+            }
+            "
+        );
+    }
+
+    [TestMethod]
+    public void TestVariableDeclarationWithFunctionCall()
+    {
+        AssertCodeGenEqualsExpected(
+            "local lVar := GetBool()",
+            @"
+            public static partial class TestProgram
+            {
+                private bool lVar = GetBool();
+            }
+            "
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local cString := \"hello\"\nlocal lVar := GetBool(cString)",
+            """
+            public static partial class TestProgram
+            {
+                private string cString = "hello";
+                private bool lVar = GetBool(cString);
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local cString := \"hello\"\nlocal nNumber := 1.2345\nlocal lVar := GetBool(cString, nNumber)",
+            """
+            public static partial class TestProgram
+            {
+                private string cString = "hello";
+                private double nNumber = 1.2345;
+                private bool lVar = GetBool(cString, nNumber);
+            }
+            """
+        );
+    }
+
+    // TODO: Figure out how to make the types nullable from the assignment.
+    [TestMethod]
+    public void TestVariableDeclarationWithConditional()
+    {
+        AssertCodeGenEqualsExpected(
+            "local lBool := .t.\nlocal lVar := iif(lBool, .t., )",
+            @"
+            public static partial class TestProgram
+            {
+                private bool lBool = true;
+                private bool lVar = lBool ? true : null;
+            }
+            "
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local lBool := .t.\nlocal lVar := iif(lBool, , .f.)",
+            @"
+            public static partial class TestProgram
+            {
+                private bool lBool = true;
+                private bool lVar = lBool ? null : false;
+            }
+            "
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local lBool := .t.\nlocal lVar := iif(lBool, .t., .f.)",
+            @"
+            public static partial class TestProgram
+            {
+                private bool lBool = true;
+                private bool lVar = lBool ? true : false;
             }
             "
         );

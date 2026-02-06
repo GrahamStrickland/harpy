@@ -2,6 +2,8 @@ using Harpy.AST.Expressions;
 using Harpy.CodeGen;
 using Harpy.Lexer;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Harpy.AST.Statements;
 
@@ -47,6 +49,41 @@ public abstract class VariableDeclaration : Statement
                    : BlankLine(indent + 1) + "assignment\n" + ChildNodeLine(indent + 1) +
                      Assignment.PrettyPrint(indent + 2))
                + "\n" + BlankLine(indent) + ")";
+    }
+
+    public override SyntaxNode Walk(CodeGenContext context)
+    {
+        var typeName = TypeInference.InferType(Name.Text);
+        var variableType = SyntaxFactory.ParseTypeName(typeName);
+
+        var variableDeclarator = SyntaxFactory.VariableDeclarator(Name.Text);
+
+        if (Assignment != null)
+        {
+            ExpressionSyntax initializer;
+            if (Assignment is AssignmentExpression assignmentExpr)
+                initializer = (ExpressionSyntax)assignmentExpr.Right.Walk(context);
+            else
+                initializer = (ExpressionSyntax)Assignment.Walk(context);
+
+            variableDeclarator = variableDeclarator.WithInitializer(
+                SyntaxFactory.EqualsValueClause(initializer));
+        }
+
+        var variableDeclaration = SyntaxFactory.VariableDeclaration(variableType)
+            .AddVariables(variableDeclarator);
+
+        var fieldDeclaration = SyntaxFactory.FieldDeclaration(variableDeclaration).AddModifiers(
+                    SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
+
+        if (Scope.Keyword() == "static")
+        {
+            fieldDeclaration = fieldDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+        }
+
+        context.TopLevelMembers.Add(fieldDeclaration);
+
+        return fieldDeclaration;
     }
 
     public override StatementSyntax WalkStatement(CodeGenContext context)

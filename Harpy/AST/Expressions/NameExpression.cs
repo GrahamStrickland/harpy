@@ -1,5 +1,6 @@
 using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -31,7 +32,6 @@ public class NameExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement name expression code generation
-        throw new NotImplementedException("NameExpression.WalkExpression not yet implemented");
+        return SyntaxFactory.IdentifierName(_nameNode.Token.Text);
     }
 }
