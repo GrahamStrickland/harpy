@@ -1,5 +1,6 @@
 using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -52,7 +53,38 @@ public class OperatorExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement operator expression code generation
-        throw new NotImplementedException("OperatorExpression.WalkExpression not yet implemented");
+        SyntaxKind operatorKind;
+        switch (_operatorNode.Token.Kind)
+        {
+            case HarbourSyntaxKind.PLUS:
+                operatorKind = SyntaxKind.AddExpression;
+                break;
+            case HarbourSyntaxKind.MINUS:
+                operatorKind = SyntaxKind.SubtractExpression;
+                break;
+            case HarbourSyntaxKind.ASTERISK:
+                operatorKind = SyntaxKind.MultiplyExpression;
+                break;
+            case HarbourSyntaxKind.SLASH:
+                operatorKind = SyntaxKind.DivideExpression;
+                break;
+            case HarbourSyntaxKind.CARET:
+                var arguments = SyntaxFactory.SeparatedList<ArgumentSyntax>();
+
+                arguments = arguments.Add(SyntaxFactory.Argument((ExpressionSyntax)_left.Walk(context)));
+                arguments = arguments.Add(SyntaxFactory.Argument((ExpressionSyntax)_right.Walk(context)));
+
+                var mathPow = SyntaxFactory.MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    SyntaxFactory.IdentifierName("Math"),
+                    SyntaxFactory.IdentifierName("Pow")
+                );
+
+                return SyntaxFactory.InvocationExpression(mathPow, SyntaxFactory.ArgumentList(arguments));
+            default:
+                throw new ArgumentException($"Invalid operator token passed to `OperatorExpression`: {PrettyPrint()}");
+        }
+
+        return SyntaxFactory.BinaryExpression(operatorKind, (ExpressionSyntax)_left.Walk(context), (ExpressionSyntax)_right.Walk(context));
     }
 }

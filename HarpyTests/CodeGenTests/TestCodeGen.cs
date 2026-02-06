@@ -232,6 +232,50 @@ public class TestCodeGen
         );
     }
 
+    [TestMethod]
+    public void TestVariableDeclarationWithOperatorExpression()
+    {
+        AssertCodeGenEqualsExpected(
+            "local nNumber := 1 + 2",
+            @"
+            public static partial class TestProgram
+            {
+                private double nNumber = 1 + 2;
+            }
+            "
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local nNumber := 1 * 2",
+            @"
+            public static partial class TestProgram
+            {
+                private double nNumber = 1 * 2;
+            }
+            "
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local cString := \"Hello\" + \", world\"",
+            """
+            public static partial class TestProgram
+            {
+                private string cString = "Hello" + ", world";
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local nNumber := 2 ^ 3",
+            @"
+            public static partial class TestProgram
+            {
+                private double nNumber = Math.Pow(2, 3);
+            }
+            "
+        );
+    }
+
     private static void AssertCodeGenEqualsExpected(string source, string expected)
     {
         var lexer = new Lexer(source);
