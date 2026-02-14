@@ -44,7 +44,7 @@ def main():
                 start_time = time.time()
                 result = subprocess.run(
                     [
-                        "Harpy/bin/Debug/net9.0/Harpy",
+                        "Harpy/bin/Debug/net10.0/Harpy",
                         "--src",
                         path,
                     ],
