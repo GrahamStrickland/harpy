@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -48,7 +49,27 @@ public class ArrayDeclarationExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement array declaration code generation
-        throw new NotImplementedException("ArrayDeclarationExpression.WalkExpression not yet implemented");
+        var elements = SyntaxFactory.SeparatedList<ExpressionSyntax>();
+
+        if (_elements != null)
+        {
+            foreach (var element in _elements)
+            {
+                var elementExpression = element.Walk(context);
+                elements = elements.Add((ExpressionSyntax)elementExpression);
+            }
+        }
+
+        return SyntaxFactory.ObjectCreationExpression(
+            SyntaxFactory.GenericName(
+                SyntaxFactory.Identifier("List"))
+            .WithTypeArgumentList(
+                SyntaxFactory.TypeArgumentList(
+                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                        SyntaxFactory.IdentifierName("dynamic")
+                    )
+                )
+            )
+        ).WithInitializer(SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, elements));
     }
 }

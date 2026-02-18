@@ -296,6 +296,60 @@ public class TestCodeGen
         );
     }
 
+    [TestMethod]
+    public void TestArrayDeclaration()
+    {
+        AssertCodeGenEqualsExpected(
+            "local aValues := {}",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{};
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local aValues := { 1 }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1};
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local aValues := { 1, 2 }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1, 2};
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local aValues := { 1, nil }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1, null};
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local aValues := { 1, \"two\" }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1, "two"};
+            }
+            """
+        );
+    }
+
     private static void AssertCodeGenEqualsExpected(string source, string expected)
     {
         var lexer = new Lexer(source);
