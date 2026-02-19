@@ -203,4 +203,38 @@ public class TestExpressionCodeGen
             """
         );
     }
+
+    [TestMethod]
+    public void TestHashDeclaration()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local hHash := { => }",
+            """
+            public static partial class TestProgram
+            {
+                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>();
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local hHash := { \"key1\" => 1 }",
+            """
+            public static partial class TestProgram
+            {
+                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>{ {"key1", 1} };
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local hHash := { \"key1\" => 1, \"key2\" => 2 }",
+            """
+            public static partial class TestProgram
+            {
+                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>{ {"key1", 1}, {"key2", 2} };
+            }
+            """
+        );
+    }
 }

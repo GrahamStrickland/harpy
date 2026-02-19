@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -54,7 +55,54 @@ public class HashDeclarationExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement hash declaration code generation
-        throw new NotImplementedException("HashDeclarationExpression.WalkExpression not yet implemented");
+        var typeArgumentList = SyntaxFactory.SeparatedList<TypeSyntax>();
+        typeArgumentList = typeArgumentList.Add(SyntaxFactory.IdentifierName("string"));
+        typeArgumentList = typeArgumentList.Add(SyntaxFactory.IdentifierName("dynamic"));
+
+        var argumentList = SyntaxFactory.SeparatedList<ArgumentSyntax>();
+
+        if (_valuePairs.Count == 0)
+        {
+            return SyntaxFactory.ObjectCreationExpression(
+                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
+                                     .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
+                                .WithArgumentList(SyntaxFactory.ArgumentList(argumentList));
+        }
+
+        if (_valuePairs.Count == 1)
+        {
+            var initializerList = SyntaxFactory.SeparatedList<ExpressionSyntax>();
+            foreach (var (k, v) in _valuePairs)
+            {
+                initializerList = initializerList.Add((ExpressionSyntax)k.Walk(context));
+                initializerList = initializerList.Add((ExpressionSyntax)v.Walk(context));
+            }
+
+            var valuePair = SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(SyntaxFactory.InitializerExpression(SyntaxKind.ComplexElementInitializerExpression, initializerList));
+
+            return SyntaxFactory.ObjectCreationExpression(
+                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
+                                     .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
+                                .WithInitializer(SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, valuePair));
+        }
+        else
+        {
+            var valuePairs = SyntaxFactory.SeparatedList<ExpressionSyntax>();
+
+            foreach (var (k, v) in _valuePairs)
+            {
+                var initializerList = SyntaxFactory.SeparatedList<ExpressionSyntax>();
+
+                initializerList = initializerList.Add((ExpressionSyntax)k.Walk(context));
+                initializerList = initializerList.Add((ExpressionSyntax)v.Walk(context));
+
+                valuePairs = valuePairs.Add(SyntaxFactory.InitializerExpression(SyntaxKind.ComplexElementInitializerExpression, initializerList));
+            }
+
+            return SyntaxFactory.ObjectCreationExpression(
+                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
+                                     .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
+                                .WithInitializer(SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, valuePairs));
+        }
     }
 }
