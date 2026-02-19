@@ -6,7 +6,7 @@ namespace HarpyTests.CodeGenTests;
 public class TestExpressionCodeGen
 {
     [TestMethod]
-    public void TestBooleanLiteral()
+    public void TestBooleanLiteralExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "static lVar := .t.",
@@ -30,7 +30,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestNumericLiteral()
+    public void TestNumericLiteralExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "static nVar := 123",
@@ -64,7 +64,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestStringLiteral()
+    public void TestStringLiteralExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "static cVar := 'hello'",
@@ -92,7 +92,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestNilLiteral()
+    public void TestNilLiteralExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "static xVar := nil",
@@ -106,7 +106,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestArrayDeclarator()
+    public void TestArrayDeclaratorExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "local aValues := {}",
@@ -161,7 +161,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestCodeblockDeclaration()
+    public void TestCodeblockDeclarationExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "local bCodeblock := { || }",
@@ -205,7 +205,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestHashDeclarator()
+    public void TestHashDeclaratorExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "local hHash := { => }",
@@ -233,6 +233,40 @@ public class TestExpressionCodeGen
             public static partial class TestProgram
             {
                 private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>{ {"key1", 1}, {"key2", 2} };
+            }
+            """
+        );
+    }
+
+    [TestMethod]
+    public void TestIndexExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a[1]",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a[0];
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a[b]",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a[(b - 1)];
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a[\"string\"]",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a["string"];
             }
             """
         );

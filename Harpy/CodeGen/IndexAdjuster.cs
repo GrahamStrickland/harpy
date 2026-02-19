@@ -33,9 +33,8 @@ public static class IndexAdjuster
                 SyntaxFactory.Literal(intValue - 1)),
             double => throw new InvalidSyntaxException(
                 $"Unable to index using a floating point variable, encountered floating point index {literal.Token}"),
-            _ => SyntaxFactory.ParenthesizedExpression(SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression,
-                indexExpression,
-                SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(1))))
+            _ => indexExpression,
+
         };
 
         // For non-literal expressions, generate: (expr - 1)
@@ -48,8 +47,8 @@ public static class IndexAdjuster
     /// </summary>
     public static bool NeedsAdjustment(Expression expression)
     {
-        // For now, always adjust. In the future, we might add heuristics to detect
-        // cases where the code is already 0-based.
+        // TODO: For now, always adjust. In the future, we might add heuristics to detect
+        // cases where the code is already 0-based or where we know the expression is really a string.
         return true;
     }
 }

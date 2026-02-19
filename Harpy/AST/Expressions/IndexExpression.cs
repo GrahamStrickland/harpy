@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -46,7 +47,19 @@ public class IndexExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement index expression code generation
-        throw new NotImplementedException("IndexExpression.WalkExpression not yet implemented");
+        var argumentList = SyntaxFactory.BracketedArgumentList();
+
+        foreach (var e in _right)
+        {
+            var expression = (ExpressionSyntax)e.Walk(context);
+
+            if (IndexAdjuster.NeedsAdjustment(e))
+                expression = IndexAdjuster.AdjustIndex(expression, context);
+
+            argumentList = argumentList.AddArguments(SyntaxFactory.Argument(expression));
+        }
+
+        return SyntaxFactory.ElementAccessExpression((ExpressionSyntax)_left.Walk(context))
+                            .WithArgumentList(argumentList);
     }
 }
