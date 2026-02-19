@@ -28,76 +28,76 @@ public class Lexer(string text)
             switch (c)
             {
                 case '#':
-                {
-                    var element = ReadPreprocessorDirectiveOrNeOp();
+                    {
+                        var element = ReadPreprocessorDirectiveOrNeOp();
 
-                    if (element is HarbourSyntaxToken token)
-                    {
-                        newToken = token;
-                    }
-                    else
-                    {
-                        if (newLineEncountered)
-                            leadingTrivia.Add((HarbourSyntaxTrivia)element);
+                        if (element is HarbourSyntaxToken token)
+                        {
+                            newToken = token;
+                        }
                         else
-                            trailingTrivia.Add((HarbourSyntaxTrivia)element);
-                    }
+                        {
+                            if (newLineEncountered)
+                                leadingTrivia.Add((HarbourSyntaxTrivia)element);
+                            else
+                                trailingTrivia.Add((HarbourSyntaxTrivia)element);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case '/':
-                {
-                    switch (Peek())
                     {
-                        case '/':
+                        switch (Peek())
                         {
-                            if (newLineEncountered)
-                                leadingTrivia.Add(ReadLineComment());
-                            else
-                                trailingTrivia.Add(ReadLineComment());
-                            break;
+                            case '/':
+                                {
+                                    if (newLineEncountered)
+                                        leadingTrivia.Add(ReadLineComment());
+                                    else
+                                        trailingTrivia.Add(ReadLineComment());
+                                    break;
+                                }
+                            case '*':
+                                {
+                                    if (newLineEncountered)
+                                        leadingTrivia.Add(ReadBlockComment());
+                                    else
+                                        trailingTrivia.Add(ReadBlockComment());
+                                    break;
+                                }
+                            default:
+                                {
+                                    newToken = new HarbourSyntaxToken(
+                                        HarbourSyntaxToken.SimpleOperatorFromText(c.ToString()),
+                                        c.ToString(),
+                                        _line,
+                                        _pos
+                                    );
+                                    break;
+                                }
                         }
-                        case '*':
-                        {
-                            if (newLineEncountered)
-                                leadingTrivia.Add(ReadBlockComment());
-                            else
-                                trailingTrivia.Add(ReadBlockComment());
-                            break;
-                        }
-                        default:
-                        {
-                            newToken = new HarbourSyntaxToken(
-                                HarbourSyntaxToken.SimpleOperatorFromText(c.ToString()),
-                                c.ToString(),
-                                _line,
-                                _pos
-                            );
-                            break;
-                        }
-                    }
 
-                    break;
-                }
+                        break;
+                    }
                 case '[':
-                {
-                    newToken = /*char.IsLetterOrDigit(Peek())
+                    {
+                        newToken = /*char.IsLetterOrDigit(Peek())
                         ? ReadStringLiteralOrBrackets(c)
                         : */new HarbourSyntaxToken(HarbourSyntaxKind.LEFT_BRACKET, c.ToString(), _line, _pos);
 
-                    break;
-                }
+                        break;
+                    }
                 case '"':
                 case '\'':
-                {
-                    newToken = ReadStringLiteralOrBrackets(c);
-                    break;
-                }
+                    {
+                        newToken = ReadStringLiteralOrBrackets(c);
+                        break;
+                    }
                 case '.':
-                {
-                    newToken = char.IsLetter(Peek()) ? ReadBooleanLiteralOrLogical(c) : ReadNumericLiteral(c);
-                    break;
-                }
+                    {
+                        newToken = char.IsLetter(Peek()) ? ReadBooleanLiteralOrLogical(c) : ReadNumericLiteral(c);
+                        break;
+                    }
                 case '0':
                 case '1':
                 case '2':
@@ -108,92 +108,92 @@ public class Lexer(string text)
                 case '7':
                 case '8':
                 case '9':
-                {
-                    newToken = ReadNumericLiteral(c);
-                    break;
-                }
+                    {
+                        newToken = ReadNumericLiteral(c);
+                        break;
+                    }
                 default:
-                {
-                    var keyword = ReadKeyword(c);
-                    var op = c.ToString() + Peek();
+                    {
+                        var keyword = ReadKeyword(c);
+                        var op = c.ToString() + Peek();
 
-                    if (keyword != null)
-                    {
-                        newToken = keyword;
-                    }
-                    else if (HarbourSyntaxToken.CompoundOperators.ContainsValue(op))
-                    {
-                        Advance();
-                        newToken = new HarbourSyntaxToken(
-                            HarbourSyntaxToken.CompoundOperatorFromText(op),
-                            op,
-                            _line,
-                            _pos
-                        );
-                    }
-                    else if (HarbourSyntaxToken.SimpleOperators.ContainsValue(c.ToString()))
-                    {
-                        newToken = new HarbourSyntaxToken(
-                            HarbourSyntaxToken.SimpleOperatorFromText(c.ToString()),
-                            c.ToString(),
-                            _line,
-                            _pos
-                        );
-                    }
-                    else if (char.IsLetterOrDigit(c))
-                    {
-                        newToken = ReadName();
-                    }
-                    else if (char.IsWhiteSpace(c) || c == ';')
-                    {
-                        HarbourSyntaxKind type;
-                        if (op == "\r\n")
+                        if (keyword != null)
+                        {
+                            newToken = keyword;
+                        }
+                        else if (HarbourSyntaxToken.CompoundOperators.ContainsValue(op))
                         {
                             Advance();
-                            type = HarbourSyntaxKind.NEWLINE;
+                            newToken = new HarbourSyntaxToken(
+                                HarbourSyntaxToken.CompoundOperatorFromText(op),
+                                op,
+                                _line,
+                                _pos
+                            );
                         }
-                        else
+                        else if (HarbourSyntaxToken.SimpleOperators.ContainsValue(c.ToString()))
                         {
-                            type = c switch
+                            newToken = new HarbourSyntaxToken(
+                                HarbourSyntaxToken.SimpleOperatorFromText(c.ToString()),
+                                c.ToString(),
+                                _line,
+                                _pos
+                            );
+                        }
+                        else if (char.IsLetterOrDigit(c))
+                        {
+                            newToken = ReadName();
+                        }
+                        else if (char.IsWhiteSpace(c) || c == ';')
+                        {
+                            HarbourSyntaxKind type;
+                            if (op == "\r\n")
                             {
-                                '\n' => HarbourSyntaxKind.NEWLINE,
-                                '\r' => HarbourSyntaxKind.CARRIAGE_RETURN,
-                                '\t' => HarbourSyntaxKind.TAB,
-                                ' ' => HarbourSyntaxKind.SPACE,
-                                ';' => HarbourSyntaxKind.LINE_CONTINUATION,
-                                _ => throw new InvalidSyntaxException($"Unknown character '{c}' encountered in source.")
-                            };
+                                Advance();
+                                type = HarbourSyntaxKind.NEWLINE;
+                            }
+                            else
+                            {
+                                type = c switch
+                                {
+                                    '\n' => HarbourSyntaxKind.NEWLINE,
+                                    '\r' => HarbourSyntaxKind.CARRIAGE_RETURN,
+                                    '\t' => HarbourSyntaxKind.TAB,
+                                    ' ' => HarbourSyntaxKind.SPACE,
+                                    ';' => HarbourSyntaxKind.LINE_CONTINUATION,
+                                    _ => throw new InvalidSyntaxException($"Unknown character '{c}' encountered in source.")
+                                };
+                            }
+
+                            if (newLineEncountered)
+                                leadingTrivia.Add(
+                                    new HarbourSyntaxTrivia(
+                                        type,
+                                        c.ToString(),
+                                        _line,
+                                        _pos
+                                    )
+                                );
+                            else
+                                trailingTrivia.Add(
+                                    new HarbourSyntaxTrivia(
+                                        type,
+                                        c.ToString(),
+                                        _line,
+                                        _pos
+                                    )
+                                );
+
+                            if (type is HarbourSyntaxKind.NEWLINE or HarbourSyntaxKind.CARRIAGE_RETURN)
+                            {
+                                _line += 1;
+                                _pos = 0;
+                                newLineEncountered = true;
+                            }
                         }
 
-                        if (newLineEncountered)
-                            leadingTrivia.Add(
-                                new HarbourSyntaxTrivia(
-                                    type,
-                                    c.ToString(),
-                                    _line,
-                                    _pos
-                                )
-                            );
-                        else
-                            trailingTrivia.Add(
-                                new HarbourSyntaxTrivia(
-                                    type,
-                                    c.ToString(),
-                                    _line,
-                                    _pos
-                                )
-                            );
-
-                        if (type is HarbourSyntaxKind.NEWLINE or HarbourSyntaxKind.CARRIAGE_RETURN)
-                        {
-                            _line += 1;
-                            _pos = 0;
-                            newLineEncountered = true;
-                        }
+                        break;
                     }
-
-                    break;
-                }
             }
 
             if (newToken == null) continue; // Search for more trivia.
@@ -242,19 +242,19 @@ public class Lexer(string text)
                     case '\n':
                     case '\r':
                     case '\0':
-                    {
-                        return new HarbourSyntaxTrivia(
-                            HarbourSyntaxTrivia.DirectiveFromText(directive.ToLower()),
-                            text[startIndex.._index],
-                            _line,
-                            _pos
-                        );
-                    }
+                        {
+                            return new HarbourSyntaxTrivia(
+                                HarbourSyntaxTrivia.DirectiveFromText(directive.ToLower()),
+                                text[startIndex.._index],
+                                _line,
+                                _pos
+                            );
+                        }
                     default:
-                    {
-                        Advance();
-                        break;
-                    }
+                        {
+                            Advance();
+                            break;
+                        }
                 }
 
         ResetIndex(1);
@@ -274,19 +274,19 @@ public class Lexer(string text)
                 case '\n':
                 case '\r':
                 case '\0':
-                {
-                    return new HarbourSyntaxTrivia(
-                        HarbourSyntaxKind.LINE_COMMENT,
-                        text[startIndex.._index],
-                        _line,
-                        _pos
-                    );
-                }
+                    {
+                        return new HarbourSyntaxTrivia(
+                            HarbourSyntaxKind.LINE_COMMENT,
+                            text[startIndex.._index],
+                            _line,
+                            _pos
+                        );
+                    }
                 default:
-                {
-                    Advance();
-                    break;
-                }
+                    {
+                        Advance();
+                        break;
+                    }
             }
     }
 
@@ -302,53 +302,53 @@ public class Lexer(string text)
             switch (c)
             {
                 case '*':
-                {
-                    var c1 = Advance();
-
-                    switch (c1)
                     {
-                        case '/':
-                        {
-                            return new HarbourSyntaxTrivia(
-                                HarbourSyntaxKind.BLOCK_COMMENT,
-                                text[startIndex.._index],
-                                startLine,
-                                _pos
-                            );
-                        }
-                        case '\0':
-                        {
-                            throw new InvalidSyntaxException(
-                                $"Unterminated block comment starting at line {startLine}.");
-                        }
-                        default:
-                        {
-                            if (c1 == '\n')
-                            {
-                                _line += 1;
-                                _pos = 0;
-                            }
+                        var c1 = Advance();
 
-                            break;
+                        switch (c1)
+                        {
+                            case '/':
+                                {
+                                    return new HarbourSyntaxTrivia(
+                                        HarbourSyntaxKind.BLOCK_COMMENT,
+                                        text[startIndex.._index],
+                                        startLine,
+                                        _pos
+                                    );
+                                }
+                            case '\0':
+                                {
+                                    throw new InvalidSyntaxException(
+                                        $"Unterminated block comment starting at line {startLine}.");
+                                }
+                            default:
+                                {
+                                    if (c1 == '\n')
+                                    {
+                                        _line += 1;
+                                        _pos = 0;
+                                    }
+
+                                    break;
+                                }
                         }
+
+                        break;
                     }
-
-                    break;
-                }
                 case '\0':
-                {
-                    throw new InvalidSyntaxException($"Unterminated block comment starting at line {startLine}.");
-                }
-                default:
-                {
-                    if (c == '\n')
                     {
-                        _line += 1;
-                        _pos = 0;
+                        throw new InvalidSyntaxException($"Unterminated block comment starting at line {startLine}.");
                     }
+                default:
+                    {
+                        if (c == '\n')
+                        {
+                            _line += 1;
+                            _pos = 0;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
         }
     }
@@ -391,46 +391,46 @@ public class Lexer(string text)
                 case '7':
                 case '8':
                 case '9':
-                {
-                    literal += c;
-                    break;
-                }
+                    {
+                        literal += c;
+                        break;
+                    }
                 case 'x':
-                {
-                    if (literal != "0")
-                        throw new InvalidSyntaxException($"Unterminated hexadecimal literal '{literal + c}'.");
-                    literal += c;
-                    hexNum = true;
-                    break;
-                }
+                    {
+                        if (literal != "0")
+                            throw new InvalidSyntaxException($"Unterminated hexadecimal literal '{literal + c}'.");
+                        literal += c;
+                        hexNum = true;
+                        break;
+                    }
                 case 'a':
                 case 'b':
                 case 'c':
                 case 'd':
                 case 'e':
                 case 'f':
-                {
-                    if (!hexNum) throw new InvalidSyntaxException($"Invalid numeric literal '{literal + c}'.");
-                    literal += c;
-                    break;
-                }
+                    {
+                        if (!hexNum) throw new InvalidSyntaxException($"Invalid numeric literal '{literal + c}'.");
+                        literal += c;
+                        break;
+                    }
                 case '.':
-                {
-                    if (dotFound)
-                        throw new InvalidSyntaxException($"Second decimal point found in literal '{literal + c}'.");
-                    literal += c;
-                    dotFound = true;
-                    break;
-                }
+                    {
+                        if (dotFound)
+                            throw new InvalidSyntaxException($"Second decimal point found in literal '{literal + c}'.");
+                        literal += c;
+                        dotFound = true;
+                        break;
+                    }
                 default:
-                {
-                    return new HarbourSyntaxToken(
-                        HarbourSyntaxKind.NUM_LITERAL,
-                        literal,
-                        _line,
-                        _pos
-                    );
-                }
+                    {
+                        return new HarbourSyntaxToken(
+                            HarbourSyntaxKind.NUM_LITERAL,
+                            literal,
+                            _line,
+                            _pos
+                        );
+                    }
             }
 
             Advance();
@@ -459,15 +459,15 @@ public class Lexer(string text)
             switch (c)
             {
                 case '\0':
-                {
-                    if (literal.Length > 1 && literal.EndsWith(endQuote)) break;
-                    throw new InvalidSyntaxException($"Unterminated string literal '{literal}'.");
-                }
+                    {
+                        if (literal.Length > 1 && literal.EndsWith(endQuote)) break;
+                        throw new InvalidSyntaxException($"Unterminated string literal '{literal}'.");
+                    }
                 default:
-                {
-                    literal += c;
-                    break;
-                }
+                    {
+                        literal += c;
+                        break;
+                    }
             }
 
             Advance();

@@ -33,9 +33,9 @@ public class ProcedureStatement : Statement
         };
         Children.Add(nameNode);
         foreach (var parameterChild in parameters.Select(parameter => new HarbourSyntaxTokenNode(parameter, [])
-                 {
-                     Parent = this
-                 }))
+        {
+            Parent = this
+        }))
             Children.Add(parameterChild);
 
         foreach (var bodyChild in body)

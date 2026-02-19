@@ -1,6 +1,6 @@
 using Harpy.Lexer;
-using Expression = Harpy.AST.Expressions.Expression;
 using ConditionalExpression = Harpy.AST.Expressions.ConditionalExpression;
+using Expression = Harpy.AST.Expressions.Expression;
 
 namespace Harpy.Parser.SubParsers;
 

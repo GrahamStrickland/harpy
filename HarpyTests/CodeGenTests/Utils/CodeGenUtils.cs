@@ -1,6 +1,6 @@
+using Harpy.CodeGen;
 using Harpy.Lexer;
 using Harpy.Parser;
-using Harpy.CodeGen;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 

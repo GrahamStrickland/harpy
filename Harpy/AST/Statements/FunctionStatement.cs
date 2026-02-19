@@ -37,9 +37,9 @@ public class FunctionStatement : Statement
 
         _parameterNodes = [];
         foreach (var parameterNode in parameters.Select(parameter => new HarbourSyntaxTokenNode(parameter, [])
-                 {
-                     Parent = this
-                 }))
+        {
+            Parent = this
+        }))
         {
             _parameterNodes.Add(parameterNode);
             Children.Add(parameterNode);
