@@ -106,7 +106,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestArrayDeclaration()
+    public void TestArrayDeclarator()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "local aValues := {}",
@@ -205,7 +205,7 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestHashDeclaration()
+    public void TestHashDeclarator()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
             "local hHash := { => }",

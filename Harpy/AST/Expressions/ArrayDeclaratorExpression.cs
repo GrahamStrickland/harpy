@@ -5,16 +5,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Harpy.AST.Expressions;
 
 /// <summary>
-///     An array declaration like <c>{ }</c> or <c>{ b, c, d }</c>.
+///     An array declarator like <c>{ }</c> or <c>{ b, c, d }</c>.
 /// </summary>
-public class ArrayDeclarationExpression : Expression
+public class ArrayDeclaratorExpression : Expression
 {
     private readonly List<Expression> _elements;
 
     /// <summary>
     ///     An array declaration like <c>{ }</c> or <c>{ b, c, d }</c>.
     /// </summary>
-    public ArrayDeclarationExpression(List<Expression> elements) : base(false, [])
+    public ArrayDeclaratorExpression(List<Expression> elements) : base(false, [])
     {
         _elements = elements;
 
@@ -27,7 +27,7 @@ public class ArrayDeclarationExpression : Expression
 
     public override string PrettyPrint(int indent = 0)
     {
-        var result = NodeLine(indent) + "ArrayDeclarationExpression(";
+        var result = NodeLine(indent) + "ArrayDeclaratorExpression(";
 
         if (_elements.Count > 0)
         {

@@ -17,14 +17,14 @@ public class ContainerDeclarationParser : IPrefixSubParser
         if (parser.Match(HarbourSyntaxKind.RIGHT_BRACE))
         {
             parser.Consume(HarbourSyntaxKind.RIGHT_BRACE);
-            return new ArrayDeclarationExpression(elements);
+            return new ArrayDeclaratorExpression(elements);
         }
 
         if (parser.Match(HarbourSyntaxKind.HASHOP))
         {
             parser.Consume(HarbourSyntaxKind.HASHOP);
             parser.Consume(HarbourSyntaxKind.RIGHT_BRACE);
-            return new HashDeclarationExpression(keyValuePairs);
+            return new HashDeclaratorExpression(keyValuePairs);
         }
 
         var firstExpression = parser.Parse() ?? throw new InvalidSyntaxException(
@@ -67,10 +67,10 @@ public class ContainerDeclarationParser : IPrefixSubParser
 
         parser.Consume(HarbourSyntaxKind.RIGHT_BRACE);
 
-        if (elements.Count > 0) return new ArrayDeclarationExpression(elements);
+        if (elements.Count > 0) return new ArrayDeclaratorExpression(elements);
 
         return keyValuePairs.Count > 0
-            ? new HashDeclarationExpression(keyValuePairs)
+            ? new HashDeclaratorExpression(keyValuePairs)
             : throw new InvalidSyntaxException(
                 $"Unable to parse container declaration with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
     }

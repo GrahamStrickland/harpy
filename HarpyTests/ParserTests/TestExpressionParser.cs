@@ -1924,7 +1924,7 @@ public sealed class TestExpressionParser
     }
 
     [TestMethod]
-    public void TestArrayDeclaration()
+    public void TestArrayDeclarator()
     {
         AssertParsedEqualsExpected(
             "a := { }",
@@ -1939,7 +1939,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───ArrayDeclarationExpression()
+                └───ArrayDeclaratorExpression()
             )
             """
         );
@@ -1956,7 +1956,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───ArrayDeclarationExpression(
+                └───ArrayDeclaratorExpression(
                         element 0
                         │
                         └───LiteralExpression(
@@ -1981,7 +1981,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───ArrayDeclarationExpression(
+                └───ArrayDeclaratorExpression(
                         element 0
                         │
                         └───LiteralExpression(
@@ -2013,7 +2013,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───ArrayDeclarationExpression(
+                └───ArrayDeclaratorExpression(
                         element 0
                         │
                         └───LiteralExpression(
@@ -2049,7 +2049,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───ArrayDeclarationExpression(
+                └───ArrayDeclaratorExpression(
                         element 0
                         │
                         └───LiteralExpression(
@@ -2075,7 +2075,7 @@ public sealed class TestExpressionParser
     }
 
     [TestMethod]
-    public void TestHashDeclaration()
+    public void TestHashDeclarator()
     {
         AssertParsedEqualsExpected(
             "a := { => }",
@@ -2090,7 +2090,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───HashDeclarationExpression()
+                └───HashDeclaratorExpression()
             )
             """
         );
@@ -2107,7 +2107,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───HashDeclarationExpression(
+                └───HashDeclaratorExpression(
                         key 0
                         │
                         └───LiteralExpression(
@@ -2139,7 +2139,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───HashDeclarationExpression(
+                └───HashDeclaratorExpression(
                         key 0
                         │
                         └───LiteralExpression(
@@ -2185,7 +2185,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───HashDeclarationExpression(
+                └───HashDeclaratorExpression(
                         key 0
                         │
                         └───LiteralExpression(
@@ -2235,7 +2235,7 @@ public sealed class TestExpressionParser
                     )
                 right
                 │
-                └───HashDeclarationExpression(
+                └───HashDeclaratorExpression(
                         key 0
                         │
                         └───LiteralExpression(

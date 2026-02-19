@@ -5,16 +5,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Harpy.AST.Expressions;
 
 /// <summary>
-///     A hash declaration like <c>{ => }</c> or <c>{ "a" => 1, "b" => 2 }</c>.
+///     A hash declarator like <c>{ => }</c> or <c>{ "a" => 1, "b" => 2 }</c>.
 /// </summary>
-public class HashDeclarationExpression : Expression
+public class HashDeclaratorExpression : Expression
 {
     private readonly Dictionary<Expression, Expression> _valuePairs;
 
     /// <summary>
     ///     A hash declaration like <c>{ => }</c> or <c>{ "a" => 1, "b" => 2 }</c>.
     /// </summary>
-    public HashDeclarationExpression(Dictionary<Expression, Expression> valuePairs) : base(false, [])
+    public HashDeclaratorExpression(Dictionary<Expression, Expression> valuePairs) : base(false, [])
     {
         _valuePairs = valuePairs;
 
@@ -29,7 +29,7 @@ public class HashDeclarationExpression : Expression
 
     public override string PrettyPrint(int indent = 0)
     {
-        var result = NodeLine(indent) + "HashDeclarationExpression(";
+        var result = NodeLine(indent) + "HashDeclaratorExpression(";
 
         if (_valuePairs.Count > 0)
         {
