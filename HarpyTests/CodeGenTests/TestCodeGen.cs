@@ -348,6 +348,51 @@ public class TestCodeGen
             }
             """
         );
+
+    }
+
+    [TestMethod]
+    public void TestCodeblockDeclaration()
+    {
+        AssertCodeGenEqualsExpected(
+            "local bCodeblock := { || }",
+            """
+            public static partial class TestProgram
+            {
+                private dynamic bCodeblock = () => { };
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local bCodeblock := { |a| b(a) }",
+            """
+            public static partial class TestProgram
+            {
+                private dynamic bCodeblock = a => { b(a); };
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local bCodeblock := { |a, b| c(a, b) }",
+            """
+            public static partial class TestProgram
+            {
+                private dynamic bCodeblock = (a, b) => { c(a, b); };
+            }
+            """
+        );
+
+        AssertCodeGenEqualsExpected(
+            "local bCodeblock := { |a, b| c(a), d(b) }",
+            """
+            public static partial class TestProgram
+            {
+                private dynamic bCodeblock = (a, b) => { c(a); d(b); };
+            }
+            """
+        );
     }
 
     private static void AssertCodeGenEqualsExpected(string source, string expected)
@@ -359,7 +404,6 @@ public class TestCodeGen
         var context = new CodeGenContext("TestProgram");
         var syntaxNode = root.Walk(context);
 
-        // Normalize whitespace for comparison
         var actual = syntaxNode.NormalizeWhitespace().ToFullString();
         var expectedNormalized = SyntaxFactory.ParseCompilationUnit(expected)
             .NormalizeWhitespace().ToFullString();

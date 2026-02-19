@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -55,7 +56,34 @@ public class CodeblockExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement codeblock expression code generation
-        throw new NotImplementedException("CodeblockExpression.WalkExpression not yet implemented");
+        var statements = SyntaxFactory.SeparatedList<StatementSyntax>();
+
+        foreach (var expression in _expressions)
+        {
+            statements = statements.Add(SyntaxFactory.ExpressionStatement((ExpressionSyntax)expression.Walk(context)));
+        }
+
+        if (_parameters.Count == 0)
+        {
+            return SyntaxFactory.ParenthesizedLambdaExpression().WithBlock(SyntaxFactory.Block(statements));
+        }
+        else if (_parameters.Count == 1)
+        {
+            return SyntaxFactory.SimpleLambdaExpression(SyntaxFactory.Parameter(_parameters[0].Walk(context).GetFirstToken()))
+                                .WithBlock(SyntaxFactory.Block(statements));
+        }
+        else
+        {
+            var parameters = SyntaxFactory.SeparatedList<ParameterSyntax>();
+
+            foreach (var parameter in _parameters)
+            {
+                parameters = parameters.Add(SyntaxFactory.Parameter(parameter.Walk(context).GetFirstToken()));
+            }
+
+            return SyntaxFactory.ParenthesizedLambdaExpression()
+                                .WithParameterList(SyntaxFactory.ParameterList(parameters))
+                                .WithBlock(SyntaxFactory.Block(statements));
+        }
     }
 }
