@@ -1,4 +1,5 @@
 using Harpy.CodeGen;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -35,7 +36,6 @@ public class ObjectAccessExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement object access expression code generation
-        throw new NotImplementedException("ObjectAccessExpression.WalkExpression not yet implemented");
+        return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, (ExpressionSyntax)_left.Walk(context), (SimpleNameSyntax)_right.Walk(context));
     }
 }

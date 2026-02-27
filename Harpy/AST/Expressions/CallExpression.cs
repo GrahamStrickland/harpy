@@ -53,11 +53,10 @@ public class CallExpression : Expression
         {
             foreach (var argument in _arguments)
             {
-                if (argument is NameExpression)
+                if (argument is not null)
                 {
                     var argumentExpression = argument.Walk(context);
-                    if (argumentExpression is IdentifierNameSyntax identifierName)
-                        arguments = arguments.Add(SyntaxFactory.Argument(identifierName));
+                    arguments = arguments.Add(SyntaxFactory.Argument((ExpressionSyntax)argumentExpression));
                 }
             }
         }

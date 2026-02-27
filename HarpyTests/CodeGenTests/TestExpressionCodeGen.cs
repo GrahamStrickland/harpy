@@ -271,4 +271,65 @@ public class TestExpressionCodeGen
             """
         );
     }
+
+    [TestMethod]
+    public void TestObjectAccessExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a:nNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a.nNo;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a:GetNo()",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a.GetNo();
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a:GetNo():nNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a.GetNo().nNo;
+            }
+            """
+        );
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a:GetNo(b):nNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a.GetNo(b).nNo;
+            }
+            """
+        );
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a:GetNo(b):nNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a.GetNo(b).nNo;
+            }
+            """
+        );
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a:GetNo(b, c:nNo):nNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a.GetNo(b, c.nNo).nNo;
+            }
+            """
+        );
+    }
 }
