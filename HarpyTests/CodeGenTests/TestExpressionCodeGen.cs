@@ -332,4 +332,135 @@ public class TestExpressionCodeGen
             """
         );
     }
+
+    [TestMethod]
+    public void TestPostfixExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := nOtherNo++",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = nOtherNo++;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := nOtherNo--",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = nOtherNo--;
+            }
+            """
+        );
+    }
+
+    [TestMethod]
+    public void TestPrefixExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := +1",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = +1;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := -1",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = -1;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := +3.14159",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = +3.14159;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := -3.14159",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = -3.14159;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := +nOtherNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = +nOtherNo;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := -nOtherNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = -nOtherNo;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local lBool1 := .f.\nlocal lBool2 := !lBool1",
+            """
+            public static partial class TestProgram
+            {
+                private bool lBool1 = false;
+                private bool lBool2 = !lBool1;
+            }
+            """
+        );
+
+        // TODO: This won't work, since we can't return ArgumentSyntax instead of ExpressionSyntax
+        // CodeGenUtils.AssertCodeGenEqualsExpected(
+        //     "local nNum := 1\nlocal lResult := func(@nNum)",
+        //     """
+        //     public static partial class TestProgram
+        //     {
+        //         private double nNum = 1;
+        //         private bool lResult = func(ref nNum);
+        //     }
+        //     """
+        // );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := ++nOtherNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = ++nOtherNo;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := --nOtherNo",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = --nOtherNo;
+            }
+            """
+        );
+    }
 }

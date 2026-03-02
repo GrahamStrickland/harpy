@@ -1,5 +1,6 @@
 using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -44,7 +45,12 @@ public class PostfixExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement postfix expression code generation
-        throw new NotImplementedException("PostfixExpression.WalkExpression not yet implemented");
+        var operatorKind = _operatorNode.Token.Kind switch
+        {
+            HarbourSyntaxKind.PLUSPLUS => SyntaxKind.PostIncrementExpression,
+            HarbourSyntaxKind.MINUSMINUS => SyntaxKind.PostDecrementExpression,
+            _ => throw new ArgumentException($"Invalid operator token passed to `PostfixExpression`: {PrettyPrint()}"),
+        };
+        return SyntaxFactory.PostfixUnaryExpression(operatorKind, (ExpressionSyntax)_left.Walk(context));
     }
 }

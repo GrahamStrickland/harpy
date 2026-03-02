@@ -77,7 +77,10 @@ public class ExpressionParser
         var token = _reader.LookAhead();
 
         if (token.Keyword() != null && token.Kind != HarbourSyntaxKind.NIL &&
-            token.Kind != HarbourSyntaxKind.IIF) return null;
+            token.Kind != HarbourSyntaxKind.IIF)
+        {
+            return null;
+        }
 
         token = _reader.Consume();
 
@@ -104,11 +107,13 @@ public class ExpressionParser
             }
 
             if (prefix is null)
+            {
                 return !optional
                     ? throw new InvalidSyntaxException(
                         $"Could not parse token '{token.Text}' of type '{token.Kind}' on line {token.Line}, column {token.Start}."
                     )
                     : null;
+            }
 
             left = prefix.Parse(this, token);
         }

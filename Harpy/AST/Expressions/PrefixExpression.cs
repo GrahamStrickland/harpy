@@ -1,5 +1,6 @@
 using Harpy.CodeGen;
 using Harpy.Lexer;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Harpy.AST.Expressions;
@@ -44,7 +45,29 @@ public class PrefixExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        // TODO: Implement prefix expression code generation
-        throw new NotImplementedException("PrefixExpression.WalkExpression not yet implemented");
+        SyntaxKind operatorKind;
+        switch (_operatorNode.Token.Kind)
+        {
+            case HarbourSyntaxKind.PLUS:
+                operatorKind = SyntaxKind.UnaryPlusExpression;
+                break;
+            case HarbourSyntaxKind.MINUS:
+                operatorKind = SyntaxKind.UnaryMinusExpression;
+                break;
+            case HarbourSyntaxKind.NOT:
+                operatorKind = SyntaxKind.LogicalNotExpression;
+                break;
+            // case HarbourSyntaxKind.AT:
+            //     return SyntaxFactory.Argument((ExpressionSyntax)_right.Walk(context)).WithRefOrOutKeyword(SyntaxFactory.Token(SyntaxKind.RefKeyword));
+            case HarbourSyntaxKind.PLUSPLUS:
+                operatorKind = SyntaxKind.PreIncrementExpression;
+                break;
+            case HarbourSyntaxKind.MINUSMINUS:
+                operatorKind = SyntaxKind.PreDecrementExpression;
+                break;
+            default:
+                throw new ArgumentException($"Invalid operator token passed to `PrefixExpression`: {PrettyPrint()}");
+        }
+        return SyntaxFactory.PrefixUnaryExpression(operatorKind, (ExpressionSyntax)_right.Walk(context));
     }
 }
