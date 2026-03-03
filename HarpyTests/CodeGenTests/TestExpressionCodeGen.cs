@@ -6,6 +6,204 @@ namespace HarpyTests.CodeGenTests;
 public class TestExpressionCodeGen
 {
     [TestMethod]
+    public void TestArrayDeclaratorExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local aValues := {}",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{};
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local aValues := { 1 }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1};
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local aValues := { 1, 2 }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1, 2};
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local aValues := { 1, nil }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1, null};
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local aValues := { 1, \"two\" }",
+            """
+            public static partial class TestProgram
+            {
+                private List<dynamic> aValues = new List<dynamic>{1, "two"};
+            }
+            """
+        );
+
+    }
+
+    [TestMethod]
+    public void TestCallExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local lVar := GetBool()",
+            """
+            public static partial class TestProgram
+            {
+                private bool lVar = GetBool();
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local cString := \"hello\"\nlocal lVar := GetBool(cString)",
+            """
+            public static partial class TestProgram
+            {
+                private string cString = "hello";
+                private bool lVar = GetBool(cString);
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local cString := \"hello\"\nlocal nNumber := 1.2345\nlocal lVar := GetBool(cString, nNumber)",
+            """
+            public static partial class TestProgram
+            {
+                private string cString = "hello";
+                private double nNumber = 1.2345;
+                private bool lVar = GetBool(cString, nNumber);
+            }
+            """
+        );
+    }
+
+    // TODO: Figure out how to make the types nullable from the assignment.
+    [TestMethod]
+    public void TestConditionalExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local lBool := .t.\nlocal lVar := iif(lBool, .t., )",
+            """
+            public static partial class TestProgram
+            {
+                private bool lBool = true;
+                private bool lVar = lBool ? true : null;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local lBool := .t.\nlocal lVar := iif(lBool, , .f.)",
+            """
+            public static partial class TestProgram
+            {
+                private bool lBool = true;
+                private bool lVar = lBool ? null : false;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local lBool := .t.\nlocal lVar := iif(lBool, .t., .f.)",
+            """
+            public static partial class TestProgram
+            {
+                private bool lBool = true;
+                private bool lVar = lBool ? true : false;
+            }
+            """
+        );
+    }
+
+    [TestMethod]
+    public void TestHashDeclaratorExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local hHash := { => }",
+            """
+            public static partial class TestProgram
+            {
+                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>();
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local hHash := { \"key1\" => 1 }",
+            """
+            public static partial class TestProgram
+            {
+                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>{ {"key1", 1} };
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local hHash := { \"key1\" => 1, \"key2\" => 2 }",
+            """
+            public static partial class TestProgram
+            {
+                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>{ {"key1", 1}, {"key2", 2} };
+            }
+            """
+        );
+    }
+
+    [TestMethod]
+    public void TestIndexExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a[1]",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a[0];
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a[b]",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a[(b - 1)];
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNo := a[\"string\"]",
+            """
+            public static partial class TestProgram
+            {
+                private double nNo = a["string"];
+            }
+            """
+        );
+    }
+
+    [TestMethod]
     public void TestBooleanLiteralExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
@@ -106,58 +304,17 @@ public class TestExpressionCodeGen
     }
 
     [TestMethod]
-    public void TestArrayDeclaratorExpression()
+    public void TestNameExpression()
     {
         CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local aValues := {}",
+            "local lVar := lLogical",
             """
             public static partial class TestProgram
             {
-                private List<dynamic> aValues = new List<dynamic>{};
+                private bool lVar = lLogical;
             }
             """
         );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local aValues := { 1 }",
-            """
-            public static partial class TestProgram
-            {
-                private List<dynamic> aValues = new List<dynamic>{1};
-            }
-            """
-        );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local aValues := { 1, 2 }",
-            """
-            public static partial class TestProgram
-            {
-                private List<dynamic> aValues = new List<dynamic>{1, 2};
-            }
-            """
-        );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local aValues := { 1, nil }",
-            """
-            public static partial class TestProgram
-            {
-                private List<dynamic> aValues = new List<dynamic>{1, null};
-            }
-            """
-        );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local aValues := { 1, \"two\" }",
-            """
-            public static partial class TestProgram
-            {
-                private List<dynamic> aValues = new List<dynamic>{1, "two"};
-            }
-            """
-        );
-
     }
 
     [TestMethod]
@@ -199,74 +356,6 @@ public class TestExpressionCodeGen
             public static partial class TestProgram
             {
                 private dynamic bCodeblock = (a, b) => { c(a); d(b); };
-            }
-            """
-        );
-    }
-
-    [TestMethod]
-    public void TestHashDeclaratorExpression()
-    {
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local hHash := { => }",
-            """
-            public static partial class TestProgram
-            {
-                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>();
-            }
-            """
-        );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local hHash := { \"key1\" => 1 }",
-            """
-            public static partial class TestProgram
-            {
-                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>{ {"key1", 1} };
-            }
-            """
-        );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local hHash := { \"key1\" => 1, \"key2\" => 2 }",
-            """
-            public static partial class TestProgram
-            {
-                private Dictionary<string, dynamic> hHash = new Dictionary<string, dynamic>{ {"key1", 1}, {"key2", 2} };
-            }
-            """
-        );
-    }
-
-    [TestMethod]
-    public void TestIndexExpression()
-    {
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local nNo := a[1]",
-            """
-            public static partial class TestProgram
-            {
-                private double nNo = a[0];
-            }
-            """
-        );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local nNo := a[b]",
-            """
-            public static partial class TestProgram
-            {
-                private double nNo = a[(b - 1)];
-            }
-            """
-        );
-
-        CodeGenUtils.AssertCodeGenEqualsExpected(
-            "local nNo := a[\"string\"]",
-            """
-            public static partial class TestProgram
-            {
-                private double nNo = a["string"];
             }
             """
         );
@@ -328,6 +417,70 @@ public class TestExpressionCodeGen
             public static partial class TestProgram
             {
                 private double nNo = a.GetNo(b, c.nNo).nNo;
+            }
+            """
+        );
+    }
+
+    [TestMethod]
+    public void TestOperatorExpression()
+    {
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNumber := 1 + 2",
+            """
+            public static partial class TestProgram
+            {
+                private double nNumber = 1 + 2;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNumber := 1 * 2",
+            """
+            public static partial class TestProgram
+            {
+                private double nNumber = 1 * 2;
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local cString := \"Hello\" + \", world\"",
+            """
+            public static partial class TestProgram
+            {
+                private string cString = "Hello" + ", world";
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNumber := 2 ^ 3",
+            """
+            public static partial class TestProgram
+            {
+                private double nNumber = Math.Pow(2, 3);
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNumber := (4 / 2) ^ 3",
+            """
+            public static partial class TestProgram
+            {
+                private double nNumber = Math.Pow(4 / 2, 3);
+            }
+            """
+        );
+
+        CodeGenUtils.AssertCodeGenEqualsExpected(
+            "local nNumber := ((4 * 6) / 2) ^ 3",
+            """
+            public static partial class TestProgram
+            {
+                private double nNumber = Math.Pow(4 * 6 / 2, 3);
             }
             """
         );
