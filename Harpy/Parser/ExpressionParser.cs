@@ -72,8 +72,8 @@ public class ExpressionParser
 
     public Expression? Parse(Precedence precedence = Precedence.NONE, bool optional = false, bool undo = false)
     {
-        if (undo)
-            _reader.SetUndoPoint();
+        if (undo) _reader.SetUndoPoint();
+
         var token = _reader.LookAhead();
 
         if (token.Keyword() != null && token.Kind != HarbourSyntaxKind.NIL &&
@@ -84,9 +84,7 @@ public class ExpressionParser
 
         Expression left;
         if (token.Literal() != null)
-        {
             left = new LiteralExpression(token);
-        }
         else
         {
             IPrefixSubParser? prefix;
@@ -100,16 +98,16 @@ public class ExpressionParser
                     prefix = new ContainerDeclarationParser();
             }
             else
-            {
                 prefix = _prefixParsers.GetValueOrDefault(token.Kind);
-            }
 
             if (prefix is null)
+            {
                 return !optional
                     ? throw new InvalidSyntaxException(
                         $"Could not parse token '{token.Text}' of type '{token.Kind}' on line {token.Line}, column {token.Start}."
                     )
                     : null;
+            }
 
             left = prefix.Parse(this, token);
         }
@@ -119,9 +117,7 @@ public class ExpressionParser
             token = _reader.Consume();
 
             if (token.Literal() != null)
-            {
                 left = new LiteralExpression(_reader.Consume());
-            }
             else
             {
                 var infix = _infixParsers[token.Kind];

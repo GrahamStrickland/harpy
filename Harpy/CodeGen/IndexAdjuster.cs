@@ -19,6 +19,7 @@ public static class IndexAdjuster
     {
         // Check if it's a literal numeric expression
         if (indexExpression is not LiteralExpressionSyntax literal)
+        {
             return SyntaxFactory.ParenthesizedExpression(
                 SyntaxFactory.BinaryExpression(
                     SyntaxKind.SubtractExpression,
@@ -26,6 +27,8 @@ public static class IndexAdjuster
                     SyntaxFactory.LiteralExpression(
                         SyntaxKind.NumericLiteralExpression,
                         SyntaxFactory.Literal(1))));
+        }
+
         return literal.Token.Value switch
         {
             // If it's a numeric literal, we can adjust it at compile time

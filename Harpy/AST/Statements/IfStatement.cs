@@ -71,6 +71,7 @@ public class IfStatement : Statement
                 result += BlankLine(indent + 2) + "condition\n" + ChildNodeLine(indent + 2) +
                           condition.PrettyPrint(indent + 3) + "\n";
                 if (statements.Count <= 0) continue;
+
                 result += BlankLine(indent + 2) + "body\n";
                 result = statements.Aggregate(result,
                     (current, stmt) => current + ChildNodeLine(indent + 2) + stmt.PrettyPrint(indent + 3) + "\n");

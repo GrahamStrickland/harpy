@@ -42,8 +42,11 @@ public class ContainerDeclarationParser : IPrefixSubParser
 
                     var k = parser.Parse();
                     if (k == null)
+                    {
                         throw new InvalidSyntaxException(
                             $"Expected expression after declaration expression with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+                    }
+
                     parser.Consume(HarbourSyntaxKind.HASHOP);
                     v = parser.Parse();
 

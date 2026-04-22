@@ -50,8 +50,7 @@ public sealed class TestSourceReader
         foreach (var _ in _reader)
         {
             i++;
-            if (i < tokenKinds.Count)
-                Assert.IsTrue(_reader.Match(tokenKinds[i]));
+            if (i < tokenKinds.Count) Assert.IsTrue(_reader.Match(tokenKinds[i]));
         }
     }
 
@@ -64,15 +63,15 @@ public sealed class TestSourceReader
             [HarbourSyntaxKind.NAME, HarbourSyntaxKind.PLUS, HarbourSyntaxKind.NAME, HarbourSyntaxKind.EOF];
 
         foreach (var tokenKind in tokenKinds)
+        {
             if (_reader.Match(tokenKind))
             {
                 var token = _reader.Consume(tokenKind);
                 Assert.AreEqual(token.Kind, tokenKind);
             }
             else
-            {
                 Assert.Fail($"Did not match tokenKind {tokenKind}.");
-            }
+        }
     }
 
     [TestMethod]

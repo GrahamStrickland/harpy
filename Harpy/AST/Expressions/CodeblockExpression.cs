@@ -65,9 +65,11 @@ public class CodeblockExpression : Expression
             return SyntaxFactory.ParenthesizedLambdaExpression().WithBlock(SyntaxFactory.Block(statements));
 
         if (_parameters.Count == 1)
+        {
             return SyntaxFactory
                 .SimpleLambdaExpression(SyntaxFactory.Parameter(_parameters[0].Walk(context).GetFirstToken()))
                 .WithBlock(SyntaxFactory.Block(statements));
+        }
 
         var parameters = SyntaxFactory.SeparatedList<ParameterSyntax>();
 

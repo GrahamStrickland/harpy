@@ -33,8 +33,10 @@ public class Parser
             if (statement != null)
                 sourceRoot.Children.Add(statement);
             else
+            {
                 throw new InvalidSyntaxException(
                     $"Expected statement with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+            }
         }
 
         throw new InvalidSyntaxException(
@@ -82,8 +84,10 @@ public class Parser
     private ReturnStatement Return(HarbourSyntaxToken token)
     {
         if (!_inFunctionOrProcedureDefinition)
+        {
             throw new InvalidSyntaxException(
                 $"Encountered `return` statement outside of function/procedure definition after token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
 
         var returnValue = _expressionParser.Parse(Precedence.NONE, true);
 
@@ -97,11 +101,16 @@ public class Parser
             out var body, out var returnValue);
 
         if (returnValue == null)
+        {
             throw new InvalidSyntaxException(
                 $"Expected return statement after function definition beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+        }
+
         if (name == null)
+        {
             throw new InvalidSyntaxException(
                 $"Expected name in function definition beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+        }
 
         _inFunctionOrProcedureDefinition = false;
         return new FunctionStatement(name, parameters, body, returnValue, isStatic);
@@ -114,8 +123,10 @@ public class Parser
             out var body, out _);
 
         if (name == null)
+        {
             throw new InvalidSyntaxException(
                 $"Expected name in procedure definition beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+        }
 
         _inFunctionOrProcedureDefinition = false;
         return new ProcedureStatement(name, parameters, body, isStatic);
@@ -138,8 +149,7 @@ public class Parser
 
         _inFunctionOrProcedureDefinition = true;
 
-        if (isStatic)
-            _reader.Consume(token.Kind);
+        if (isStatic) _reader.Consume(token.Kind);
 
         name = _reader.Consume(HarbourSyntaxKind.NAME);
 
@@ -149,7 +159,8 @@ public class Parser
         while (!_reader.Match(HarbourSyntaxKind.RIGHT_PAREN))
         {
             parameters.Add(_reader.Consume(HarbourSyntaxKind.NAME));
-            if (_reader.Match(HarbourSyntaxKind.COMMA)) _reader.Consume(HarbourSyntaxKind.COMMA);
+            if (_reader.Match(HarbourSyntaxKind.COMMA))
+                _reader.Consume(HarbourSyntaxKind.COMMA);
             else
                 break;
         }
@@ -167,19 +178,21 @@ public class Parser
             while (statement != null)
             {
                 body.Add(statement);
-                if (statement is ReturnStatement)
-                    break;
+                if (statement is ReturnStatement) break;
 
                 next = _reader.LookAhead();
                 if (next.Kind is HarbourSyntaxKind.EOF) break;
+
                 next = _reader.Consume();
                 statement = ParseStatement(next);
             }
         }
 
         if (body[^1] is not ReturnStatement)
+        {
             throw new InvalidSyntaxException(
                 $"Expected return statement at end of function definition, found '{body[^1].PrettyPrint()}'.");
+        }
 
         returnValue = ((ReturnStatement)body[^1]).ReturnValue();
         body.RemoveAt(body.Count - 1);
@@ -204,8 +217,10 @@ public class Parser
 
         var next = _reader.LookAhead();
         if (next.Kind is not HarbourSyntaxKind.NAME)
+        {
             throw new InvalidSyntaxException(
                 $"Expected name in variable declaration beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
 
         name = next;
         next = _reader.LookAhead(1);
@@ -228,9 +243,11 @@ public class Parser
             {
                 var elseToken = _reader.Consume(HarbourSyntaxKind.ELSE);
                 while (!_reader.Match(HarbourSyntaxKind.ENDIF))
+                {
                     elseBody.Add(ParseStatement(_reader.Consume()) ??
                                  throw new InvalidSyntaxException(
                                      $"Expected statement after else condition beginning with token '{elseToken.Text}' on line {elseToken.Line}, column {elseToken.Start}."));
+                }
 
                 break;
             }
@@ -246,9 +263,11 @@ public class Parser
 
                     while (!_reader.Match(HarbourSyntaxKind.ENDIF) && !_reader.Match(HarbourSyntaxKind.ELSE) &&
                            !_reader.Match(HarbourSyntaxKind.ELSEIF))
+                    {
                         elseIfBody.Add(ParseStatement(_reader.Consume()) ??
                                        throw new InvalidSyntaxException(
                                            $"Expected statement after else if condition beginning with token '{elseIfToken.Text}' on line {elseIfToken.Line}, column {elseIfToken.Start}."));
+                    }
 
                     elseIfConditions.Add(new Tuple<Expression, List<Statement>>(elseIfCondition, elseIfBody));
                 }
@@ -294,9 +313,11 @@ public class Parser
         List<Statement> body = [];
 
         while (!_reader.Match(HarbourSyntaxKind.END) && !_reader.Match(HarbourSyntaxKind.ENDWHILE))
+        {
             body.Add(ParseStatement(_reader.Consume()) ??
                      throw new InvalidSyntaxException(
                          $"Expected statement after while loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+        }
 
         if (_reader.Match(HarbourSyntaxKind.END))
         {
@@ -304,9 +325,7 @@ public class Parser
             if (_reader.Match(HarbourSyntaxKind.WHILE)) _reader.Consume(HarbourSyntaxKind.WHILE);
         }
         else
-        {
             _reader.Consume(HarbourSyntaxKind.ENDWHILE);
-        }
 
         _inLoop = !quitLoop && _inLoop;
 
@@ -321,17 +340,21 @@ public class Parser
         var quitLoop = !_inLoop;
         _inLoop = true;
 
-        if (_reader.Match(HarbourSyntaxKind.EACH))
-            return ForEachLoop(token, quitLoop);
+        if (_reader.Match(HarbourSyntaxKind.EACH)) return ForEachLoop(token, quitLoop);
 
         var initializer = _expressionParser.Parse(Precedence.NONE, false, true);
         if (initializer is not AssignmentExpression)
+        {
             throw new InvalidSyntaxException(
                 $"Expected initializer expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
 
         if (!_reader.Match(HarbourSyntaxKind.TO))
+        {
             throw new InvalidSyntaxException(
                 $"Expected `step` after initialization in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
+
         _reader.Consume(HarbourSyntaxKind.TO);
 
         var bound = _expressionParser.Parse(Precedence.NONE, false, true);
@@ -344,15 +367,19 @@ public class Parser
                 _reader.Consume(HarbourSyntaxKind.STEP);
                 step = _expressionParser.Parse(Precedence.NONE, false, true);
                 if (step == null)
+                {
                     throw new InvalidSyntaxException(
                         $"Expected step expression in for loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}, found null.");
+                }
             }
 
             List<Statement> body = [];
             while (!_reader.Match(HarbourSyntaxKind.NEXT))
+            {
                 body.Add(ParseStatement(_reader.Consume()) ??
                          throw new InvalidSyntaxException(
                              $"Expected statement after for loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+            }
 
             _reader.Consume(HarbourSyntaxKind.NEXT);
 
@@ -370,13 +397,19 @@ public class Parser
         _reader.Consume(HarbourSyntaxKind.EACH);
 
         if (!_reader.Match(HarbourSyntaxKind.NAME))
+        {
             throw new InvalidSyntaxException(
                 $"Expected variable name in initialization of for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
+
         var variable = _reader.Consume(HarbourSyntaxKind.NAME);
 
         if (!_reader.Match(HarbourSyntaxKind.IN))
+        {
             throw new InvalidSyntaxException(
                 $"Expected `step` keyword after initialization in for each loop statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
+
         _reader.Consume(HarbourSyntaxKind.IN);
 
         var collection = _expressionParser.Parse(Precedence.NONE, false, true);
@@ -384,9 +417,11 @@ public class Parser
         {
             List<Statement> body = [];
             while (!_reader.Match(HarbourSyntaxKind.NEXT))
+            {
                 body.Add(ParseStatement(_reader.Consume()) ??
                          throw new InvalidSyntaxException(
                              $"Expected statement after for loop beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+            }
 
             _reader.Consume(HarbourSyntaxKind.NEXT);
 
@@ -402,8 +437,10 @@ public class Parser
     private LoopStatement Loop(HarbourSyntaxToken token)
     {
         if (!_inLoop)
+        {
             throw new InvalidSyntaxException(
                 $"Encountered loop statement outside of a loop; token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
 
         return token.Kind != HarbourSyntaxKind.LOOP
             ? throw new InvalidSyntaxException(
@@ -414,8 +451,10 @@ public class Parser
     private ExitStatement Exit(HarbourSyntaxToken token)
     {
         if (!_inLoop)
+        {
             throw new InvalidSyntaxException(
                 $"Encountered exit statement outside of a loop; token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
 
         return token.Kind != HarbourSyntaxKind.EXIT
             ? throw new InvalidSyntaxException(
@@ -426,8 +465,11 @@ public class Parser
     private BeginSequenceStatement BeginSequence(HarbourSyntaxToken token)
     {
         if (!_reader.Match(HarbourSyntaxKind.SEQUENCE))
+        {
             throw new InvalidSyntaxException(
                 $"Expected `sequence` keyword after `begin` in begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+        }
+
         _reader.Consume(HarbourSyntaxKind.SEQUENCE);
 
         CodeblockExpression? errorHandler = null;
@@ -437,17 +479,21 @@ public class Parser
 
             errorHandler = (CodeblockExpression?)_expressionParser.Parse();
             if (errorHandler is null)
+            {
                 throw new InvalidSyntaxException(
                     $"Expected codeblock after begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}.");
+            }
         }
 
         List<Statement> beginSequenceBody = [];
         while (!_reader.Match(HarbourSyntaxKind.RECOVER) && !_reader.Match(HarbourSyntaxKind.ALWAYS)
                                                          && !_reader.Match(HarbourSyntaxKind.END) &&
                                                          !_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
+        {
             beginSequenceBody.Add(ParseStatement(_reader.Consume()) ??
                                   throw new InvalidSyntaxException(
                                       $"Expected statement after begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+        }
 
         HarbourSyntaxToken? exception = null;
         List<Statement> recoverBody = [];
@@ -464,9 +510,11 @@ public class Parser
             while (!_reader.Match(HarbourSyntaxKind.ALWAYS)
                    && !_reader.Match(HarbourSyntaxKind.END) &&
                    !_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
+            {
                 recoverBody.Add(ParseStatement(_reader.Consume()) ??
                                 throw new InvalidSyntaxException(
                                     $"Expected statement after `recover` keyword in begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+            }
         }
 
         List<Statement> alwaysBody = [];
@@ -476,9 +524,11 @@ public class Parser
 
             while (!_reader.Match(HarbourSyntaxKind.END) &&
                    !_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
+            {
                 alwaysBody.Add(ParseStatement(_reader.Consume()) ??
                                throw new InvalidSyntaxException(
                                    $"Expected statement after begin sequence statement beginning with token '{token.Text}' on line {token.Line}, column {token.Start}."));
+            }
         }
 
         if (_reader.Match(HarbourSyntaxKind.END))
@@ -487,9 +537,7 @@ public class Parser
             if (_reader.Match(HarbourSyntaxKind.SEQUENCE)) _reader.Consume(HarbourSyntaxKind.SEQUENCE);
         }
         else if (_reader.Match(HarbourSyntaxKind.ENDSEQUENCE))
-        {
             _reader.Consume(HarbourSyntaxKind.ENDSEQUENCE);
-        }
         else
         {
             throw new InvalidSyntaxException(
@@ -501,8 +549,7 @@ public class Parser
 
     private CallStatement? Call(HarbourSyntaxToken name)
     {
-        if (name.Kind is not HarbourSyntaxKind.NAME)
-            return null;
+        if (name.Kind is not HarbourSyntaxKind.NAME) return null;
 
         CallExpression? callExpression;
         var token = _reader.LookAhead();
@@ -520,9 +567,7 @@ public class Parser
             callExpression = possibleCallExpression;
         }
         else
-        {
             return null;
-        }
 
         return new CallStatement(callExpression);
     }

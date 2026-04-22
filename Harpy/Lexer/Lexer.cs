@@ -32,9 +32,7 @@ public class Lexer(string text)
                     var element = ReadPreprocessorDirectiveOrNeOp();
 
                     if (element is HarbourSyntaxToken token)
-                    {
                         newToken = token;
-                    }
                     else
                     {
                         if (newLineEncountered)
@@ -55,6 +53,7 @@ public class Lexer(string text)
                                 leadingTrivia.Add(ReadLineComment());
                             else
                                 trailingTrivia.Add(ReadLineComment());
+
                             break;
                         }
                         case '*':
@@ -63,6 +62,7 @@ public class Lexer(string text)
                                 leadingTrivia.Add(ReadBlockComment());
                             else
                                 trailingTrivia.Add(ReadBlockComment());
+
                             break;
                         }
                         default:
@@ -118,9 +118,7 @@ public class Lexer(string text)
                     var op = c.ToString() + Peek();
 
                     if (keyword != null)
-                    {
                         newToken = keyword;
-                    }
                     else if (HarbourSyntaxToken.CompoundOperators.ContainsValue(op))
                     {
                         Advance();
@@ -141,9 +139,7 @@ public class Lexer(string text)
                         );
                     }
                     else if (char.IsLetterOrDigit(c))
-                    {
                         newToken = ReadName();
-                    }
                     else if (char.IsWhiteSpace(c) || c == ';')
                     {
                         HarbourSyntaxKind type;
@@ -166,6 +162,7 @@ public class Lexer(string text)
                         }
 
                         if (newLineEncountered)
+                        {
                             leadingTrivia.Add(
                                 new HarbourSyntaxTrivia(
                                     type,
@@ -174,7 +171,9 @@ public class Lexer(string text)
                                     _pos
                                 )
                             );
+                        }
                         else
+                        {
                             trailingTrivia.Add(
                                 new HarbourSyntaxTrivia(
                                     type,
@@ -183,6 +182,7 @@ public class Lexer(string text)
                                     _pos
                                 )
                             );
+                        }
 
                         if (type is HarbourSyntaxKind.NEWLINE or HarbourSyntaxKind.CARRIAGE_RETURN)
                         {
@@ -197,6 +197,7 @@ public class Lexer(string text)
             }
 
             if (newToken == null) continue; // Search for more trivia.
+
             newLineEncountered = false;
             newToken.LeadingTrivia = leadingTrivia;
             leadingTrivia = [];
@@ -236,7 +237,9 @@ public class Lexer(string text)
         while (char.IsLetterOrDigit(c = Advance())) directive += c;
 
         if (HarbourSyntaxTrivia.Directives.ContainsValue(directive.ToLower()))
+        {
             while (true)
+            {
                 switch (Peek())
                 {
                     case '\n':
@@ -256,6 +259,8 @@ public class Lexer(string text)
                         break;
                     }
                 }
+            }
+        }
 
         ResetIndex(1);
 
@@ -269,6 +274,7 @@ public class Lexer(string text)
         Advance();
 
         while (true)
+        {
             switch (Peek())
             {
                 case '\n':
@@ -288,6 +294,7 @@ public class Lexer(string text)
                     break;
                 }
             }
+        }
     }
 
     private HarbourSyntaxTrivia ReadBlockComment()
@@ -399,6 +406,7 @@ public class Lexer(string text)
                 {
                     if (literal != "0")
                         throw new InvalidSyntaxException($"Unterminated hexadecimal literal '{literal + c}'.");
+
                     literal += c;
                     hexNum = true;
                     break;
@@ -411,6 +419,7 @@ public class Lexer(string text)
                 case 'f':
                 {
                     if (!hexNum) throw new InvalidSyntaxException($"Invalid numeric literal '{literal + c}'.");
+
                     literal += c;
                     break;
                 }
@@ -418,6 +427,7 @@ public class Lexer(string text)
                 {
                     if (dotFound)
                         throw new InvalidSyntaxException($"Second decimal point found in literal '{literal + c}'.");
+
                     literal += c;
                     dotFound = true;
                     break;
@@ -461,6 +471,7 @@ public class Lexer(string text)
                 case '\0':
                 {
                     if (literal.Length > 1 && literal.EndsWith(endQuote)) break;
+
                     throw new InvalidSyntaxException($"Unterminated string literal '{literal}'.");
                 }
                 default:
@@ -476,12 +487,15 @@ public class Lexer(string text)
         // TODO: This won't work unless we handle include files/preprocessor parsing first,
         // e.g., `IF !(aHWFlag[F_HWCardReader] .OR. aHWFlag[F_HWDallasKey]) .OR. oPOSStatus:oFree:lFlag3`
         if (endQuote != ']' || !_names.Contains(literal[1..]))
+        {
             return new HarbourSyntaxToken(
                 HarbourSyntaxKind.STR_LITERAL,
                 literal + Advance(),
                 _line,
                 _pos
             );
+        }
+
         ResetIndex();
         return new HarbourSyntaxToken(HarbourSyntaxKind.LEFT_BRACKET, "[", _line, _pos);
     }
@@ -500,12 +514,14 @@ public class Lexer(string text)
         }
 
         if (HarbourSyntaxToken.Keywords.ContainsValue(keyword.ToLower()))
+        {
             return new HarbourSyntaxToken(
                 HarbourSyntaxToken.KeywordFromText(keyword.ToLower()),
                 keyword,
                 _line,
                 _pos
             );
+        }
 
         ResetIndex();
         return null;
@@ -545,6 +561,7 @@ public class Lexer(string text)
         var c = '\0';
 
         if (text.Length <= _index) return c;
+
         c = text[_index];
         _index += 1;
         _pos += 1;

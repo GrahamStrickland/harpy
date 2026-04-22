@@ -31,6 +31,7 @@ public abstract class VariableDeclaration : Statement
         Children.Add(nameNode);
 
         if (Assignment == null) return;
+
         Assignment.Parent = this;
         Children.Add(Assignment);
     }

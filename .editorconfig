@@ -1,0 +1,58 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{json,yml,yaml,xml,csproj,sln,props,targets}]
+indent_size = 2
+
+[*.{cs,csx}]
+indent_size = 4
+tab_width = 4
+
+# --- Language conventions (Roslyn) ---------------------------------------
+
+# File-scoped namespace declarations (matches current codebase).
+csharp_style_namespace_declarations = file_scoped:warning
+
+# using directives outside the namespace.
+csharp_using_directive_placement = outside_namespace:warning
+
+# var preferences.
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:suggestion
+
+# Roslyn "prefer braces" — the Roslyn counterpart to Roslynator RCS1001.
+# when_multiline: require braces only when the controlled statement spans
+# multiple source lines. Matches the existing code style.
+csharp_prefer_braces = when_multiline:warning
+
+# --- Roslynator analyzer severities --------------------------------------
+
+# RCS1001: Add braces (when expression spans over multiple lines).
+dotnet_diagnostic.RCS1001.severity = warning
+
+# --- ReSharper / Rider brace settings (consumed by `jb cleanupcode`) -----
+#
+# The Roslyn setting above is advisory to the IDE; ReSharper's cleanup uses
+# its own `resharper_braces_for_*` keys. Setting them to
+# `required_for_multiline` makes `jb cleanupcode` add braces wherever
+# Roslynator's RCS1001 would fire, and `resharper_braces_redundant = true`
+# strips braces from single-statement bodies to avoid fighting with the
+# existing style.
+
+resharper_braces_for_ifelse       = required_for_multiline
+resharper_braces_for_foreach      = required_for_multiline
+resharper_braces_for_for          = required_for_multiline
+resharper_braces_for_while        = required_for_multiline
+resharper_braces_for_dowhile      = required_for_multiline
+resharper_braces_for_using        = required_for_multiline
+resharper_braces_for_lock         = required_for_multiline
+resharper_braces_for_fixed        = required_for_multiline
+resharper_braces_redundant        = true

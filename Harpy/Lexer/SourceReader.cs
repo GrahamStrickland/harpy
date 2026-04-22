@@ -28,8 +28,7 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
     {
         _lexer = lexer;
 
-        foreach (var t in _lexer)
-            _tokens.AddLast(t);
+        foreach (var t in _lexer) _tokens.AddLast(t);
 
         _lastLine = _tokens.Last().Line;
         _lastPosition = _tokens.Last().End + 1;
@@ -40,10 +39,10 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
         while (true)
         {
             if (!MoveNext() || _current == null) continue;
+
             yield return _current;
 
-            if (_current.Kind == HarbourSyntaxKind.EOF)
-                break;
+            if (_current.Kind == HarbourSyntaxKind.EOF) break;
         }
     }
 
@@ -54,8 +53,7 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
 
     public bool MoveNext()
     {
-        if (_endOfFile)
-            return false;
+        if (_endOfFile) return false;
 
         HarbourSyntaxToken token;
         if (_tokens.Count > 0)
@@ -64,9 +62,7 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
             _tokens.RemoveFirst();
         }
         else
-        {
             token = new HarbourSyntaxToken(HarbourSyntaxKind.EOF, "\0", _lastLine, _lastPosition);
-        }
 
         _undoBuffer.Push(token);
         _current = token;
@@ -103,8 +99,10 @@ public class SourceReader : IEnumerable<HarbourSyntaxToken>, IEnumerator<Harbour
         var token = _tokens.First();
 
         if (expected != null && token.Kind != expected)
+        {
             throw new InvalidSyntaxException(
                 $"Expected token kind '{expected}' and found '{token.Kind}' with text '{token.Text}' at line {token.Line}, column {token.Start}.");
+        }
 
         _tokens.RemoveFirst();
         _undoBuffer.Push(token);

@@ -62,8 +62,10 @@ public class BeginSequenceStatement : Statement
     {
         var result = NodeLine(indent) + "BeginSequenceStatement(\n";
         if (_errorHandler != null)
+        {
             result += BlankLine(indent + 1) + "errorHandler\n" + ChildNodeLine(indent + 1) +
                       _errorHandler.PrettyPrint(indent + 2) + "\n";
+        }
 
         if (_beginSequenceBody.Count > 0)
         {
@@ -76,8 +78,11 @@ public class BeginSequenceStatement : Statement
         {
             result += BlankLine(indent + 1) + "recoverBody\n";
             if (_exceptionNode != null)
+            {
                 result += BlankLine(indent + 2) + "exception\n" + ChildNodeLine(indent + 2) +
                           _exceptionNode.PrettyPrint(indent + 3) + "\n";
+            }
+
             result = _recoverBody.Aggregate(result,
                 (current, stmt) => current + ChildNodeLine(indent + 1) + stmt.PrettyPrint(indent + 2) + "\n");
         }

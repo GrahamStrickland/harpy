@@ -53,8 +53,7 @@ public class IndexExpression : Expression
         {
             var expression = (ExpressionSyntax)e.Walk(context);
 
-            if (IndexAdjuster.NeedsAdjustment(e))
-                expression = IndexAdjuster.AdjustIndex(expression, context);
+            if (IndexAdjuster.NeedsAdjustment(e)) expression = IndexAdjuster.AdjustIndex(expression, context);
 
             argumentList = argumentList.AddArguments(SyntaxFactory.Argument(expression));
         }

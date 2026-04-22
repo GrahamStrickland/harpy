@@ -13,9 +13,7 @@ internal static class Program
         string sourceFile;
 
         if (args is ["--src", _, ..])
-        {
             sourceFile = args[1];
-        }
         else
         {
             Console.Write("""

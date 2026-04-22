@@ -62,10 +62,12 @@ public class HashDeclaratorExpression : Expression
         var argumentList = SyntaxFactory.SeparatedList<ArgumentSyntax>();
 
         if (_valuePairs.Count == 0)
+        {
             return SyntaxFactory.ObjectCreationExpression(
                     SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
                         .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
                 .WithArgumentList(SyntaxFactory.ArgumentList(argumentList));
+        }
 
         if (_valuePairs.Count == 1)
         {

@@ -12,12 +12,10 @@ public static class TypeInference
     /// <returns>A C# type name as a string</returns>
     public static string InferType(string variableName)
     {
-        if (string.IsNullOrEmpty(variableName))
-            return "dynamic";
+        if (string.IsNullOrEmpty(variableName)) return "dynamic";
 
         // Check for single character variable names (typically integers)
-        if (variableName.Length == 1)
-            return "int";
+        if (variableName.Length == 1) return "int";
 
         // Check for keywords that suggest integer types (case-insensitive)
         var lowerName = variableName.ToLower();
@@ -50,14 +48,14 @@ public static class TypeInference
     /// </summary>
     public static bool IsHungarianNotation(string variableName)
     {
-        if (string.IsNullOrEmpty(variableName) || variableName.Length < 2)
-            return false;
+        if (string.IsNullOrEmpty(variableName) || variableName.Length < 2) return false;
 
         var prefix = char.ToLower(variableName[0]);
         var secondChar = variableName[1];
 
         // Check for static variable prefix 's' followed by type prefix
         if (prefix != 's' || variableName.Length < 3) return "lncdhaop".Contains(prefix) && char.IsUpper(secondChar);
+
         var typePrefix = char.ToLower(variableName[1]);
         var thirdChar = variableName[2];
         // Check if second char is a known prefix and third char is uppercase

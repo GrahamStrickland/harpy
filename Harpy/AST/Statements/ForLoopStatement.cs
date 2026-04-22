@@ -37,6 +37,7 @@ public class ForLoopStatement : Statement
         }
 
         if (_body == null) return;
+
         foreach (var statement in _body)
         {
             statement.Parent = this;
@@ -52,8 +53,10 @@ public class ForLoopStatement : Statement
                      ChildNodeLine(indent + 1) + _bound.PrettyPrint(indent + 2);
 
         if (_step != null)
+        {
             output += "\n" + BlankLine(indent + 1) + "step\n" + ChildNodeLine(indent + 1) +
                       _step.PrettyPrint(indent + 2);
+        }
 
         if (_body == null) return output + "\n" + BlankLine(indent) + ")";
 

@@ -52,11 +52,13 @@ public class ArrayDeclaratorExpression : Expression
         var elements = SyntaxFactory.SeparatedList<ExpressionSyntax>();
 
         if (_elements != null)
+        {
             foreach (var element in _elements)
             {
                 var elementExpression = element.Walk(context);
                 elements = elements.Add((ExpressionSyntax)elementExpression);
             }
+        }
 
         return SyntaxFactory.ObjectCreationExpression(
             SyntaxFactory.GenericName(

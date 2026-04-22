@@ -13,6 +13,7 @@ public class ReturnStatement : Statement
         _returnValue = returnValue;
 
         if (_returnValue == null) return;
+
         _returnValue.Parent = this;
         Children.Add(_returnValue);
     }
@@ -22,8 +23,10 @@ public class ReturnStatement : Statement
         var result = NodeLine(indent) + "ReturnStatement(";
 
         if (_returnValue != null)
+        {
             result += "\n" + BlankLine(indent + 1) + "returnValue\n" + ChildNodeLine(indent + 1) +
                       _returnValue.PrettyPrint(indent + 2) + "\n" + BlankLine(indent);
+        }
 
         return result + ")";
     }

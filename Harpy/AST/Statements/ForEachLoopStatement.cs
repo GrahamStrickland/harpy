@@ -32,6 +32,7 @@ public class ForEachLoopStatement : Statement
         Children.Add(_collection);
 
         if (_body == null) return;
+
         foreach (var statement in _body)
         {
             statement.Parent = this;

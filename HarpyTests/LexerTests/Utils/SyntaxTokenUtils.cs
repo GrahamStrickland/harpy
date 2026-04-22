@@ -26,6 +26,7 @@ internal static class SyntaxTokenUtils
             }
 
             if (!checkTrivia) continue;
+
             if (obs[i].LeadingTrivia.Count != expected[i].LeadingTrivia.Count)
             {
                 Assert.Fail(
@@ -66,6 +67,7 @@ internal static class SyntaxTokenUtils
             var expectedTrivia = expectedTriviaList[j];
 
             if (SyntaxElementsEqual(obsTrivia, expectedTrivia)) continue;
+
             Assert.Fail(
                 $"Trivia lines mismatch at index {j}. "
                 + $"Expected Trivia({expectedTrivia.Kind}, '{expectedTrivia.Text}', {expectedTrivia.Line}, {expectedTrivia.Start}, {expectedTrivia.End}), "

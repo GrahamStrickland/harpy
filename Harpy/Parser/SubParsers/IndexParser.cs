@@ -18,12 +18,14 @@ public class IndexParser : IInfixSubParser
         };
 
         if (!parser.Match(HarbourSyntaxKind.RIGHT_BRACKET))
+        {
             while (parser.Match(HarbourSyntaxKind.COMMA))
             {
                 parser.Consume(HarbourSyntaxKind.COMMA);
                 indexExpressions.Add(parser.Parse() ?? throw new InvalidSyntaxException(
                     $"Expected expression after index expression with left expression '{left.PrettyPrint()}' with first token '{token.Text}' on line {token.Line}, column {token.Start}, found null."));
             }
+        }
 
         parser.Consume(HarbourSyntaxKind.RIGHT_BRACKET);
 

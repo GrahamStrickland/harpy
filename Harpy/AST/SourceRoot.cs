@@ -22,6 +22,7 @@ public class SourceRoot(string name, List<HarbourAstNode> children) : HarbourAst
         var topLevelStatements = new List<StatementSyntax>();
 
         foreach (var child in Children)
+        {
             switch (child)
             {
                 case FunctionStatement or ProcedureStatement or LocalVariableDeclaration or StaticVariableDeclaration:
@@ -38,6 +39,7 @@ public class SourceRoot(string name, List<HarbourAstNode> children) : HarbourAst
                     break;
                 }
             }
+        }
 
         if (topLevelStatements.Count > 0)
         {

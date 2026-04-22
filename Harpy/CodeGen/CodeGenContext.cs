@@ -59,8 +59,7 @@ public class CodeGenContext(string partialClassName)
     /// </summary>
     public void ExitScope()
     {
-        if (ScopeStack.Count > 0)
-            ScopeStack.Pop();
+        if (ScopeStack.Count > 0) ScopeStack.Pop();
     }
 
     /// <summary>

@@ -50,12 +50,16 @@ public class CallExpression : Expression
         var arguments = SyntaxFactory.SeparatedList<ArgumentSyntax>();
 
         if (_arguments != null)
+        {
             foreach (var argument in _arguments)
+            {
                 if (argument is not null)
                 {
                     var argumentExpression = argument.Walk(context);
                     arguments = arguments.Add(SyntaxFactory.Argument((ExpressionSyntax)argumentExpression));
                 }
+            }
+        }
 
         var argumentList = SyntaxFactory.ArgumentList(arguments);
 
