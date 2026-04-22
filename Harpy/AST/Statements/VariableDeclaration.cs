@@ -74,12 +74,10 @@ public abstract class VariableDeclaration : Statement
             .AddVariables(variableDeclarator);
 
         var fieldDeclaration = SyntaxFactory.FieldDeclaration(variableDeclaration).AddModifiers(
-                    SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
+            SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
 
         if (Scope.Keyword() == "static")
-        {
             fieldDeclaration = fieldDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
-        }
 
         context.TopLevelMembers.Add(fieldDeclaration);
 

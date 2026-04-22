@@ -62,12 +62,10 @@ public class HashDeclaratorExpression : Expression
         var argumentList = SyntaxFactory.SeparatedList<ArgumentSyntax>();
 
         if (_valuePairs.Count == 0)
-        {
             return SyntaxFactory.ObjectCreationExpression(
-                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
-                                     .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
-                                .WithArgumentList(SyntaxFactory.ArgumentList(argumentList));
-        }
+                    SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
+                        .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
+                .WithArgumentList(SyntaxFactory.ArgumentList(argumentList));
 
         if (_valuePairs.Count == 1)
         {
@@ -78,31 +76,34 @@ public class HashDeclaratorExpression : Expression
                 initializerList = initializerList.Add((ExpressionSyntax)v.Walk(context));
             }
 
-            var valuePair = SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(SyntaxFactory.InitializerExpression(SyntaxKind.ComplexElementInitializerExpression, initializerList));
+            var valuePair = SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
+                SyntaxFactory.InitializerExpression(SyntaxKind.ComplexElementInitializerExpression, initializerList));
 
             return SyntaxFactory.ObjectCreationExpression(
-                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
-                                     .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
-                                .WithInitializer(SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, valuePair));
+                    SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
+                        .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
+                .WithInitializer(
+                    SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, valuePair));
         }
-        else
+
+        var valuePairs = SyntaxFactory.SeparatedList<ExpressionSyntax>();
+
+        foreach (var (k, v) in _valuePairs)
         {
-            var valuePairs = SyntaxFactory.SeparatedList<ExpressionSyntax>();
+            var initializerList = SyntaxFactory.SeparatedList<ExpressionSyntax>();
 
-            foreach (var (k, v) in _valuePairs)
-            {
-                var initializerList = SyntaxFactory.SeparatedList<ExpressionSyntax>();
+            initializerList = initializerList.Add((ExpressionSyntax)k.Walk(context));
+            initializerList = initializerList.Add((ExpressionSyntax)v.Walk(context));
 
-                initializerList = initializerList.Add((ExpressionSyntax)k.Walk(context));
-                initializerList = initializerList.Add((ExpressionSyntax)v.Walk(context));
-
-                valuePairs = valuePairs.Add(SyntaxFactory.InitializerExpression(SyntaxKind.ComplexElementInitializerExpression, initializerList));
-            }
-
-            return SyntaxFactory.ObjectCreationExpression(
-                        SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
-                                     .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
-                                .WithInitializer(SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, valuePairs));
+            valuePairs =
+                valuePairs.Add(SyntaxFactory.InitializerExpression(SyntaxKind.ComplexElementInitializerExpression,
+                    initializerList));
         }
+
+        return SyntaxFactory.ObjectCreationExpression(
+                SyntaxFactory.GenericName(SyntaxFactory.Identifier("Dictionary"))
+                    .WithTypeArgumentList(SyntaxFactory.TypeArgumentList(typeArgumentList)))
+            .WithInitializer(
+                SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, valuePairs));
     }
 }

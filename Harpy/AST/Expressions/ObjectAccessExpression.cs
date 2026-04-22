@@ -36,6 +36,7 @@ public class ObjectAccessExpression : Expression
 
     protected override ExpressionSyntax WalkExpression(CodeGenContext context)
     {
-        return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, (ExpressionSyntax)_left.Walk(context), (SimpleNameSyntax)_right.Walk(context));
+        return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+            (ExpressionSyntax)_left.Walk(context), (SimpleNameSyntax)_right.Walk(context));
     }
 }

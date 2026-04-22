@@ -33,8 +33,7 @@ public static class IndexAdjuster
                 SyntaxFactory.Literal(intValue - 1)),
             double => throw new InvalidSyntaxException(
                 $"Unable to index using a floating point variable, encountered floating point index {literal.Token}"),
-            _ => indexExpression,
-
+            _ => indexExpression
         };
 
         // For non-literal expressions, generate: (expr - 1)

@@ -57,7 +57,6 @@ public class TestExpressionCodeGen
             }
             """
         );
-
     }
 
     [TestMethod]
@@ -272,7 +271,7 @@ public class TestExpressionCodeGen
             {
                 private static string cVar = "hello";
             }
-            
+
             """
         );
 
@@ -284,7 +283,7 @@ public class TestExpressionCodeGen
             {
                 private static string cVar = "world";
             }
-            
+
             """
         );
     }

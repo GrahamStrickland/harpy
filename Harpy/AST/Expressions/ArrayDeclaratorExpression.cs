@@ -52,24 +52,22 @@ public class ArrayDeclaratorExpression : Expression
         var elements = SyntaxFactory.SeparatedList<ExpressionSyntax>();
 
         if (_elements != null)
-        {
             foreach (var element in _elements)
             {
                 var elementExpression = element.Walk(context);
                 elements = elements.Add((ExpressionSyntax)elementExpression);
             }
-        }
 
         return SyntaxFactory.ObjectCreationExpression(
             SyntaxFactory.GenericName(
-                SyntaxFactory.Identifier("List"))
-            .WithTypeArgumentList(
-                SyntaxFactory.TypeArgumentList(
-                    SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-                        SyntaxFactory.IdentifierName("dynamic")
+                    SyntaxFactory.Identifier("List"))
+                .WithTypeArgumentList(
+                    SyntaxFactory.TypeArgumentList(
+                        SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+                            SyntaxFactory.IdentifierName("dynamic")
+                        )
                     )
                 )
-            )
         ).WithInitializer(SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, elements));
     }
 }

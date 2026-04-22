@@ -60,6 +60,7 @@ public class ConditionalExpression : Expression
         else
             elseExpression = (ExpressionSyntax)_elseArm.Walk(context);
 
-        return SyntaxFactory.ConditionalExpression((ExpressionSyntax)_ifArm.Walk(context), thenExpression, elseExpression);
+        return SyntaxFactory.ConditionalExpression((ExpressionSyntax)_ifArm.Walk(context), thenExpression,
+            elseExpression);
     }
 }

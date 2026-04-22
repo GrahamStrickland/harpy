@@ -68,6 +68,7 @@ public class PrefixExpression : Expression
             default:
                 throw new ArgumentException($"Invalid operator token passed to `PrefixExpression`: {PrettyPrint()}");
         }
+
         return SyntaxFactory.PrefixUnaryExpression(operatorKind, (ExpressionSyntax)_right.Walk(context));
     }
 }

@@ -22,24 +22,22 @@ public class SourceRoot(string name, List<HarbourAstNode> children) : HarbourAst
         var topLevelStatements = new List<StatementSyntax>();
 
         foreach (var child in Children)
-        {
             switch (child)
             {
                 case FunctionStatement or ProcedureStatement or LocalVariableDeclaration or StaticVariableDeclaration:
-                    {
-                        // Functions, procedures, and file-level statics become members of the partial class
-                        classMembers.Add((MemberDeclarationSyntax)child.Walk(context));
-                        break;
-                    }
+                {
+                    // Functions, procedures, and file-level statics become members of the partial class
+                    classMembers.Add((MemberDeclarationSyntax)child.Walk(context));
+                    break;
+                }
                 case Statement statement:
-                    {
-                        var syntax = statement.WalkStatement(context);
-                        topLevelStatements.Add(syntax);
+                {
+                    var syntax = statement.WalkStatement(context);
+                    topLevelStatements.Add(syntax);
 
-                        break;
-                    }
+                    break;
+                }
             }
-        }
 
         if (topLevelStatements.Count > 0)
         {

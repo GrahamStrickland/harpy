@@ -60,6 +60,6 @@ public class IndexExpression : Expression
         }
 
         return SyntaxFactory.ElementAccessExpression((ExpressionSyntax)_left.Walk(context))
-                            .WithArgumentList(argumentList);
+            .WithArgumentList(argumentList);
     }
 }

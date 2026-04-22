@@ -1,8 +1,8 @@
+using System.Globalization;
 using Harpy.CodeGen;
 using Harpy.Lexer;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Globalization;
 
 namespace Harpy.AST.Expressions;
 
@@ -57,26 +57,20 @@ public class LiteralExpression : Expression
     private static LiteralExpressionSyntax ParseNumericLiteral(string text)
     {
         if (int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
-        {
             return SyntaxFactory.LiteralExpression(
                 SyntaxKind.NumericLiteralExpression,
                 SyntaxFactory.Literal(intValue));
-        }
 
         if ((text.StartsWith("0x") || text.StartsWith("0X")) && int.TryParse(text[2..], NumberStyles.HexNumber,
                 CultureInfo.InvariantCulture, out var hexValue))
-        {
             return SyntaxFactory.LiteralExpression(
                 SyntaxKind.NumericLiteralExpression,
                 SyntaxFactory.Literal(text, hexValue));
-        }
 
         if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleValue))
-        {
             return SyntaxFactory.LiteralExpression(
                 SyntaxKind.NumericLiteralExpression,
                 SyntaxFactory.Literal(doubleValue));
-        }
 
         throw new InvalidOperationException($"Unable to parse numeric literal: {text}");
     }

@@ -59,31 +59,23 @@ public class CodeblockExpression : Expression
         var statements = SyntaxFactory.SeparatedList<StatementSyntax>();
 
         foreach (var expression in _expressions)
-        {
             statements = statements.Add(SyntaxFactory.ExpressionStatement((ExpressionSyntax)expression.Walk(context)));
-        }
 
         if (_parameters.Count == 0)
-        {
             return SyntaxFactory.ParenthesizedLambdaExpression().WithBlock(SyntaxFactory.Block(statements));
-        }
-        else if (_parameters.Count == 1)
-        {
-            return SyntaxFactory.SimpleLambdaExpression(SyntaxFactory.Parameter(_parameters[0].Walk(context).GetFirstToken()))
-                                .WithBlock(SyntaxFactory.Block(statements));
-        }
-        else
-        {
-            var parameters = SyntaxFactory.SeparatedList<ParameterSyntax>();
 
-            foreach (var parameter in _parameters)
-            {
-                parameters = parameters.Add(SyntaxFactory.Parameter(parameter.Walk(context).GetFirstToken()));
-            }
+        if (_parameters.Count == 1)
+            return SyntaxFactory
+                .SimpleLambdaExpression(SyntaxFactory.Parameter(_parameters[0].Walk(context).GetFirstToken()))
+                .WithBlock(SyntaxFactory.Block(statements));
 
-            return SyntaxFactory.ParenthesizedLambdaExpression()
-                                .WithParameterList(SyntaxFactory.ParameterList(parameters))
-                                .WithBlock(SyntaxFactory.Block(statements));
-        }
+        var parameters = SyntaxFactory.SeparatedList<ParameterSyntax>();
+
+        foreach (var parameter in _parameters)
+            parameters = parameters.Add(SyntaxFactory.Parameter(parameter.Walk(context).GetFirstToken()));
+
+        return SyntaxFactory.ParenthesizedLambdaExpression()
+            .WithParameterList(SyntaxFactory.ParameterList(parameters))
+            .WithBlock(SyntaxFactory.Block(statements));
     }
 }

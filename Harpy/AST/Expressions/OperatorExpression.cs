@@ -85,6 +85,7 @@ public class OperatorExpression : Expression
                 throw new ArgumentException($"Invalid operator token passed to `OperatorExpression`: {PrettyPrint()}");
         }
 
-        return SyntaxFactory.BinaryExpression(operatorKind, (ExpressionSyntax)_left.Walk(context), (ExpressionSyntax)_right.Walk(context));
+        return SyntaxFactory.BinaryExpression(operatorKind, (ExpressionSyntax)_left.Walk(context),
+            (ExpressionSyntax)_right.Walk(context));
     }
 }

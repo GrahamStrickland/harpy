@@ -49,7 +49,7 @@ public class PostfixExpression : Expression
         {
             HarbourSyntaxKind.PLUSPLUS => SyntaxKind.PostIncrementExpression,
             HarbourSyntaxKind.MINUSMINUS => SyntaxKind.PostDecrementExpression,
-            _ => throw new ArgumentException($"Invalid operator token passed to `PostfixExpression`: {PrettyPrint()}"),
+            _ => throw new ArgumentException($"Invalid operator token passed to `PostfixExpression`: {PrettyPrint()}")
         };
         return SyntaxFactory.PostfixUnaryExpression(operatorKind, (ExpressionSyntax)_left.Walk(context));
     }
