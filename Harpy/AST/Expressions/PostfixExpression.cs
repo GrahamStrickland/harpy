@@ -43,7 +43,7 @@ public class PostfixExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         var operatorKind = _operatorNode.Token.Kind switch
         {

@@ -51,7 +51,7 @@ public class OperatorExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         SyntaxKind operatorKind;
         switch (_operatorNode.Token.Kind)

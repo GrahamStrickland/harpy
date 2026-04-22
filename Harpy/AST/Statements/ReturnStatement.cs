@@ -36,9 +36,9 @@ public class ReturnStatement : Statement
         return _returnValue;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement return statement code generation
-        throw new NotImplementedException("ReturnStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("ReturnStatement.Walk not yet implemented");
     }
 }

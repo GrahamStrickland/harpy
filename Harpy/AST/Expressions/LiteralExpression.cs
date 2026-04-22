@@ -32,7 +32,7 @@ public class LiteralExpression : Expression
                ChildNodeLine(indent + 1) + _literalNode.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         var token = _literalNode.Token;
         var literalType = token.Literal();

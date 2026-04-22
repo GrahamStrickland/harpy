@@ -47,9 +47,9 @@ public class WhileLoopStatement : Statement
         return result;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement while loop statement code generation
-        throw new NotImplementedException("WhileLoopStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("WhileLoopStatement.Walk not yet implemented");
     }
 }

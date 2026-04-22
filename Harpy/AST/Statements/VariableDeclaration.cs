@@ -1,7 +1,6 @@
 using Harpy.AST.Expressions;
 using Harpy.CodeGen;
 using Harpy.Lexer;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -52,30 +51,19 @@ public abstract class VariableDeclaration : Statement
                + "\n" + BlankLine(indent) + ")";
     }
 
-    public override SyntaxNode Walk(CodeGenContext context)
+    public override LocalDeclarationStatementSyntax Walk(CodeGenContext context)
     {
-        var typeName = TypeInference.InferType(Name.Text);
-        var variableType = SyntaxFactory.ParseTypeName(typeName);
+        return SyntaxFactory.LocalDeclarationStatement(BuildDeclaration(context));
+    }
 
-        var variableDeclarator = SyntaxFactory.VariableDeclarator(Name.Text);
-
-        if (Assignment != null)
-        {
-            ExpressionSyntax initializer;
-            if (Assignment is AssignmentExpression assignmentExpr)
-                initializer = (ExpressionSyntax)assignmentExpr.Right.Walk(context);
-            else
-                initializer = (ExpressionSyntax)Assignment.Walk(context);
-
-            variableDeclarator = variableDeclarator.WithInitializer(
-                SyntaxFactory.EqualsValueClause(initializer));
-        }
-
-        var variableDeclaration = SyntaxFactory.VariableDeclaration(variableType)
-            .AddVariables(variableDeclarator);
-
-        var fieldDeclaration = SyntaxFactory.FieldDeclaration(variableDeclaration).AddModifiers(
-            SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
+    /// <summary>
+    ///     Emit this variable declaration as a class-level field, used when the declaration appears at file scope
+    ///     and gets promoted to a member of the generated partial class.
+    /// </summary>
+    public FieldDeclarationSyntax ToFieldDeclaration(CodeGenContext context)
+    {
+        var fieldDeclaration = SyntaxFactory.FieldDeclaration(BuildDeclaration(context))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
 
         if (Scope.Keyword() == "static")
             fieldDeclaration = fieldDeclaration.AddModifiers(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
@@ -85,9 +73,21 @@ public abstract class VariableDeclaration : Statement
         return fieldDeclaration;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    private VariableDeclarationSyntax BuildDeclaration(CodeGenContext context)
     {
-        // TODO: Implement variable declaration code generation
-        throw new NotImplementedException("VariableDeclaration.WalkStatement not yet implemented");
+        var variableType = SyntaxFactory.ParseTypeName(TypeInference.InferType(Name.Text));
+        var variableDeclarator = SyntaxFactory.VariableDeclarator(Name.Text);
+
+        if (Assignment != null)
+        {
+            var initializer = Assignment is AssignmentExpression assignmentExpr
+                ? (ExpressionSyntax)assignmentExpr.Right.Walk(context)
+                : (ExpressionSyntax)Assignment.Walk(context);
+
+            variableDeclarator = variableDeclarator.WithInitializer(
+                SyntaxFactory.EqualsValueClause(initializer));
+        }
+
+        return SyntaxFactory.VariableDeclaration(variableType).AddVariables(variableDeclarator);
     }
 }

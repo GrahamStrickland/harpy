@@ -29,9 +29,9 @@ public class AssignmentStatement : Statement
                _assignmentExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement assignment statement code generation
-        throw new NotImplementedException("AssignmentStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("AssignmentStatement.Walk not yet implemented");
     }
 }

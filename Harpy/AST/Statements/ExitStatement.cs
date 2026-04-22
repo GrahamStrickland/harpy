@@ -13,9 +13,9 @@ public class ExitStatement() : Statement([])
         return NodeLine(indent) + "ExitStatement";
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement exit statement code generation
-        throw new NotImplementedException("ExitStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("ExitStatement.Walk not yet implemented");
     }
 }

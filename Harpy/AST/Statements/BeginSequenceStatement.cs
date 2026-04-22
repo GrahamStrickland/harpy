@@ -98,9 +98,9 @@ public class BeginSequenceStatement : Statement
         return result;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement begin sequence statement code generation
-        throw new NotImplementedException("BeginSequenceStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("BeginSequenceStatement.Walk not yet implemented");
     }
 }

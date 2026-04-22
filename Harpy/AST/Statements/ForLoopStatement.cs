@@ -67,9 +67,9 @@ public class ForLoopStatement : Statement
         return output + BlankLine(indent) + ")";
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement for loop statement code generation
-        throw new NotImplementedException("ForLoopStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("ForLoopStatement.Walk not yet implemented");
     }
 }

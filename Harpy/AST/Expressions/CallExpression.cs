@@ -44,7 +44,7 @@ public class CallExpression : Expression
                    : "\n") + BlankLine(indent) + ")";
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         var expressionSyntax = _function.Walk(context);
         var arguments = SyntaxFactory.SeparatedList<ArgumentSyntax>();

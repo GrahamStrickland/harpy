@@ -69,9 +69,9 @@ public class ProcedureStatement : Statement
         return result;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement procedure statement code generation
-        throw new NotImplementedException("ProcedureStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("ProcedureStatement.Walk not yet implemented");
     }
 }

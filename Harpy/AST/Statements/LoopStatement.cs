@@ -13,9 +13,9 @@ public class LoopStatement() : Statement([])
         return NodeLine(indent) + "LoopStatement";
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement loop statement code generation
-        throw new NotImplementedException("LoopStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("LoopStatement.Walk not yet implemented");
     }
 }

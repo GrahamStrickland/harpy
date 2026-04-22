@@ -58,9 +58,9 @@ public class ForEachLoopStatement : Statement
         return result;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement for each loop statement code generation
-        throw new NotImplementedException("ForEachLoopStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("ForEachLoopStatement.Walk not yet implemented");
     }
 }

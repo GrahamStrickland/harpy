@@ -48,7 +48,7 @@ public class ConditionalExpression : Expression
                BlankLine(indent) + ")";
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         ExpressionSyntax thenExpression, elseExpression;
         if (_thenArm == null)

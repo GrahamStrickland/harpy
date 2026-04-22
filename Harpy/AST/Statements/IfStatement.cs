@@ -89,9 +89,9 @@ public class IfStatement : Statement
         return result;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement if statement code generation
-        throw new NotImplementedException("IfStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("IfStatement.Walk not yet implemented");
     }
 }

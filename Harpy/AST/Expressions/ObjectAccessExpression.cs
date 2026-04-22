@@ -34,7 +34,7 @@ public class ObjectAccessExpression : Expression
                $"{_right.PrettyPrint(indent + 2)}\n" + BlankLine(indent) + ")";
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
             (ExpressionSyntax)_left.Walk(context), (SimpleNameSyntax)_right.Walk(context));

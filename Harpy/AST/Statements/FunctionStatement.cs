@@ -80,9 +80,9 @@ public class FunctionStatement : Statement
         return result;
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement function statement code generation
-        throw new NotImplementedException("FunctionStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("FunctionStatement.Walk not yet implemented");
     }
 }

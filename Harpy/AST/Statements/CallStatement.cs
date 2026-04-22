@@ -28,9 +28,9 @@ public class CallStatement : Statement
                ChildNodeLine(indent + 1) + _callExpression.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement call statement code generation
-        throw new NotImplementedException("CallStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("CallStatement.Walk not yet implemented");
     }
 }

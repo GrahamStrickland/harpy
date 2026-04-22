@@ -53,7 +53,7 @@ public class HashDeclaratorExpression : Expression
         return result;
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         var typeArgumentList = SyntaxFactory.SeparatedList<TypeSyntax>();
         typeArgumentList = typeArgumentList.Add(SyntaxFactory.IdentifierName("string"));

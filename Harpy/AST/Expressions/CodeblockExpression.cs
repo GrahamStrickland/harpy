@@ -54,7 +54,7 @@ public class CodeblockExpression : Expression
         return result;
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         var statements = SyntaxFactory.SeparatedList<StatementSyntax>();
 

@@ -30,7 +30,7 @@ public class NameExpression : Expression
                _nameNode.PrettyPrint(indent + 2) + "\n" + BlankLine(indent) + ")";
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         return SyntaxFactory.IdentifierName(_nameNode.Token.Text);
     }

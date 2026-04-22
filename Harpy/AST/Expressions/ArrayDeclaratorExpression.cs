@@ -47,7 +47,7 @@ public class ArrayDeclaratorExpression : Expression
         return result;
     }
 
-    protected override ExpressionSyntax WalkExpression(CodeGenContext context)
+    public override ExpressionSyntax Walk(CodeGenContext context)
     {
         var elements = SyntaxFactory.SeparatedList<ExpressionSyntax>();
 
@@ -56,7 +56,7 @@ public class ArrayDeclaratorExpression : Expression
             foreach (var element in _elements)
             {
                 var elementExpression = element.Walk(context);
-                elements = elements.Add((ExpressionSyntax)elementExpression);
+                elements = elements.Add(elementExpression);
             }
         }
 

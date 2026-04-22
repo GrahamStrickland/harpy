@@ -25,15 +25,21 @@ public class SourceRoot(string name, List<HarbourAstNode> children) : HarbourAst
         {
             switch (child)
             {
-                case FunctionStatement or ProcedureStatement or LocalVariableDeclaration or StaticVariableDeclaration:
+                case VariableDeclaration varDecl:
                 {
-                    // Functions, procedures, and file-level statics become members of the partial class
+                    // File-level local/static declarations are promoted to fields on the partial class
+                    classMembers.Add(varDecl.ToFieldDeclaration(context));
+                    break;
+                }
+                case FunctionStatement or ProcedureStatement:
+                {
+                    // Functions and procedures become members of the partial class
                     classMembers.Add((MemberDeclarationSyntax)child.Walk(context));
                     break;
                 }
                 case Statement statement:
                 {
-                    var syntax = statement.WalkStatement(context);
+                    var syntax = statement.Walk(context);
                     topLevelStatements.Add(syntax);
 
                     break;

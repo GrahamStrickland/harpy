@@ -29,9 +29,9 @@ public class ConditionalStatement : Statement
                ")";
     }
 
-    public override StatementSyntax WalkStatement(CodeGenContext context)
+    public override StatementSyntax Walk(CodeGenContext context)
     {
         // TODO: Implement conditional statement code generation
-        throw new NotImplementedException("ConditionalStatement.WalkStatement not yet implemented");
+        throw new NotImplementedException("ConditionalStatement.Walk not yet implemented");
     }
 }
