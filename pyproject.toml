@@ -13,10 +13,10 @@ addopts = ["--import-mode=importlib"]
 
 [dependency-groups]
 dev = [
-    "basedpyright>=1.31.4",
     "debugpy>=1.8.17",
     "isort>=6.1.0",
     "pytest>=8.4.1",
     "pytest-cov>=7.0.0",
     "ruff>=0.13.3",
+    "ty>=0.0.63",
 ]
